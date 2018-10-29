@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f1559f59aa8bbe4cad19168a03d98d9, type: 3}
+  m_Name: Canon
+  m_EditorClassIdentifier: 
+  Description: A simple canon. Add more fancy description alter.
+  Type: 0
+  Level1Sprite: {fileID: 21300000, guid: 4f1a3818b1b10634c8f24e213439790c, type: 3}
+  Level2Sprite: {fileID: 21300000, guid: faba90f1984b67d408c72df89d3d6e96, type: 3}
+  Level3Sprite: {fileID: 21300000, guid: 8cfff682d4424924a82e46b3ea0877cc, type: 3}
+  Prefab: {fileID: 1506116810879668, guid: aa5ab62b7f5af6d44a87e4e117083d1a, type: 2}
