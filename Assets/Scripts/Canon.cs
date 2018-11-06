@@ -38,10 +38,16 @@ public class Canon : Tower {
         }
     }
 
+    protected override void UpdateGunPartsReferences()
+    {
+        base.UpdateGunPartsReferences();
+        
+        currentFirePoint = currentGunHead.GetChild(0);
+    }
+
     private void Fire()
     {
         var projectile = Instantiate(cannonBall, currentFirePoint.position, currentFirePoint.rotation);
         projectile.GetComponent<CanonBall>().SetTarget(target, (towerData as Declarations.CanonTower).CurrentDamage);
-        Debug.Log("Tower" + name + "shot");
     }
 }

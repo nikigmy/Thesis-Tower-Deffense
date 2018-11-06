@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CanonBall : MonoBehaviour {
+public class CanonBall : Projectile {
 
     private bool move = false;
     private Enemy target;
-    private float speed = 10;//set in data later
+    private float speed = 15;//set in data later
     private int damage;
 
     public void SetTarget(Enemy target, int damage)

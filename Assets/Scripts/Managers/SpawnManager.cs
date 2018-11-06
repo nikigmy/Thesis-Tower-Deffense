@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
+    bool shouldInitNextWavePart = false;
     public List<Enemy> enemies;
 
     private Tile spawnTile;
@@ -32,12 +33,12 @@ public class SpawnManager : MonoBehaviour
     {
         enemies = new List<Enemy>();
     }
-
+    
     public void SpawnWaves(Declarations.WaveData[] waves)
     {
         currentWaves = waves;
         currentWaveIndex = 0;
-        StartCoroutine(WaitBetweenWaves());
+        StartCoroutine(WaitBetweenWaves(delayBetweenWaves));
     }
 
     private void SpawnWave()
@@ -53,7 +54,7 @@ public class SpawnManager : MonoBehaviour
         {
             if (currentWave.WaveParts[currentWavePartIndex].Type == Declarations.WavePartType.Delay)
             {
-                StartCoroutine(WaitForDelay());
+                StartCoroutine(WaitForDelay((currentWave.WaveParts[currentWavePartIndex] as Declarations.DelayWavePart).Delay));
             }
             else
             {
@@ -66,7 +67,6 @@ public class SpawnManager : MonoBehaviour
 
                     currentWavePartIndex++;
                     NextWavePart();
-                    Debug.Log("Spawned enemy");
                 }
                 else
                 {
@@ -79,7 +79,7 @@ public class SpawnManager : MonoBehaviour
             if (currentWaveIndex < currentWaves.Length - 1)
             {
                 currentWaveIndex++;
-                StartCoroutine(WaitBetweenWaves());
+                StartCoroutine(WaitBetweenWaves(delayBetweenWaves));
             }
         }
     }
@@ -89,15 +89,16 @@ public class SpawnManager : MonoBehaviour
         enemies.Remove(enemy);
     }
 
-    IEnumerator WaitForDelay()
+    IEnumerator WaitForDelay(float delay)
     {
-        yield return new WaitForSeconds((currentWave.WaveParts[currentWavePartIndex] as Declarations.DelayWavePart).Delay);
+        yield return new WaitForSeconds(delay);
         currentWavePartIndex++;
         NextWavePart();
     }
-    IEnumerator WaitBetweenWaves()
+
+    IEnumerator WaitBetweenWaves(float delay)
     {
-        yield return new WaitForSeconds(delayBetweenWaves);
+        yield return new WaitForSeconds(delay);
         SpawnWave();
     }
 }

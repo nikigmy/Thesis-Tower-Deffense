@@ -2,27 +2,27 @@
   <GeneralData>
   </GeneralData>
   <EnemyData>
-    <Capsule Speed="5" Health="100" Damage="1" Award="100"/>
+    <Capsule Speed="2" Health="100" Damage="1" Award="100"/>
   </EnemyData>
   <TowerData>
     <Canon>
-      <Level1  Damage="20" FireRate="1" Price="100" Range="5"/>
-      <Level2  Damage="30" FireRate="1" UpgradePrice="1000" Range="10"/>
-      <Level3  Damage="30" FireRate="0.5" UpgradePrice="1500" Range="15"/>
+      <Level1  Damage="15" FireRate="0.5" Price="100" Range="3"/>
+      <Level2  Damage="20" FireRate="0.5" UpgradePrice="1000" Range="3.5"/>
+      <Level3  Damage="30" FireRate="0.3" UpgradePrice="1500" Range="3.5"/>
     </Canon>
   </TowerData>
 </Setup>
 <!--/*
 * Canon
 * Plazma
-* Rocket
 * Gatling
 * Gauss
+* Tesla
+* Mortar
 *
 * Laser
-* Tesla
+* Rocket
 * Radar
-* Mortar
 * Crosbow
 * Fire
 * Acid

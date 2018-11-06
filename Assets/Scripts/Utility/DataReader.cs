@@ -30,7 +30,7 @@ public class DataReader
     private const string cst_award = "Award";
 
     #region LevelReading
-    public static bool ReadLevelData(XElement levelFile, out Declarations.LevelData levelData)
+    public static bool ReadLevelData(XElement levelFile, out Declarations.LevelData levelData, bool readWaves = true)
     {
         var mapElement = levelFile.Element(cst_Map);
         var spawnData = levelFile.Element(cst_spawnData);
@@ -41,10 +41,14 @@ public class DataReader
             Declarations.IntVector2 mapSize;
             Declarations.TileType[,] map;
             Declarations.WaveData[] waves;
-            if (int.TryParse(levelFile.Attribute(cst_StartMoney).Value, out startMoney) && int.TryParse(levelFile.Attribute(cst_StartHealth).Value, out startHealth) && ReadMapData(mapElement, out mapSize, out map) && ReadWaveData(spawnData, out waves))
+            if (int.TryParse(levelFile.Attribute(cst_StartMoney).Value, out startMoney) && int.TryParse(levelFile.Attribute(cst_StartHealth).Value, out startHealth) && ReadMapData(mapElement, out mapSize, out map))
             {
-                levelData = new Declarations.LevelData(mapSize, map, waves, startMoney, startHealth);
-                return true;
+                waves = null;
+                if (!readWaves || ReadWaveData(spawnData, out waves))
+                {
+                    levelData = new Declarations.LevelData(mapSize, map, waves, startMoney, startHealth);
+                    return true;
+                }
             }
         }
         levelData = null;
@@ -58,7 +62,7 @@ public class DataReader
         for (int i = 0; i < wavesData.Count; i++)
         {
             var wavePartsData = wavesData[i].Elements().ToList();
-            Declarations.WavePart[] waveParts = new Declarations.WavePart[wavePartsData.Count]; 
+            Declarations.WavePart[] waveParts = new Declarations.WavePart[wavePartsData.Count];
             for (int j = 0; j < wavePartsData.Count; j++)
             {
                 var partName = wavePartsData[j].Name.LocalName;
@@ -68,19 +72,19 @@ public class DataReader
                     var enemyTypeAttribute = wavePartsData[j].Attribute(cst_type);
                     if (enemyTypeAttribute != null && !string.IsNullOrEmpty(enemyTypeAttribute.Value) && Helpers.GetEnemyTypeFromString(enemyTypeAttribute.Value, out enemyType))
                     {
-                        if(Def.Instance.EnemyDictionary.ContainsKey(enemyType))
-                        waveParts[j] = new Declarations.SpawnWavePart(Def.Instance.EnemyDictionary[enemyType]);
+                        if (Def.Instance.EnemyDictionary.ContainsKey(enemyType))
+                            waveParts[j] = new Declarations.SpawnWavePart(Def.Instance.EnemyDictionary[enemyType]);
                     }
                     else
                     {
                         return false;
                     }
                 }
-                else if(partName == cst_delay)
+                else if (partName == cst_delay)
                 {
                     float delay;
                     var timeAttribute = wavePartsData[j].Attribute(cst_time);
-                    if(timeAttribute != null && !string.IsNullOrEmpty(timeAttribute.Value)  && float.TryParse(timeAttribute.Value, out delay))
+                    if (timeAttribute != null && !string.IsNullOrEmpty(timeAttribute.Value) && float.TryParse(timeAttribute.Value, out delay))
                     {
                         waveParts[j] = new Declarations.DelayWavePart(delay);
                     }
@@ -163,15 +167,15 @@ public class DataReader
     {
         int level1Damage = 0;
         float level1FireRate = 0;
-        int level1Range = 0;
+        float level1Range = 0;
 
         int level2Damage = 0;
         float level2FireRate = 0;
-        int level2Range = 0;
+        float level2Range = 0;
 
         int level3Damage = 0;
         float level3FireRate = 0;
-        int level3Range = 0;
+        float level3Range = 0;
 
         int price = 0;
         int level2UpgradePrice = 0;
@@ -198,7 +202,7 @@ public class DataReader
                 failed = true;
             }
             var rangeAtribute = level1.Attribute(cst_Range);
-            if (!(rangeAtribute != null && !string.IsNullOrEmpty(rangeAtribute.Value) && int.TryParse(rangeAtribute.Value, out level1Range)))
+            if (!(rangeAtribute != null && !string.IsNullOrEmpty(rangeAtribute.Value) && float.TryParse(rangeAtribute.Value, out level1Range)))
             {
                 failed = true;
             }
@@ -229,7 +233,7 @@ public class DataReader
                 failed = true;
             }
             var rangeAtribute = level2.Attribute(cst_Range);
-            if (!(rangeAtribute != null && !string.IsNullOrEmpty(rangeAtribute.Value) && int.TryParse(rangeAtribute.Value, out level2Range)))
+            if (!(rangeAtribute != null && !string.IsNullOrEmpty(rangeAtribute.Value) && float.TryParse(rangeAtribute.Value, out level2Range)))
             {
                 failed = true;
             }
@@ -260,7 +264,7 @@ public class DataReader
                 failed = true;
             }
             var rangeAtribute = level3.Attribute(cst_Range);
-            if (!(rangeAtribute != null && !string.IsNullOrEmpty(rangeAtribute.Value) && int.TryParse(rangeAtribute.Value, out level3Range)))
+            if (!(rangeAtribute != null && !string.IsNullOrEmpty(rangeAtribute.Value) && float.TryParse(rangeAtribute.Value, out level3Range)))
             {
                 failed = true;
             }

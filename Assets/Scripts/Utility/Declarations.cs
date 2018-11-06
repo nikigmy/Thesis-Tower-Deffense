@@ -17,7 +17,8 @@ public class Declarations
 
     public enum TowerType
     {
-        Canon
+        Canon,
+        Plasma
     }
     public enum EnemyType
     {
@@ -109,9 +110,9 @@ public class Declarations
         public int Level2UpgradePrice { get; protected set; }
         public int Level3UpgradePrice { get; protected set; }
 
-        public int Level1Range { get; protected set; }
-        public int Level2Range { get; protected set; }
-        public int Level3Range { get; protected set; }
+        public float Level1Range { get; protected set; }
+        public float Level2Range { get; protected set; }
+        public float Level3Range { get; protected set; }
 
         public int CurrentLevel { get; protected set; }
         public int CurrentPrice
@@ -146,7 +147,7 @@ public class Declarations
                 }
             }
         }
-        public int CurrentRange
+        public float CurrentRange
         {
             get
             {
@@ -164,7 +165,7 @@ public class Declarations
             }
         }
 
-        protected TowerData(TowerType type, TowerAssetData assetData, int price, int level2UpgradePrice, int level3UpgradePrice, int level1Range, int level2Range, int level3Range)
+        protected TowerData(TowerType type, TowerAssetData assetData, int price, int level2UpgradePrice, int level3UpgradePrice, float level1Range, float level2Range, float level3Range)
         {
             Type = type;
             AssetData = assetData;
@@ -247,7 +248,7 @@ public class Declarations
                 }
             }
         }
-        public CanonTower(int price, int level2UpgradePrice, int level3UpgradePrice, int level1Damage, float level1FireRate, int level2Damage, float level2FireRate, int level3Damage, float level3FireRate, int level1Range, int level2Range, int level3Range, TowerAssetData assetData) :
+        public CanonTower(int price, int level2UpgradePrice, int level3UpgradePrice, int level1Damage, float level1FireRate, int level2Damage, float level2FireRate, int level3Damage, float level3FireRate, float level1Range, float level2Range, float level3Range, TowerAssetData assetData) :
             base(TowerType.Canon, assetData, price, level2UpgradePrice, level3UpgradePrice, level1Range, level2Range, level3Range)
         {
             Level1Damage = level1Damage;

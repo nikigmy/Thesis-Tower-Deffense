@@ -19,7 +19,7 @@ public class CameraManager : MonoBehaviour {
         transform.position = centerOfField;
 
         var bottomOfField = Helpers.GetPositionForTile(currentLevel.MapSize.y, currentLevel.MapSize.x);
-        minPositions = new Vector3(0, 10, bottomOfField.z - 15);
+        minPositions = new Vector3(0, 3, bottomOfField.z - 15);
         maxPositions = new Vector3(bottomOfField.x, Def.Instance.MaxCameraHeight, -10);
     }
 	
@@ -69,7 +69,7 @@ public class CameraManager : MonoBehaviour {
         {
             vectorToMove -= Vector3.forward * Def.Instance.CameraMoveSpeed;
         }
-
-        transform.Translate(vectorToMove * Time.deltaTime, Space.World);
+        
+        transform.Translate(vectorToMove * Time.unscaledDeltaTime, Space.World);
     }
 }

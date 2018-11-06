@@ -27,6 +27,8 @@ public class GameManager : MonoBehaviour {
     public int Health;
     public int Money;
     public UnityEvent MoneyChanged;
+    public bool Paused = false;
+    public float PreviousGameSpeed = 1;
 
     private void Awake()
     {
@@ -84,6 +86,32 @@ public class GameManager : MonoBehaviour {
         else
         {
             healthText.text = "Health:" + Health;
+        }
+    }
+
+    public void ChangeGameSpeed(int speed)
+    {
+        if (Paused)
+        {
+            PreviousGameSpeed = Time.timeScale;
+        }
+        else
+        {
+            Time.timeScale = speed;
+            PreviousGameSpeed = speed;
+        }
+    }
+    public void PauseButtonClicked()
+    {
+        if (Paused)
+        {
+            Time.timeScale = PreviousGameSpeed;
+            Paused = false;
+        }
+        else
+        {
+            Time.timeScale = 0;
+            Paused = true;
         }
     }
 }

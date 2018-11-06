@@ -1,7 +1,7 @@
 <Level StartMoney="500" StartHealth="10">
   <Map Width="30" Height="20">
-    xxxxxxxxxxxxxxxxxxxxxxx///////
-    xxx//////////////////////####$
+    xxxxxxxxxxxxxxxxxxxxxxx/////$$
+    xxx//////////////////////###$$
     xxx//////////////////////#///x
     xxx/////#################////x
     xxx/////#////////////////////x

@@ -36,16 +36,14 @@ public class Def
     {
         TowerDictionary = new Dictionary<Declarations.TowerType, Declarations.TowerData>();
         EnemyDictionary = new Dictionary<Declarations.EnemyType, Declarations.EnemyData>();
-        var setup = XElement.Parse(Resources.Load<TextAsset>(cst_setup).text);
-        LoadSetup(towersAssetData, enemyAssetData, setup);
 
-        var levels = Resources.LoadAll<TextAsset>(cst_levels);
-        LoadLevels(levels);
-
+        LoadSetup(towersAssetData, enemyAssetData);
+        LoadLevels();
     }
 
-    private void LoadSetup(TowerAssetData[] towersAssetData, EnemyAssetData[] enemyAssetData, XElement setup)
+    private void LoadSetup(TowerAssetData[] towersAssetData, EnemyAssetData[] enemyAssetData)
     {
+        var setup = XElement.Parse(Resources.Load<TextAsset>(cst_setup).text);
         var towers = setup.Element(cst_towerData).Elements().ToList();
         for (int i = 0; i < towers.Count; i++)
         {
@@ -84,8 +82,10 @@ public class Def
         }
     }
 
-    private void LoadLevels(TextAsset[] levels)
+    public void LoadLevels()
     {
+        var levels = Resources.LoadAll<TextAsset>(cst_levels);
+
         Levels = new Declarations.LevelData[levels.Length];
         for (int i = 0; i < levels.Length; i++)
         {

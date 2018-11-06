@@ -32,12 +32,18 @@ public abstract class Tower : MonoBehaviour
         }
         towerData.Upgraded.AddListener(UpgradeTower);
     }
-
-    private void UpdateGunPartsReferences()
+    
+    protected virtual void UpdateGunPartsReferences()
     {
-        currentGunBase = currentGun.transform.GetChild(0);
-        currentGunHead = currentGunBase.GetChild(0);
-        currentFirePoint = currentGunHead.GetChild(0);
+        var nextGunBase = currentGun.transform.GetChild(0);
+        if (currentGunBase != null)
+            nextGunBase.transform.localRotation = currentGunBase.localRotation;
+        currentGunBase = nextGunBase;
+
+        var nextGunHead = currentGunBase.GetChild(0);
+        if (currentGunHead != null)
+            nextGunHead.transform.localRotation = currentGunHead.transform.localRotation;
+        currentGunHead = nextGunHead;
     }
 
     private void UpgradeTower()
@@ -81,7 +87,7 @@ public abstract class Tower : MonoBehaviour
         }
     }
 
-    protected void LookAtTarget()
+    protected virtual void LookAtTarget()
     {
         if (target != null)
         {
@@ -109,6 +115,11 @@ public abstract class Tower : MonoBehaviour
         if (towerData != null)
         {
             Gizmos.DrawWireSphere(transform.position, towerData.CurrentRange);
+            if (target != null)
+            {
+                Gizmos.DrawLine(currentFirePoint.transform.position, target.transform.position);
+
+            }
         }
     }
 
