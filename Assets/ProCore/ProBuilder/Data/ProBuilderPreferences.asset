@@ -18,17 +18,18 @@ MonoBehaviour:
   - pbDefaultSelectionMode
   - pbHandleAlignment
   - pb_GIWorkflowMode
+  - pbDragSelectMode
   m_Float_keys:
   - pbEditorScroll.x
   - pbEditorScroll.y
   m_String_keys: []
   m_Color_keys: []
   m_Material_keys: []
-  m_Bool_values: 00
-  m_Int_values: 01000000020000000200000000000000
+  m_Bool_values: 01
+  m_Int_values: 0000000002000000020000000100000000000000
   m_Float_values:
   - 0
-  - 0
+  - 41
   m_String_values: []
   m_Color_values: []
   m_Material_values: []

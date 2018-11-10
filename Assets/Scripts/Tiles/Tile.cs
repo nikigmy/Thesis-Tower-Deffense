@@ -19,4 +19,17 @@ public class Tile : MonoBehaviour
         Col = col;
         Type = type;
     }
+
+    private void OnDrawGizmos()
+    {
+        MeshFilter filter = GetComponent<MeshFilter>();
+        if (filter == null)
+        {
+            filter = transform.GetChild(0).GetComponent<MeshFilter>();
+        }
+        if(filter != null)
+        {
+            Gizmos.DrawWireMesh(filter.sharedMesh, -1, transform.position);
+        }
+    }
 }

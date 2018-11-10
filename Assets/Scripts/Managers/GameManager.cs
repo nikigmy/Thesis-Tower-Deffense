@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour {
     public int Money;
     public UnityEvent MoneyChanged;
     public bool Paused = false;
-    public float PreviousGameSpeed = 1;
+    public bool GameSpedUp = false;
 
     private void Awake()
     {
@@ -54,6 +54,7 @@ public class GameManager : MonoBehaviour {
         MoneyChanged.Invoke();
         moneyText.text = "Gold:" + Money;
     }
+
     public void AddMoney(int value)
     {
         Money += value;
@@ -89,29 +90,25 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    public void ChangeGameSpeed(int speed)
+    public void SpeedUpGame()
     {
-        if (Paused)
+        GameSpedUp = !GameSpedUp;
+        if (!Paused)
         {
-            PreviousGameSpeed = Time.timeScale;
-        }
-        else
-        {
-            Time.timeScale = speed;
-            PreviousGameSpeed = speed;
+            Time.timeScale = GameSpedUp ? 2 : 1;
         }
     }
-    public void PauseButtonClicked()
+
+    public void PausePlayGame()
     {
+        Paused = !Paused;
         if (Paused)
         {
-            Time.timeScale = PreviousGameSpeed;
-            Paused = false;
+            Time.timeScale = 0;
         }
         else
         {
-            Time.timeScale = 0;
-            Paused = true;
+            Time.timeScale = Time.timeScale = GameSpedUp ? 2 : 1;
         }
     }
 }

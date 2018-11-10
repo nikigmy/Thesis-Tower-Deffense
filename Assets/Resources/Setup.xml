@@ -13,18 +13,19 @@
   </TowerData>
 </Setup>
 <!--/*
-* Canon
-* Plazma
-* Gatling
-* Gauss
-* Tesla
-* Mortar
+* Canon   Damage, FireRate
+* Plazma  Damage, ChargeTime, ExplosionRange
+* Gatling Damage, FireRate
+* Gauss   Damage, ChargeTime, LaserRange
+* Tesla   Damage, FireRate
+* Mortar  Damage, FireRate, ExplosionRange
 *
-* Laser
-* Rocket
-* Radar
-* Crosbow
-* Fire
+* Crystal Damage, FireRate, SlowEffect
+* Fire    Damage, FireRange
+* Laser   BaseDamage, DamgaeIncrease
+* Crosbow Damage, FireRate
+
+* Rocket  Damage, FireRate, ExplosionRange
 * Acid
-* Crystal
+* Radar
 -->

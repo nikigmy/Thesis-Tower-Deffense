@@ -99,22 +99,46 @@ public class Declarations
         }
     }
 
+    public class TowerLevelData
+    {
+        public int Price { get; protected set; }
+
+        public float Range { get; protected set; }
+
+        public float FireRate { get; protected set; }
+
+        public int Damage { get; private set; }
+        
+        public TowerLevelData(int price, float range, float fireRate, int damage)
+        {
+            Price = price;
+            Range = range;
+            FireRate = fireRate;
+            Damage = damage;
+        }
+    }
+
+    public class PlasmaLevelData : TowerLevelData
+    {
+        public PlasmaLevelData(int price, float range, float fireRate, int damage, int explosionRange) : base(price, range, fireRate, damage)
+        {
+            ExplosionRange = explosionRange;
+        }
+
+        public int ExplosionRange { get; protected set; }
+    }
+
     public abstract class TowerData
     {
         public UnityEvent Upgraded;
 
         public TowerType Type { get; protected set; }
         public TowerAssetData AssetData;
-
-        public int Price { get; protected set; }
-        public int Level2UpgradePrice { get; protected set; }
-        public int Level3UpgradePrice { get; protected set; }
-
-        public float Level1Range { get; protected set; }
-        public float Level2Range { get; protected set; }
-        public float Level3Range { get; protected set; }
+        
+        public TowerLevelData[] Levels { get; protected set; }
 
         public int CurrentLevel { get; protected set; }
+
         public int CurrentPrice
         {
             get
@@ -122,16 +146,17 @@ public class Declarations
                 switch (CurrentLevel)
                 {
                     case 1:
-                        return Price;
+                        return Levels[0].Price;
                     case 2:
-                        return Price + Level2UpgradePrice;
+                        return Levels[0].Price + Levels[1].Price;
                     case 3:
-                        return Price + Level2UpgradePrice + Level3UpgradePrice;
+                        return Levels[0].Price + Levels[1].Price + Levels[2].Price;
                     default:
                         return -1;
                 }
             }
         }
+
         public int CurrentUpgradePrice
         {
             get
@@ -139,14 +164,15 @@ public class Declarations
                 switch (CurrentLevel)
                 {
                     case 1:
-                        return Level2UpgradePrice;
+                        return Levels[1].Price;
                     case 2:
-                        return Level3UpgradePrice;
+                        return Levels[2].Price;
                     default:
                         return 0;
                 }
             }
         }
+
         public float CurrentRange
         {
             get
@@ -154,37 +180,63 @@ public class Declarations
                 switch (CurrentLevel)
                 {
                     case 1:
-                        return Level1Range;
+                        return Levels[0].Range;
                     case 2:
-                        return Level2Range;
+                        return Levels[1].Range;
                     case 3:
-                        return Level3Range;
+                        return Levels[2].Range;
                     default:
-                        return Level3Range;
+                        return Levels[2].Range;
                 }
             }
         }
 
-        protected TowerData(TowerType type, TowerAssetData assetData, int price, int level2UpgradePrice, int level3UpgradePrice, float level1Range, float level2Range, float level3Range)
+        public int CurrentDamage
+        {
+            get
+            {
+                switch (CurrentLevel)
+                {
+                    case 1:
+                        return Levels[0].Damage;
+                    case 2:
+                        return Levels[1].Damage;
+                    case 3:
+                        return Levels[2].Damage;
+                    default:
+                        return Levels[3].Damage;
+                }
+            }
+        }
+
+        public float CurrentFireRate
+        {
+            get
+            {
+                switch (CurrentLevel)
+                {
+                    case 1:
+                        return Levels[0].FireRate;
+                    case 2:
+                        return Levels[1].FireRate;
+                    case 3:
+                        return Levels[2].FireRate;
+                    default:
+                        return Levels[2].FireRate;
+                }
+            }
+        }
+
+        protected TowerData(TowerType type, TowerAssetData assetData, TowerLevelData[] levels)
         {
             Type = type;
             AssetData = assetData;
             CurrentLevel = 1;
             Upgraded = new UnityEvent();
 
-            Price = price;
-            Level2UpgradePrice = level2UpgradePrice;
-            Level3UpgradePrice = level3UpgradePrice;
-
-            Level1Range = level1Range;
-            Level2Range = level2Range;
-            Level3Range = level3Range;
+            Levels = levels;
         }
-
-        public TowerData(int level1Range, int level2Range, int level3Range)
-        {
-        }
-
+        
         public void Upgrade()
         {
             if (CurrentLevel <= 2)
@@ -202,61 +254,36 @@ public class Declarations
             }
         }
     }
-
     public class CanonTower : TowerData
     {
-        public int Level1Damage { get; private set; }
-        public float Level1FireRate { get; private set; }
+        public CanonTower(TowerAssetData assetData, TowerLevelData[] levels) :
+            base(TowerType.Canon, assetData, levels)
+        {
+        }
+    }
 
-        public int Level2Damage { get; private set; }
-        public float Level2FireRate { get; private set; }
-
-        public int Level3Damage { get; private set; }
-        public float Level3FireRate { get; private set; }
-
-        public int CurrentDamage
+    public class PlasmaTower : TowerData
+    {
+        public int CurrentExplosionRange
         {
             get
             {
                 switch (CurrentLevel)
                 {
                     case 1:
-                        return Level1Damage;
+                        return (Levels[0] as PlasmaLevelData).ExplosionRange;
                     case 2:
-                        return Level2Damage;
+                        return (Levels[1] as PlasmaLevelData).ExplosionRange;
                     case 3:
-                        return Level3Damage;
+                        return (Levels[2] as PlasmaLevelData).ExplosionRange;
                     default:
-                        return Level3Damage;
+                        return (Levels[2] as PlasmaLevelData).ExplosionRange;
                 }
             }
         }
-        public float CurrentFireRate
+        public PlasmaTower(TowerAssetData assetData, PlasmaLevelData[] levels) :
+            base(TowerType.Plasma, assetData, levels)
         {
-            get
-            {
-                switch (CurrentLevel)
-                {
-                    case 1:
-                        return Level1FireRate;
-                    case 2:
-                        return Level2FireRate;
-                    case 3:
-                        return Level3FireRate;
-                    default:
-                        return Level3FireRate;
-                }
-            }
-        }
-        public CanonTower(int price, int level2UpgradePrice, int level3UpgradePrice, int level1Damage, float level1FireRate, int level2Damage, float level2FireRate, int level3Damage, float level3FireRate, float level1Range, float level2Range, float level3Range, TowerAssetData assetData) :
-            base(TowerType.Canon, assetData, price, level2UpgradePrice, level3UpgradePrice, level1Range, level2Range, level3Range)
-        {
-            Level1Damage = level1Damage;
-            Level1FireRate = level1FireRate;
-            Level2Damage = level2Damage;
-            Level2FireRate = level2FireRate;
-            Level3Damage = level3Damage;
-            Level3FireRate = level3FireRate;
         }
     }
 
@@ -277,6 +304,43 @@ public class Declarations
             Speed = speed;
             Damage = damage;
             Award = award;
+        }
+    }
+
+    public interface IProjectileData
+    {
+
+    }
+
+    public class TargetableProjectileData : IProjectileData
+    {
+        public Enemy Target;
+
+        public TargetableProjectileData(Enemy target)
+        {
+            Target = target;
+        }
+    }
+
+    public class CanonBallData : TargetableProjectileData
+    {
+        public int Damage;
+
+        public CanonBallData(Enemy target, int damage) : base(target)
+        {
+            Damage = damage;
+        }
+    }
+
+    public class PlasmaBallData : TargetableProjectileData
+    {
+        public int ExprosionDamage;
+        public float ExplosionRange;
+
+        public PlasmaBallData(Enemy target, int exprosionDamage, float explosionRange) : base(target)
+        {
+            ExprosionDamage = exprosionDamage;
+            ExplosionRange = explosionRange;
         }
     }
 }

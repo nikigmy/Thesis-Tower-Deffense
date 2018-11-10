@@ -165,6 +165,7 @@ public class DataReader
 
     private static bool ReadCanonData(XElement towerData, TowerAssetData assetData, out Declarations.TowerData tower)
     {
+        var levels = new Declarations.TowerLevelData[3];
         int level1Damage = 0;
         float level1FireRate = 0;
         float level1Range = 0;
@@ -206,6 +207,7 @@ public class DataReader
             {
                 failed = true;
             }
+            levels[0] = new Declarations.TowerLevelData(price, level1Range, level1FireRate, level1Damage);
         }
         else
         {
@@ -237,6 +239,7 @@ public class DataReader
             {
                 failed = true;
             }
+            levels[1] = new Declarations.TowerLevelData(level2UpgradePrice, level2Range, level2FireRate, level2Damage);
         }
         else
         {
@@ -268,6 +271,7 @@ public class DataReader
             {
                 failed = true;
             }
+            levels[2] = new Declarations.TowerLevelData(level3UpgradePrice, level3Range, level3FireRate, level3Damage);
         }
         #endregion
 
@@ -278,7 +282,7 @@ public class DataReader
         }
         else
         {
-            tower = new Declarations.CanonTower(price, level2UpgradePrice, level3UpgradePrice, level1Damage, level1FireRate, level2Damage, level2FireRate, level3Damage, level3FireRate, level1Range, level2Range, level3Range, assetData);
+            tower = new Declarations.CanonTower(assetData, levels);
             return true;
         }
     }
