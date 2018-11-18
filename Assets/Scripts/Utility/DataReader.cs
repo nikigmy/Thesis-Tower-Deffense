@@ -19,7 +19,8 @@ public class DataReader
     private const string cst_FireRate = "FireRate";
     private const string cst_Price = "Price";
     private const string cst_Range = "Range";
-    private const string cst_UpgradePrice = "UpgradePrice";
+    private const string cst_UpgradePrice = "UpgradePrice"; 
+    private const string cst_ExplosionRange = "ExplosionRange";
     private const string cst_Map = "Map";
     private const string cst_spawnData = "SpawnData";
     private const string cst_wave = "Wave";
@@ -28,6 +29,7 @@ public class DataReader
     private const string cst_time = "Time";
     private const string cst_type = "Type";
     private const string cst_award = "Award";
+
 
     #region LevelReading
     public static bool ReadLevelData(XElement levelFile, out Declarations.LevelData levelData, bool readWaves = true)
@@ -155,6 +157,8 @@ public class DataReader
         {
             case Declarations.TowerType.Canon:
                 return ReadCanonData(towerData, assetData, out tower);
+            case Declarations.TowerType.Plasma:
+                return ReadPlasmaData(towerData, assetData, out tower);
             default:
                 Debug.Log("Unknown tower type");
                 break;
@@ -163,51 +167,23 @@ public class DataReader
         return false;
     }
 
-    private static bool ReadCanonData(XElement towerData, TowerAssetData assetData, out Declarations.TowerData tower)
+    private static bool ReadPlasmaData(XElement towerData, TowerAssetData assetData, out Declarations.TowerData tower)
     {
-        var levels = new Declarations.TowerLevelData[3];
-        int level1Damage = 0;
-        float level1FireRate = 0;
-        float level1Range = 0;
-
-        int level2Damage = 0;
-        float level2FireRate = 0;
-        float level2Range = 0;
-
-        int level3Damage = 0;
-        float level3FireRate = 0;
-        float level3Range = 0;
-
-        int price = 0;
-        int level2UpgradePrice = 0;
-        int level3UpgradePrice = 0;
+        var levels = new Declarations.PlasmaLevelData[3];
 
         bool failed = false;
+
+        
         #region Level1
         var level1 = towerData.Element(cst_Level1);
+
         if (level1 != null)
         {
-            var damageAttribute = level1.Attribute(cst_Damage);
-            if (!(damageAttribute != null && !string.IsNullOrEmpty(damageAttribute.Value) && int.TryParse(damageAttribute.Value, out level1Damage)))
-            {
-                failed = true;
-            }
-            var fireRateAttribute = level1.Attribute(cst_FireRate);
-            if (!(fireRateAttribute != null && !string.IsNullOrEmpty(fireRateAttribute.Value) && float.TryParse(fireRateAttribute.Value, out level1FireRate)))
-            {
-                failed = true;
-            }
-            var priceAttribute = level1.Attribute(cst_Price);
-            if (!(priceAttribute != null && !string.IsNullOrEmpty(priceAttribute.Value) && int.TryParse(priceAttribute.Value, out price)))
-            {
-                failed = true;
-            }
-            var rangeAtribute = level1.Attribute(cst_Range);
-            if (!(rangeAtribute != null && !string.IsNullOrEmpty(rangeAtribute.Value) && float.TryParse(rangeAtribute.Value, out level1Range)))
-            {
-                failed = true;
-            }
-            levels[0] = new Declarations.TowerLevelData(price, level1Range, level1FireRate, level1Damage);
+            levels[0] = new Declarations.PlasmaLevelData(ReadInt(level1, cst_Price, ref failed),
+                                                        ReadFloat(level1, cst_Range, ref failed),
+                                                        ReadFloat(level1, cst_FireRate, ref failed),
+                                                        ReadInt(level1, cst_Damage, ref failed),
+                                                        ReadFloat(level1, cst_ExplosionRange, ref failed));
         }
         else
         {
@@ -219,27 +195,11 @@ public class DataReader
         var level2 = towerData.Element(cst_Level2);
         if (level2 != null)
         {
-            var damageAttribute = level2.Attribute(cst_Damage);
-            if (!(damageAttribute != null && !string.IsNullOrEmpty(damageAttribute.Value) && int.TryParse(damageAttribute.Value, out level2Damage)))
-            {
-                failed = true;
-            }
-            var fireRateAttribute = level2.Attribute(cst_FireRate);
-            if (!(fireRateAttribute != null && !string.IsNullOrEmpty(fireRateAttribute.Value) && float.TryParse(fireRateAttribute.Value, out level2FireRate)))
-            {
-                failed = true;
-            }
-            var upgradPriceAttribute = level2.Attribute(cst_UpgradePrice);
-            if (!(upgradPriceAttribute != null && !string.IsNullOrEmpty(upgradPriceAttribute.Value) && int.TryParse(upgradPriceAttribute.Value, out level2UpgradePrice)))
-            {
-                failed = true;
-            }
-            var rangeAtribute = level2.Attribute(cst_Range);
-            if (!(rangeAtribute != null && !string.IsNullOrEmpty(rangeAtribute.Value) && float.TryParse(rangeAtribute.Value, out level2Range)))
-            {
-                failed = true;
-            }
-            levels[1] = new Declarations.TowerLevelData(level2UpgradePrice, level2Range, level2FireRate, level2Damage);
+            levels[1] = new Declarations.PlasmaLevelData(ReadInt(level2, cst_UpgradePrice, ref failed),
+                                                        ReadFloat(level2, cst_Range, ref failed),
+                                                        ReadFloat(level2, cst_FireRate, ref failed),
+                                                        ReadInt(level2, cst_Damage, ref failed),
+                                                        ReadFloat(level2, cst_ExplosionRange, ref failed));
         }
         else
         {
@@ -251,32 +211,76 @@ public class DataReader
         var level3 = towerData.Element(cst_Level3);
         if (level3 != null)
         {
-            var damageAttribute = level3.Attribute(cst_Damage);
-            if (!(damageAttribute != null && !string.IsNullOrEmpty(damageAttribute.Value) && int.TryParse(damageAttribute.Value, out level3Damage)))
-            {
-                failed = true;
-            }
-            var fireRateAttribute = level3.Attribute(cst_FireRate);
-            if (!(fireRateAttribute != null && !string.IsNullOrEmpty(fireRateAttribute.Value) && float.TryParse(fireRateAttribute.Value, out level3FireRate)))
-            {
-                failed = true;
-            }
-            var upgradPriceAttribute = level3.Attribute(cst_UpgradePrice);
-            if (!(upgradPriceAttribute != null && !string.IsNullOrEmpty(upgradPriceAttribute.Value) && int.TryParse(upgradPriceAttribute.Value, out level3UpgradePrice)))
-            {
-                failed = true;
-            }
-            var rangeAtribute = level3.Attribute(cst_Range);
-            if (!(rangeAtribute != null && !string.IsNullOrEmpty(rangeAtribute.Value) && float.TryParse(rangeAtribute.Value, out level3Range)))
-            {
-                failed = true;
-            }
-            levels[2] = new Declarations.TowerLevelData(level3UpgradePrice, level3Range, level3FireRate, level3Damage);
+            levels[2] = new Declarations.PlasmaLevelData(ReadInt(level3, cst_UpgradePrice, ref failed),
+                                                        ReadFloat(level3, cst_Range, ref failed),
+                                                        ReadFloat(level3, cst_FireRate, ref failed),
+                                                        ReadInt(level3, cst_Damage, ref failed),
+                                                        ReadInt(level3, cst_ExplosionRange, ref failed));
         }
         #endregion
 
         if (failed)
         {
+            Debug.Log("Filed to read plasma tower");
+            tower = null;
+            return false;
+        }
+        else
+        {
+            tower = new Declarations.PlasmaTower(assetData, levels);
+            return true;
+        }
+    }
+
+    private static bool ReadCanonData(XElement towerData, TowerAssetData assetData, out Declarations.TowerData tower)
+    {
+        var levels = new Declarations.TowerLevelData[3];
+
+        bool failed = false;
+        #region Level1
+        var level1 = towerData.Element(cst_Level1);
+        if (level1 != null)
+        {
+            levels[0] = new Declarations.TowerLevelData(ReadInt(level1, cst_Price, ref failed),
+                                                        ReadFloat(level1, cst_Range, ref failed),
+                                                        ReadFloat(level1, cst_FireRate, ref failed),
+                                                        ReadInt(level1, cst_Damage, ref failed));
+        }
+        else
+        {
+            failed = true;
+        }
+        #endregion
+
+        #region Level2
+        var level2 = towerData.Element(cst_Level2);
+        if (level2 != null)
+        {
+            levels[1] = new Declarations.TowerLevelData(ReadInt(level2, cst_UpgradePrice, ref failed),
+                                                        ReadFloat(level2, cst_Range, ref failed),
+                                                        ReadFloat(level2, cst_FireRate, ref failed),
+                                                        ReadInt(level2, cst_Damage, ref failed));
+        }
+        else
+        {
+            failed = true;
+        }
+        #endregion
+
+        #region Level3
+        var level3 = towerData.Element(cst_Level3);
+        if (level3 != null)
+        {
+            levels[2] = new Declarations.TowerLevelData(ReadInt(level3, cst_UpgradePrice, ref failed), 
+                                                        ReadFloat(level3, cst_Range, ref failed), 
+                                                        ReadFloat(level3, cst_FireRate, ref failed),
+                                                        ReadInt(level3, cst_Damage, ref failed));
+        }
+        #endregion
+
+        if (failed)
+        {
+            Debug.Log("Filed to read canon tower");
             tower = null;
             return false;
         }
@@ -285,6 +289,28 @@ public class DataReader
             tower = new Declarations.CanonTower(assetData, levels);
             return true;
         }
+    }
+
+    private static float ReadFloat(XElement element, string attributeName, ref bool failed)
+    {
+        var result = 0.0f;
+        var attribute = element.Attribute(attributeName);
+        if (!(attribute != null && !string.IsNullOrEmpty(attribute.Value) && float.TryParse(attribute.Value, out result)))
+        {
+            failed = true;
+        }
+        return result;
+    }
+
+    private static int ReadInt(XElement element, string attributeName, ref bool failed)
+    {
+        int result = 0;
+        var attribute = element.Attribute(attributeName);
+        if (!(attribute != null && !string.IsNullOrEmpty(attribute.Value) && int.TryParse(attribute.Value, out result)))
+        {
+            failed = true;
+        }
+        return result;
     }
     #endregion
 

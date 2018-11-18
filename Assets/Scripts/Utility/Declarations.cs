@@ -120,12 +120,12 @@ public class Declarations
 
     public class PlasmaLevelData : TowerLevelData
     {
-        public PlasmaLevelData(int price, float range, float fireRate, int damage, int explosionRange) : base(price, range, fireRate, damage)
+        public float ExplosionRange { get; protected set; }
+
+        public PlasmaLevelData(int price, float range, float fireRate, int damage, float explosionRange) : base(price, range, fireRate, damage)
         {
             ExplosionRange = explosionRange;
         }
-
-        public int ExplosionRange { get; protected set; }
     }
 
     public abstract class TowerData
@@ -264,7 +264,7 @@ public class Declarations
 
     public class PlasmaTower : TowerData
     {
-        public int CurrentExplosionRange
+        public float CurrentExplosionRange
         {
             get
             {

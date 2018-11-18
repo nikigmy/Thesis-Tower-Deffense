@@ -7,9 +7,14 @@
   <TowerData>
     <Canon>
       <Level1  Damage="15" FireRate="0.5" Price="100" Range="3"/>
-      <Level2  Damage="20" FireRate="0.5" UpgradePrice="1000" Range="3.5"/>
-      <Level3  Damage="30" FireRate="0.3" UpgradePrice="1500" Range="3.5"/>
+      <Level2  Damage="20" FireRate="0.5" UpgradePrice="100" Range="3.5"/>
+      <Level3  Damage="30" FireRate="0.3" UpgradePrice="150" Range="3.5"/>
     </Canon>
+    <Plasma>
+      <Level1  Damage="30" FireRate="1.5" Price="200" ExplosionRange="1" Range="4"/>
+      <Level2  Damage="35" FireRate="1" UpgradePrice="150" ExplosionRange="1.5" Range="3.5"/>
+      <Level3  Damage="50" FireRate="1" UpgradePrice="200" ExplosionRange="2" Range="3.5"/>
+    </Plasma>
   </TowerData>
 </Setup>
 <!--/*

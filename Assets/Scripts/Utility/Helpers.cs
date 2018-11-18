@@ -21,6 +21,9 @@ public class Helpers {
             case "Canon":
                 towerType = Declarations.TowerType.Canon;
                 break;
+            case "Plasma":
+                towerType = Declarations.TowerType.Plasma;
+                    break;
             default:
                 towerType = Declarations.TowerType.Canon;
                 return false;

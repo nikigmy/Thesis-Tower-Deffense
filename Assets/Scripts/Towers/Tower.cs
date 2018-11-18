@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public abstract class Tower : MonoBehaviour
 {
     protected Declarations.TowerData towerData;
+    [SerializeField]
     protected Enemy target;
 
     [SerializeField]
@@ -105,9 +106,16 @@ public abstract class Tower : MonoBehaviour
 
     protected bool CanShoot()
     {
-        var baseLookOffset = currentGunBase.rotation.eulerAngles.y - Quaternion.LookRotation(target.transform.position - currentGunBase.position).eulerAngles.y;
-        var towerLookOffset = currentGunHead.rotation.eulerAngles.x - Quaternion.LookRotation(target.transform.position - currentGunHead.position).eulerAngles.x;
-        return Math.Abs(baseLookOffset) + Math.Abs(towerLookOffset) <= 30;//good enough
+        if (target != null)
+        {
+            var baseLookOffset = currentGunBase.rotation.eulerAngles.y - Quaternion.LookRotation(target.transform.position - currentGunBase.position).eulerAngles.y;
+            var towerLookOffset = currentGunHead.rotation.eulerAngles.x - Quaternion.LookRotation(target.transform.position - currentGunHead.position).eulerAngles.x;
+            return Math.Abs(baseLookOffset) + Math.Abs(towerLookOffset) <= 30;//good enough
+        }
+        else
+        {
+            return false;
+        }
     }
 
     private void OnDrawGizmosSelected()
