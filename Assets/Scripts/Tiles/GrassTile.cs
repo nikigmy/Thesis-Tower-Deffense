@@ -14,9 +14,7 @@ public class GrassTile : Tile
     {
         rend = GetComponent<MeshRenderer>();
         normalMaterial = rend.material;
-
     }
-
 
     private void OnMouseEnter()
     {
@@ -38,7 +36,7 @@ public class GrassTile : Tile
             }
             else if (buildManager.Selling)
             {
-                DestroyTower();
+                DestroyTower(buildManager);
             }
             rend.material = glowMaterial;
         }
@@ -60,21 +58,20 @@ public class GrassTile : Tile
         }
         else if (currentTower != null && buildManager.SellClicked)
         {
-            DestroyTower();
+            DestroyTower(buildManager);
         }
     }
 
-    private void DestroyTower()
+    private void DestroyTower(BuildManager buildManager)
     {
-        currentTower.Destroy();
+        var tower = currentTower;
         currentTower = null;
+        buildManager.DestroyTower(currentTower);
     }
 
     private void BuildTower(BuildManager buildManager)
     {
-        GameManager.instance.SubstractMoney(buildManager.CurrentTower.CurrentPrice);
-        var createdTower = Instantiate(buildManager.CurrentTower.AssetData.Prefab, transform.position, Quaternion.identity, transform);
-        currentTower = createdTower.GetComponent<Tower>();
+        currentTower = buildManager.BuildTower(this);
     }
 
     private void OnMouseExit()

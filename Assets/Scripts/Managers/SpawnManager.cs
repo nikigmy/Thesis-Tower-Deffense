@@ -2,10 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SpawnManager : MonoBehaviour
 {
-    bool shouldInitNextWavePart = false;
     public List<Enemy> enemies;
 
     private Tile spawnTile;
@@ -33,7 +33,15 @@ public class SpawnManager : MonoBehaviour
     {
         enemies = new List<Enemy>();
     }
-    
+
+    private void Update()
+    {
+        if (currentWaveIndex == currentWaves.Length - 1 && enemies.Count == 0)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+    }
+
     public void SpawnWaves(Declarations.WaveData[] waves)
     {
         currentWaves = waves;
@@ -82,6 +90,16 @@ public class SpawnManager : MonoBehaviour
                 StartCoroutine(WaitBetweenWaves(delayBetweenWaves));
             }
         }
+    }
+
+    internal Enemy GetEnemyInFront(Enemy enemy)
+    {
+        var enemyIndex = enemies.IndexOf(enemy);
+        if (enemyIndex >= 1)
+        {
+            return enemies[enemyIndex - 1];
+        }
+        return null;
     }
 
     internal void EnemyDestroyed(Enemy enemy)

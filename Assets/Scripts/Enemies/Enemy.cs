@@ -7,16 +7,22 @@ public class Enemy : MonoBehaviour
     private Transform healthBar;
     private Slider healthSlider;
     private Text healthText;
-    private MeshRenderer capsuleRenderer;
+    private Renderer capsuleRenderer;
 
     private Declarations.EnemyData enemyData;
     private Tile currentTile;
     private Tile previousTile;
     private int currentHealth;
+    public float CurrentSpeed;
+    private const float distanceFromFrontEnemy = 1.1f;
 
     private void Awake()
     {
         capsuleRenderer = transform.GetChild(0).GetComponent<MeshRenderer>();
+        if(capsuleRenderer == null)
+        {
+            capsuleRenderer = transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
+        }
         healthBar = transform.GetChild(1);
         healthSlider = healthBar.transform.GetChild(0).GetComponent<Slider>();
         healthText = healthBar.transform.GetChild(1).GetComponent<Text>();
@@ -57,13 +63,45 @@ public class Enemy : MonoBehaviour
                 return;
             }
             var dir = currentTile.transform.position - transform.position;
-            if (dir.magnitude < Time.deltaTime * enemyData.Speed)
+            
+            var baseLookRotation = Quaternion.LookRotation(dir);
+            var baseRotation = Quaternion.Lerp(transform.rotation, baseLookRotation, Time.deltaTime * 4).eulerAngles;
+            transform.rotation = Quaternion.Euler(0, baseRotation.y, 0);
+
+            var speed = enemyData.Speed;
+            var enemyInFront = GameManager.instance.SpawnManager.GetEnemyInFront(this);
+            if(enemyInFront != null)
+            {
+                if (Vector3.Distance(transform.position, enemyInFront.transform.position) <= distanceFromFrontEnemy)
+                {
+                    if (enemyInFront.CurrentSpeed < CurrentSpeed)
+                    {
+                        CurrentSpeed = enemyInFront.CurrentSpeed;
+                    }
+                }
+                else
+                {
+                    if(CurrentSpeed < enemyData.Speed)
+                    {
+                        CurrentSpeed = enemyData.Speed;
+                    }
+                }
+            }
+            else
+            {
+                if (CurrentSpeed < enemyData.Speed)
+                {
+                    CurrentSpeed = enemyData.Speed;
+                }
+            }
+
+            if (dir.magnitude < Time.deltaTime * CurrentSpeed)
             {
                 transform.position = currentTile.transform.position;
             }
             else
             {
-                transform.Translate((currentTile.transform.position - transform.position).normalized * Time.deltaTime * enemyData.Speed);
+                transform.Translate(dir.normalized * Time.deltaTime * CurrentSpeed, Space.World);
             }
         }
 

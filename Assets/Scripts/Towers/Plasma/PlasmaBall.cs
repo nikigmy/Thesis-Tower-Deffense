@@ -8,11 +8,13 @@ public class PlasmaBall : Projectile {
     private float speed = 15;//set in data later
     private float explosionRange;
     private int explosionDamage;
+    [SerializeField]
+    private GameObject explosionPrefab;
 
     public override void SetTarget(Declarations.IProjectileData projectileData)
     {
         var data = (Declarations.PlasmaBallData)projectileData;
-        this.explosionDamage = data.ExprosionDamage;
+        this.explosionDamage = data.ExplosionDamage;
         this.target = data.Target;
         this.explosionRange = data.ExplosionRange;
         move = true;
@@ -24,21 +26,13 @@ public class PlasmaBall : Projectile {
         {
             if (target != null)
             {
-                var dir = target.GetCenter() - transform.position;
+                var targetCenter = target.GetCenter();
+                var dir = targetCenter - transform.position;
                 var currSpeed = speed * Time.deltaTime;
 
                 if (dir.magnitude <= currSpeed)
                 {
-                    for (int i = 0; i < GameManager.instance.SpawnManager.enemies.Count; i++)
-                    {
-                        var enemy = GameManager.instance.SpawnManager.enemies[i];
-                        var distance = Vector3.Distance(enemy.transform.position, target.transform.position);
-                        if (distance < explosionRange)
-                        {
-                            enemy.DealDamage((int)Mathf.Round(explosionDamage * (explosionRange - distance) / explosionRange));
-                        }
-                    }
-                    Destroy(gameObject);
+                    Explode(target.transform.position, targetCenter);
                 }
                 else
                 {
@@ -50,5 +44,29 @@ public class PlasmaBall : Projectile {
                 Destroy(gameObject);
             }
         }
+    }
+
+    private void Explode(Vector3 targetPosition, Vector3 targetCenter)
+    {
+        PseudoVolumetricExplosion explosion = Instantiate(explosionPrefab, targetPosition, Quaternion.identity).GetComponent<PseudoVolumetricExplosion>();
+        explosion.SetRadius(explosionRange);
+
+        for (int i = 0; i < GameManager.instance.SpawnManager.enemies.Count; i++)
+        {
+            var enemy = GameManager.instance.SpawnManager.enemies[i];
+            if (enemy != null)
+            {
+                var distance = Vector3.Distance(enemy.GetCenter(), targetCenter);
+                if (distance < explosionRange)
+                {
+                    enemy.DealDamage((int)Mathf.Round(explosionDamage * (explosionRange - distance) / explosionRange));
+                }
+            }
+            if(enemy == null)
+            {
+                i--;
+            }
+        }
+        Destroy(gameObject);
     }
 }

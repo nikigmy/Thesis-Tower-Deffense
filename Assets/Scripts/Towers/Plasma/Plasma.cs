@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,41 +10,74 @@ public class Plasma : Tower
     private GameObject plasmaBall;
     [SerializeField]
     private bool charging = false;
-    Coroutine currentCharge;
+    [SerializeField]
+    private bool coolingOff = false;
+    private DateTime timeOfChargeStart;
+    private float timeLeftFromCoolOff;
+    private float timeLeftFromCharge;
 
     private ParticleSystem currentFx;
 
     private void Awake()
     {
         towerData = Def.Instance.TowerDictionary[Declarations.TowerType.Plasma];
-        //Invoke("StartCharge", 2);
     }
-
-    //private void StartCharge()
-    //{
-    //    Debug.Log("Started");
-    //    StartCoroutine(Charge());
-    //}
 
     private void Update()
     {
-        if (target != null && Vector3.Distance(target.transform.position, transform.position) > towerData.CurrentRange)
+        if (target == null || (target != null && Vector3.Distance(target.transform.position, transform.position) > towerData.CurrentRange))//change target
         {
-            charging = false;
-            if(currentCharge != null)
+            target = null;
+            if (charging)
             {
-                StopCoroutine(currentCharge);
-                currentFx.Stop();
-                target = null;
+                CoolOff();
+            }
+        }
+
+        if (coolingOff)
+        {
+            timeLeftFromCoolOff -= Time.deltaTime;
+            if (timeLeftFromCoolOff <= 0)
+            {
+                coolingOff = false;
+            }
+        }
+        if (charging && !coolingOff)
+        {
+            if (target != null)
+            {
+                timeLeftFromCharge -= Time.deltaTime;
+                if (timeLeftFromCharge <= 0)
+                {
+                    if (CanShoot())
+                    {
+                        currentFx.Clear();
+                        currentFx.Stop();
+                        charging = false;
+                        Fire();
+                    }
+                    else
+                    {
+                        CoolOff();
+                    }
+                }
+            }
+            else
+            {
+                CoolOff();
             }
         }
 
         if (target != null)
         {
             LookAtTarget();
-            if (CanShoot() && !charging)
+            if (CanShoot() && !charging && !coolingOff)
             {
-                currentCharge = StartCoroutine(Charge());
+                charging = true;
+                timeLeftFromCharge = towerData.CurrentFireRate;
+                currentFx.Play(true);
+                var main = currentFx.main;
+                main.simulationSpeed = 1;
             }
         }
         else
@@ -52,25 +86,14 @@ public class Plasma : Tower
         }
     }
 
-    IEnumerator Charge()
+    private void CoolOff()
     {
-        Debug.Log("Plasma gun '" + gameObject.name + "' charging");
-        charging = true;
-        currentFx.Play(true);
-        yield return new WaitForSeconds(towerData.CurrentFireRate);
-
-        if (charging)
-        {
-            currentFx.Stop();
-            if (CanShoot())
-            {
-                Fire();
-            }
-            else
-            {
-                Debug.Log("Plasma gun '" + gameObject.name + "' cant shoot at target");
-            }
-        }
+        currentFx.Stop();
+        coolingOff = true;
+        charging = false;
+        var main = currentFx.main;
+        main.simulationSpeed = 2;
+        timeLeftFromCoolOff = (towerData.CurrentFireRate - timeLeftFromCharge) / 2;
     }
 
     private void Fire()

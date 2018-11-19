@@ -2,7 +2,8 @@
   <GeneralData>
   </GeneralData>
   <EnemyData>
-    <Capsule Speed="2" Health="100" Damage="1" Award="100"/>
+    <Capsule Speed="3" Health="100" Damage="1" Award="100"/>
+    <ElementalGolem Speed="1.5" Health="1000" Damage="5" Award="500"/>
   </EnemyData>
   <TowerData>
     <Canon>
@@ -11,18 +12,18 @@
       <Level3  Damage="30" FireRate="0.3" UpgradePrice="150" Range="3.5"/>
     </Canon>
     <Plasma>
-      <Level1  Damage="30" FireRate="1.5" Price="200" ExplosionRange="1" Range="4"/>
-      <Level2  Damage="35" FireRate="1" UpgradePrice="150" ExplosionRange="1.5" Range="3.5"/>
-      <Level3  Damage="50" FireRate="1" UpgradePrice="200" ExplosionRange="2" Range="3.5"/>
+      <Level1  Damage="35" FireRate="1.75" Price="200" ExplosionRange="1" Range="4.5"/>
+      <Level2  Damage="40" FireRate="1.5" UpgradePrice="150" ExplosionRange="1.25" Range="4.5"/>
+      <Level3  Damage="50" FireRate="1.25" UpgradePrice="200" ExplosionRange="1.5" Range="4.5"/>
     </Plasma>
   </TowerData>
 </Setup>
 <!--/*
 * Canon   Damage, FireRate
 * Plazma  Damage, ChargeTime, ExplosionRange
+* Tesla   Damage, FireRate
 * Gatling Damage, FireRate
 * Gauss   Damage, ChargeTime, LaserRange
-* Tesla   Damage, FireRate
 * Mortar  Damage, FireRate, ExplosionRange
 *
 * Crystal Damage, FireRate, SlowEffect

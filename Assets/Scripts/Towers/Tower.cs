@@ -20,6 +20,21 @@ public abstract class Tower : MonoBehaviour
     protected Transform currentGunHead;
     protected Transform currentFirePoint;
 
+    public Declarations.TowerType Type
+    {
+        get
+        {
+            if(towerData != null)
+            {
+                return towerData.Type;
+            }
+            else
+            {
+                return Declarations.TowerType.Canon;
+            }
+        }
+    }
+
     private void Start()
     {
         currentGun = Level1Gun;

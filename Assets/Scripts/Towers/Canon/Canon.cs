@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Canon : Tower {
+public class Canon : Tower
+{
 
     [SerializeField]
     private GameObject cannonBall;
@@ -18,12 +19,12 @@ public class Canon : Tower {
     private void Update()
     {
         timeFromPreviousShot += Time.deltaTime;
-        if(target != null && (target.transform.position - transform.position).magnitude > towerData.CurrentRange)
+        if (target != null && (target.transform.position - transform.position).magnitude > towerData.CurrentRange)
         {
             target = null;
         }
 
-        if(target != null)
+        if (target != null)
         {
             LookAtTarget();
             if (CanShoot() && timeFromPreviousShot >= (towerData as Declarations.CanonTower).CurrentFireRate)
@@ -41,7 +42,7 @@ public class Canon : Tower {
     protected override void UpdateGunPartsReferences()
     {
         base.UpdateGunPartsReferences();
-        
+
         currentFirePoint = currentGunHead.GetChild(0);
     }
 

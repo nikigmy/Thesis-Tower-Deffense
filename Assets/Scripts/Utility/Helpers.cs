@@ -42,6 +42,9 @@ public class Helpers {
             case "Capsule":
                 enemyType = Declarations.EnemyType.Capsule;
                 break;
+            case "ElementalGolem":
+                enemyType = Declarations.EnemyType.Golem;
+                break;
             default:
                 enemyType = Declarations.EnemyType.Capsule;
                 return false;

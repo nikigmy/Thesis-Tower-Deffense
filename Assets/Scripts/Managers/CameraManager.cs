@@ -11,9 +11,11 @@ public class CameraManager : MonoBehaviour
 
     private Vector3 minPositions;
     private Vector3 maxPositions;
+    bool debugging = false;
     // Use this for initialization
     void Start()
     {
+        //AnimationCurve.EaseInOut()
         var currentLevel = GameManager.instance.CurrentLevel;
         var centerOfField = Helpers.GetPositionForTile(currentLevel.MapSize.y / 2, currentLevel.MapSize.x / 2);
         centerOfField.y = transform.position.y;
@@ -44,19 +46,19 @@ public class CameraManager : MonoBehaviour
         }
 
         var mousePos = Input.mousePosition;
-        if (mousePos.x >= Screen.width - panBorderThickness && transform.position.x < maxPositions.x)//right
+        if (mousePos.x >= Screen.width - panBorderThickness && transform.position.x < maxPositions.x && (mousePos.x < Screen.width || !debugging))//right
         {
             vectorToMove += Vector3.right * Def.Instance.CameraMoveSpeed;
         }
-        if (mousePos.x <= panBorderThickness && transform.position.x > minPositions.x)//left
+        if (mousePos.x <= panBorderThickness && transform.position.x > minPositions.x && (mousePos.x > 0 || !debugging))//left
         {
             vectorToMove -= Vector3.right * Def.Instance.CameraMoveSpeed;
         }
-        if (mousePos.y >= Screen.height - panBorderThickness && transform.position.z < maxPositions.z)//up
+        if (mousePos.y >= Screen.height - panBorderThickness && transform.position.z < maxPositions.z && (mousePos.y < Screen.height || !debugging))//up
         {
             vectorToMove += Vector3.forward * Def.Instance.CameraMoveSpeed;
         }
-        if (mousePos.y <= panBorderThickness && transform.position.z > minPositions.z)//down
+        if (mousePos.y <= panBorderThickness && transform.position.z > minPositions.z && (mousePos.y > 0 || !debugging))//down
         {
             vectorToMove -= Vector3.forward * Def.Instance.CameraMoveSpeed;
         }

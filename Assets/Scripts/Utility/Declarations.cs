@@ -22,7 +22,8 @@ public class Declarations
     }
     public enum EnemyType
     {
-        Capsule
+        Capsule,
+        Golem
     }
 
     public enum WavePartType
@@ -164,9 +165,9 @@ public class Declarations
                 switch (CurrentLevel)
                 {
                     case 1:
-                        return Levels[1].Price;
+                        return Levels[1].Price * (10 + GameManager.instance.BuildManager.GetBuiltTowersCount(Type));
                     case 2:
-                        return Levels[2].Price;
+                        return Levels[2].Price * (10 + GameManager.instance.BuildManager.GetBuiltTowersCount(Type));
                     default:
                         return 0;
                 }
@@ -239,18 +240,21 @@ public class Declarations
         
         public void Upgrade()
         {
-            if (CurrentLevel <= 2)
+            if (GameManager.instance.Money >= CurrentUpgradePrice)
             {
-                GameManager.instance.SubstractMoney(CurrentUpgradePrice);
-                CurrentLevel++;
-                if (Upgraded != null)
+                if (CurrentLevel <= 2)
                 {
-                    Upgraded.Invoke();
+                    GameManager.instance.SubstractMoney(CurrentUpgradePrice);
+                    CurrentLevel++;
+                    if (Upgraded != null)
+                    {
+                        Upgraded.Invoke();
+                    }
                 }
-            }
-            else
-            {
-                Debug.Log("Cant upgrade tower further");
+                else
+                {
+                    Debug.Log("Cant upgrade tower further");
+                }
             }
         }
     }
@@ -334,12 +338,12 @@ public class Declarations
 
     public class PlasmaBallData : TargetableProjectileData
     {
-        public int ExprosionDamage;
+        public int ExplosionDamage;
         public float ExplosionRange;
 
         public PlasmaBallData(Enemy target, int exprosionDamage, float explosionRange) : base(target)
         {
-            ExprosionDamage = exprosionDamage;
+            ExplosionDamage = exprosionDamage;
             ExplosionRange = explosionRange;
         }
     }

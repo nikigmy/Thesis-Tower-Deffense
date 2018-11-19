@@ -215,7 +215,7 @@ public class DataReader
                                                         ReadFloat(level3, cst_Range, ref failed),
                                                         ReadFloat(level3, cst_FireRate, ref failed),
                                                         ReadInt(level3, cst_Damage, ref failed),
-                                                        ReadInt(level3, cst_ExplosionRange, ref failed));
+                                                        ReadFloat(level3, cst_ExplosionRange, ref failed));
         }
         #endregion
 
@@ -320,6 +320,8 @@ public class DataReader
         switch (enemyType)
         {
             case Declarations.EnemyType.Capsule:
+                return ReadCapsuleData(enemyData, assetData, out enemy);
+            case Declarations.EnemyType.Golem:
                 return ReadCapsuleData(enemyData, assetData, out enemy);
             default:
                 Debug.Log("Unknown enemy type");
