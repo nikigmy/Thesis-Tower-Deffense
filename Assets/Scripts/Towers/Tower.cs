@@ -151,4 +151,10 @@ public abstract class Tower : MonoBehaviour
         GameManager.instance.AddMoney(towerData.CurrentPrice / 2);
         Destroy(gameObject);
     }
+
+    protected bool LostTarget()
+    {
+        return (target != null && Vector3.Distance(target.transform.position, transform.position) > towerData.CurrentRange) || (target != null && !target.Alive);
+    }
+
 }

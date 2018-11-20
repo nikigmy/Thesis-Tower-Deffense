@@ -449,7 +449,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4197512167460950}
   - component: {fileID: 95324566353563160}
-  - component: {fileID: 114040245704130958}
+  - component: {fileID: 114526664868617648}
   m_Layer: 0
   m_Name: ElementalGolem
   m_TagString: Untagged
@@ -1145,8 +1145,8 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1699768608712974}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4722941077126342}
@@ -1871,7 +1871,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &114040245704130958
+--- !u!114 &114526664868617648
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1879,9 +1879,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1631163036372852}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1dedd52586da1224bb1d8f312153f213, type: 3}
+  m_Script: {fileID: 11500000, guid: 5dd866a87c98d2c4b8831b41d66a3c96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CurrentSpeed: 0
 --- !u!114 &114576501759654562
 MonoBehaviour:
   m_ObjectHideFlags: 1

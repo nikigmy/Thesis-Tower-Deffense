@@ -25,13 +25,13 @@ public class Plasma : Tower
 
     private void Update()
     {
-        if (target == null || (target != null && Vector3.Distance(target.transform.position, transform.position) > towerData.CurrentRange))//change target
+        if (LostTarget())//change target
         {
             target = null;
-            if (charging)
-            {
-                CoolOff();
-            }
+        }
+        if (target == null && charging)
+        {
+            CoolOff();
         }
 
         if (coolingOff)

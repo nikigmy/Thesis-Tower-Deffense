@@ -19,7 +19,7 @@ public class Canon : Tower
     private void Update()
     {
         timeFromPreviousShot += Time.deltaTime;
-        if (target != null && (target.transform.position - transform.position).magnitude > towerData.CurrentRange)
+        if (LostTarget())
         {
             target = null;
         }

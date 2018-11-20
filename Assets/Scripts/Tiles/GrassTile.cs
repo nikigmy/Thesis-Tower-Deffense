@@ -65,7 +65,6 @@ public class GrassTile : Tile
     private void DestroyTower(BuildManager buildManager)
     {
         var tower = currentTower;
-        currentTower = null;
         buildManager.DestroyTower(currentTower);
     }
 

@@ -4,17 +4,18 @@ using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
-    private Transform healthBar;
-    private Slider healthSlider;
-    private Text healthText;
-    private Renderer capsuleRenderer;
+    protected Transform healthBar;
+    protected Slider healthSlider;
+    protected Text healthText;
+    protected Renderer capsuleRenderer;
 
-    private Declarations.EnemyData enemyData;
-    private Tile currentTile;
-    private Tile previousTile;
-    private int currentHealth;
+    protected Declarations.EnemyData enemyData;
+    protected Tile currentTile;
+    protected Tile previousTile;
+    protected int currentHealth;
     public float CurrentSpeed;
     private const float distanceFromFrontEnemy = 1.1f;
+    public bool Alive = true;
 
     private void Awake()
     {
@@ -45,46 +46,49 @@ public class Enemy : MonoBehaviour
     {
         healthText.text = currentHealth.ToString();
         healthSlider.value = (float)currentHealth / enemyData.Health;
+
+        healthBar.LookAt(Camera.main.transform);
     }
 
     private void Update()
     {
-        if ((currentTile.transform.position - transform.position).magnitude <= 0.3)
+        if (Alive)
         {
-            FindNextTile();
-        }
-        if (currentTile != null)
-        {
-            if(currentTile.Type == Declarations.TileType.Objective)
+            if ((currentTile.transform.position - transform.position).magnitude <= 0.3)
             {
-                GameManager.instance.DealDamage(enemyData.Damage);
-                GameManager.instance.SpawnManager.EnemyDestroyed(this);
-                DestroyImmediate(gameObject);
-                return;
+                FindNextTile();
             }
-            var dir = currentTile.transform.position - transform.position;
-            
-            var baseLookRotation = Quaternion.LookRotation(dir);
-            var baseRotation = Quaternion.Lerp(transform.rotation, baseLookRotation, Time.deltaTime * 4).eulerAngles;
-            transform.rotation = Quaternion.Euler(0, baseRotation.y, 0);
-
-            var speed = enemyData.Speed;
-            var enemyInFront = GameManager.instance.SpawnManager.GetEnemyInFront(this);
-            if(enemyInFront != null)
+            if (currentTile != null)
             {
-                if (Vector3.Distance(transform.position, enemyInFront.transform.position) <= distanceFromFrontEnemy)
+                if (currentTile.Type == Declarations.TileType.Objective)
                 {
-                    if (enemyInFront.CurrentSpeed < CurrentSpeed)
-                    {
-                        CurrentSpeed = enemyInFront.CurrentSpeed;
-                    }
+                    GameManager.instance.DealDamage(enemyData.Damage);
+                    GameManager.instance.SpawnManager.EnemyDestroyed(this);
+                    Destroy(gameObject);
+                    return;
                 }
-                else
+                Move();
+            }
+        }
+    }
+
+    protected void Move()
+    {
+        var dir = currentTile.transform.position - transform.position;
+
+        var baseLookRotation = Quaternion.LookRotation(dir);
+        var baseRotation = Quaternion.Lerp(transform.rotation, baseLookRotation, Time.deltaTime * 4).eulerAngles;
+        transform.rotation = Quaternion.Euler(0, baseRotation.y, 0);
+
+        var speed = enemyData.Speed;
+        var enemyInFront = GameManager.instance.SpawnManager.GetEnemyInFront(this);
+        if (enemyInFront != null)
+        {
+            if (Vector3.Distance(transform.position, enemyInFront.transform.position) <= distanceFromFrontEnemy)
+            {
+                if (enemyInFront.CurrentSpeed < CurrentSpeed)
                 {
-                    if(CurrentSpeed < enemyData.Speed)
-                    {
-                        CurrentSpeed = enemyData.Speed;
-                    }
+                    CurrentSpeed = enemyInFront.CurrentSpeed;
                 }
             }
             else
@@ -94,18 +98,23 @@ public class Enemy : MonoBehaviour
                     CurrentSpeed = enemyData.Speed;
                 }
             }
-
-            if (dir.magnitude < Time.deltaTime * CurrentSpeed)
+        }
+        else
+        {
+            if (CurrentSpeed < enemyData.Speed)
             {
-                transform.position = currentTile.transform.position;
-            }
-            else
-            {
-                transform.Translate(dir.normalized * Time.deltaTime * CurrentSpeed, Space.World);
+                CurrentSpeed = enemyData.Speed;
             }
         }
 
-        healthBar.LookAt(Camera.main.transform);
+        if (dir.magnitude < Time.deltaTime * CurrentSpeed)
+        {
+            transform.position = currentTile.transform.position;
+        }
+        else
+        {
+            transform.Translate(dir.normalized * Time.deltaTime * CurrentSpeed, Space.World);
+        }
     }
 
     internal void DealDamage(int damage)
@@ -113,9 +122,7 @@ public class Enemy : MonoBehaviour
         currentHealth -= damage;
         if (currentHealth <= 0)
         {
-            GameManager.instance.SpawnManager.EnemyDestroyed(this);
-            GameManager.instance.AddMoney(enemyData.Award);
-            DestroyImmediate(gameObject);
+            Died();
         }
         else
         {
@@ -169,5 +176,13 @@ public class Enemy : MonoBehaviour
                 previousTile = temp;
             }
         }
+    }
+
+    protected virtual void Died()
+    {
+        Alive = false;
+        GameManager.instance.SpawnManager.EnemyDestroyed(this);
+        GameManager.instance.AddMoney(enemyData.Award);
+        Destroy(gameObject);
     }
 }
