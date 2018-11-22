@@ -52,6 +52,7 @@ public class Declarations
         public int StartMoney { get; private set; }
         public int StartHealth { get; private set; }
         public WaveData[] Waves { get; private set; }
+        public Sprite previewSprite { get; private set; }
 
         public LevelData(IntVector2 mapSize, TileType[,] map, WaveData[] waves, int startMoney, int startHealth)
         {
@@ -60,6 +61,7 @@ public class Declarations
             StartMoney = startMoney;
             StartHealth = startHealth;
             Waves = waves;
+            previewSprite = TextureGenerator.GetTextureForLevel(this);
         }
     }
 
@@ -109,7 +111,7 @@ public class Declarations
         public float FireRate { get; protected set; }
 
         public int Damage { get; private set; }
-        
+
         public TowerLevelData(int price, float range, float fireRate, int damage)
         {
             Price = price;
@@ -135,7 +137,7 @@ public class Declarations
 
         public TowerType Type { get; protected set; }
         public TowerAssetData AssetData;
-        
+
         public TowerLevelData[] Levels { get; protected set; }
 
         public int CurrentLevel { get; protected set; }
@@ -237,7 +239,7 @@ public class Declarations
 
             Levels = levels;
         }
-        
+
         public void Upgrade()
         {
             if (GameManager.instance.Money >= CurrentUpgradePrice)

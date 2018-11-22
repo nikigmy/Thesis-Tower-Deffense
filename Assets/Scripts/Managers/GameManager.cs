@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-
+    public MainMenu MainMenu;
     public static GameManager instance;
     [Header("Setup")]
     public BuildManager BuildManager;
@@ -38,18 +38,26 @@ public class GameManager : MonoBehaviour
 
     private void SceneLoaded(Scene scene, LoadSceneMode loadMode)
     {
-        LooeadDependencies();
+        if (scene.name == "Level")
+        {
+            LooeadDependencies(true);
 
-        MapGenerator.GenerateMap(CurrentLevel);
-        SpawnManager.SpawnWaves(CurrentLevel.Waves);
+            MapGenerator.GenerateMap(CurrentLevel);
+            SpawnManager.SpawnWaves(CurrentLevel.Waves);
 
-        UIManager.InitUI();
-        SpawnManager.LevelCompleted.AddListener(LevelCompleted);
+            UIManager.InitUI();
+            SpawnManager.LevelCompleted.AddListener(LevelCompleted);
 
-        LevelLoaded.Invoke();
+            LevelLoaded.Invoke();
+        }
+        else if(scene.name == "MainMenu")
+        {
+            LooeadDependencies(false);
+            MainMenu.LoadLevelSelector();
+        }
     }
 
-    void LoadLevel(int index)
+    public void LoadLevel(int index)
     {
         CurrentLevel = Def.Instance.Levels[index];
         Health = CurrentLevel.StartHealth;
@@ -62,12 +70,19 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(2, LoadSceneMode.Single);
     }
 
-    private void LooeadDependencies()
+    private void LooeadDependencies(bool level)
     {
-        BuildManager = FindObjectOfType<BuildManager>();
-        MapGenerator = FindObjectOfType<MapGenerator>();
-        SpawnManager = FindObjectOfType<SpawnManager>();
-        UIManager = FindObjectOfType<UIManager>();
+        if (level)
+        {
+            BuildManager = FindObjectOfType<BuildManager>();
+            MapGenerator = FindObjectOfType<MapGenerator>();
+            SpawnManager = FindObjectOfType<SpawnManager>();
+            UIManager = FindObjectOfType<UIManager>();
+        }
+        else
+        {
+            MainMenu = FindObjectOfType<MainMenu>();
+        }
     }
 
     public void SubstractMoney(int value)

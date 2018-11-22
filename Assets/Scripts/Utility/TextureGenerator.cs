@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class TextureGenerator
 {
-    public static Sprite GetTextureForLevel(Declarations.LevelData levelData, int HexHeight = 10)
+    public static Sprite GetTextureForLevel(Declarations.LevelData levelData)
     {
+        int HexHeight = 10;
         var width = (int)HexToPoints(HexHeight, 1, levelData.MapSize.x - 1)[4].X;
         var height = (int)HexToPoints(HexHeight, levelData.MapSize.y - 1, 0)[0].Y;
         var pointForHexes = FillPointForHexes(levelData, HexHeight);
