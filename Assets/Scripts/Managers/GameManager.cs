@@ -1,92 +1,97 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour {
+public class GameManager : MonoBehaviour
+{
 
     public static GameManager instance;
     [Header("Setup")]
     public BuildManager BuildManager;
     public MapGenerator MapGenerator;
     public SpawnManager SpawnManager;
+    public UIManager UIManager;
     [SerializeField]
     private TowerAssetData[] towersAssetData;
     [SerializeField]
     private EnemyAssetData[] enemyAssetData;
-    [Header("UI")]
-    [SerializeField]
-    private Shop shop;
-    [SerializeField]
-    private InformationPanel informationPanel;
-    [SerializeField]
-    private UnityEngine.UI.Text moneyText;
-    [SerializeField]
-    private UnityEngine.UI.Text healthText;
 
     public Declarations.LevelData CurrentLevel;
-    public int Health;
-    public int Money;
+
     public UnityEvent MoneyChanged;
+    public UnityEvent HealthChanged;
+    public UnityEvent LevelLoaded;
     public bool Paused = false;
     public bool GameSpedUp = false;
 
+    public int Health;
+    public int Money;
+
     private void Awake()
     {
+        DontDestroyOnLoad(this);
         instance = this;
         Def.Instance.LoadData(towersAssetData, enemyAssetData);
-        CurrentLevel = Def.Instance.Levels[0];
-        Health = CurrentLevel.StartHealth;
-        Money = CurrentLevel.StartMoney;
-        moneyText.text = "Gold:" + Money;
-        healthText.text = "Health:" + Health;
+        SceneManager.sceneLoaded += SceneLoaded;
     }
 
-    // Use this for initialization
-    void Start () {
+    private void SceneLoaded(Scene scene, LoadSceneMode loadMode)
+    {
+        LooeadDependencies();
+
         MapGenerator.GenerateMap(CurrentLevel);
-        shop.GenerateShop();
         SpawnManager.SpawnWaves(CurrentLevel.Waves);
+
+        UIManager.InitUI();
+        SpawnManager.LevelCompleted.AddListener(LevelCompleted);
+
+        LevelLoaded.Invoke();
+    }
+
+    void LoadLevel(int index)
+    {
+        CurrentLevel = Def.Instance.Levels[index];
+        Health = CurrentLevel.StartHealth;
+        Money = CurrentLevel.StartMoney;
+
+        Time.timeScale = 1;
+        GameSpedUp = false;
+        Paused = false;
+
+        SceneManager.LoadScene(2, LoadSceneMode.Single);
+    }
+
+    private void LooeadDependencies()
+    {
+        BuildManager = FindObjectOfType<BuildManager>();
+        MapGenerator = FindObjectOfType<MapGenerator>();
+        SpawnManager = FindObjectOfType<SpawnManager>();
+        UIManager = FindObjectOfType<UIManager>();
     }
 
     public void SubstractMoney(int value)
     {
         Money -= value;
         MoneyChanged.Invoke();
-        moneyText.text = "Gold:" + Money;
     }
 
     public void AddMoney(int value)
     {
         Money += value;
         MoneyChanged.Invoke();
-        moneyText.text = "Gold:" + Money;
-    }
-
-    public void ShopItemClicked(Declarations.TowerData towerData)
-    {
-        informationPanel.gameObject.SetActive(true);
-        informationPanel.LoadTowerData(towerData);
-        BuildManager.CurrentTower = towerData;
-        BuildManager.SellClicked = false;
-    }
-
-    public void SellItemClicked()
-    {
-        informationPanel.gameObject.SetActive(false);
-        BuildManager.CurrentTower = null;
-        BuildManager.SellClicked = true;
     }
 
     public void DealDamage(int value)
     {
         Health -= value;
-        if(Health <= 0)
+        if (Health <= 0)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
         else
         {
-            healthText.text = "Health:" + Health;
+            HealthChanged.Invoke();
         }
     }
 
@@ -108,7 +113,12 @@ public class GameManager : MonoBehaviour {
         }
         else
         {
-            Time.timeScale = Time.timeScale = GameSpedUp ? 2 : 1;
+            Time.timeScale = GameSpedUp ? 2 : 1;
         }
+    }
+
+    private void LevelCompleted()
+    {
+        UIManager.ShowVictoryScreen();
     }
 }

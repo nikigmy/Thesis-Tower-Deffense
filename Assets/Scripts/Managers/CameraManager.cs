@@ -5,17 +5,27 @@ using UnityEngine.EventSystems;
 
 public class CameraManager : MonoBehaviour
 {
-
     private const string mouseCroll = "Mouse ScrollWheel";
     private const int panBorderThickness = 10;
 
     private Vector3 minPositions;
     private Vector3 maxPositions;
     bool debugging = false;
+    bool init;
     // Use this for initialization
     void Start()
     {
-        //AnimationCurve.EaseInOut()
+        init = false;
+        GameManager.instance.LevelLoaded.AddListener(LevelLoaded);
+    }
+
+    private void LevelLoaded()
+    {
+        InitCamera();
+    }
+
+    private void InitCamera()
+    {
         var currentLevel = GameManager.instance.CurrentLevel;
         var centerOfField = Helpers.GetPositionForTile(currentLevel.MapSize.y / 2, currentLevel.MapSize.x / 2);
         centerOfField.y = transform.position.y;
@@ -24,12 +34,13 @@ public class CameraManager : MonoBehaviour
         var bottomOfField = Helpers.GetPositionForTile(currentLevel.MapSize.y, currentLevel.MapSize.x);
         minPositions = new Vector3(0, 3, bottomOfField.z - 15);
         maxPositions = new Vector3(bottomOfField.x, Def.Instance.MaxCameraHeight, -10);
+        init = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (EventSystem.current.IsPointerOverGameObject())
+        if (!init || EventSystem.current.IsPointerOverGameObject())
         {
             return;
         }

@@ -2,10 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 public class SpawnManager : MonoBehaviour
 {
+    public UnityEvent LevelCompleted;
     public List<Enemy> enemies;
 
     private Tile spawnTile;
@@ -33,15 +35,7 @@ public class SpawnManager : MonoBehaviour
     {
         enemies = new List<Enemy>();
     }
-
-    private void Update()
-    {
-        if (currentWaveIndex == currentWaves.Length - 1 && enemies.Count == 0)
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
-    }
-
+    
     public void SpawnWaves(Declarations.WaveData[] waves)
     {
         currentWaves = waves;
@@ -105,6 +99,10 @@ public class SpawnManager : MonoBehaviour
     internal void EnemyDestroyed(Enemy enemy)
     {
         enemies.Remove(enemy);
+        if(currentWaveIndex == currentWaves.Length - 1  && currentWavePartIndex == currentWave.WaveParts.Length && enemies.Count == 0)
+        {
+            LevelCompleted.Invoke();
+        }
     }
 
     IEnumerator WaitForDelay(float delay)

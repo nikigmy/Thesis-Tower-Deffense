@@ -1,0 +1,212 @@
+<Level StartMoney="500" StartHealth="10">
+  <Map Width="44" Height="26">
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx////xxxxxxx///
+    xxx/////////xxxxxxxxxxxx/////////xxx$$xxx///
+    xxx///////////////////////////////xx$$$xx///
+    xxx//###############################$$xx////
+    xxx//#//////////////////////////////xxxx////
+    xxx//#////////xxxxxxxxxxxxxxxxxxxxxx////////
+    xxx//#///////////xxxxxxxxxxx////////////###*
+    xxx//#/////////////////////////////////#////
+    xxx///##################################////
+    xxx/////////////////////////#///#///////////
+    xxxx//////xxxxxxxx//////////#///#///////////
+    xxxxxxxxxxxxxxxxxxxxxx//////#///#///////////
+    xxxxxxxxxxxxxxxxxxxxxx//////#////#######////
+    xxxxx///xxxxxx//////////////#//////////#////
+    xxxx////////////////////////#//////////#////
+    xxx////#####################////xx/////#////
+    xxx////#////////////////////////xxx////#////
+    xxx////#///////xxxxxxxxxxxxxxxxxxx/////#////
+    xxx////#////xxxxxxxxxxxxxxxxxxxxxxx////#////
+    xxx////#///////////////////////////////#////
+    xxxx////################################///x
+    xxxxx/////////////////////////////////////xx
+    xxxxxx///////////////////////////////////xxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  </Map>
+  <SpawnData>
+    <Wave>
+      <Enemy Type="Capsule"/>
+      <Delay Time="2"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="2"/>
+      <Enemy Type="Capsule"/>
+    </Wave>
+    <Wave>
+      <Enemy Type="Capsule"/>
+      <Delay Time="2"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="2"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="2"/>
+      <Enemy Type="Capsule"/>
+    </Wave>
+    <Wave>
+      <Enemy Type="Capsule"/>
+      <Delay Time="1"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="1"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="1"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="1"/>
+      <Enemy Type="Capsule"/>
+    </Wave>
+    <Wave>
+      <Enemy Type="ElementalGolem"/>
+      <Delay Time="5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="1"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="1"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="1"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="1"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+    </Wave>
+    <Wave>
+      <Enemy Type="ElementalGolem"/>
+      <Delay Time="1"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+    </Wave>
+    <Wave>
+      <Enemy Type="ElementalGolem"/>
+      <Delay Time="1"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Enemy Type="ElementalGolem"/>
+      <Delay Time="1"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+    </Wave>
+    <Wave>
+      <Enemy Type="ElementalGolem"/>
+      <Delay Time="1"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="ElementalGolem"/>
+      <Delay Time="1"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="ElementalGolem"/>
+      <Delay Time="1"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="ElementalGolem"/>
+      <Delay Time="1"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="ElementalGolem"/>
+      <Delay Time="1"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="ElementalGolem"/>
+      <Delay Time="1"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+    </Wave>
+    <Wave>
+      <Enemy Type="ElementalGolem"/>
+      <Delay Time="1"/>
+      <Enemy Type="ElementalGolem"/>
+      <Delay Time="1"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="ElementalGolem"/>
+      <Delay Time="1"/>
+      <Enemy Type="ElementalGolem"/>
+      <Delay Time="1"/>
+      <Enemy Type="ElementalGolem"/>
+      <Delay Time="1"/>
+      <Enemy Type="ElementalGolem"/>
+      <Delay Time="1"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Capsule"/>
+      <Delay Time="0.5"/>
+    </Wave>
+  </SpawnData>
+</Level>

@@ -21,7 +21,7 @@ public class ShopItem : MonoBehaviour {
 
         towerData.Upgraded.AddListener(UpdateMenu);
         var button = GetComponent<Button>();
-        button.onClick.AddListener(delegate { GameManager.instance.ShopItemClicked(towerData); });
+        button.onClick.AddListener(delegate { GameManager.instance.UIManager.ShopItemClicked(towerData); });
         GameManager.instance.MoneyChanged.AddListener(UpdateTextColor);
     }
 

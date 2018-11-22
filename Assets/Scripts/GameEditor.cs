@@ -5,25 +5,88 @@ using UnityEditor;
 using System.Linq;
 using System.Xml.Linq;
 
-public class GameEditor : Editor
+public class GameEditor : EditorWindow
 {
-
-    [MenuItem("Tools/MapGenerator/GenerateMap")]
-
-    private static void GenerateMap()
+    int levelIndex = -1;
+    [MenuItem("Window/EditorTools")]
+    static void Init()
     {
-        var mapGenerator = FindObjectOfType<MapGenerator>();
-        var levels = Resources.LoadAll<TextAsset>("Levels");
-        Declarations.LevelData levelData;
-        DataReader.ReadLevelData(XElement.Parse(levels.ElementAt(0).text), out levelData, false);
-        mapGenerator.GenerateTileMap();
-        mapGenerator.GenerateMap(levelData);
+        // Get existing open window or if none, make a new one:
+        GameEditor window = (GameEditor)EditorWindow.GetWindow(typeof(GameEditor));
+        window.Show();
+        UnityEngine.UI.Graphic a;
     }
 
-    [MenuItem("Tools/MapGenerator/ClearMap")]
-    private static void ClearMap()
+    void OnGUI()
     {
-        var mapGenerator = FindObjectOfType<MapGenerator>();
-        mapGenerator.ClearMap();
+        GUILayout.Label("EditorTools", EditorStyles.boldLabel);
+
+        levelIndex = EditorGUILayout.IntField("Level index", levelIndex);
+        
+        if(GUILayout.Button("Generate Map"))
+        {
+            var image = GameObject.FindGameObjectsWithTag("TestTextureGeneration")[0].GetComponent<UnityEngine.UI.Image>();
+            var mapGenerator = FindObjectOfType<MapGenerator>();
+            if(mapGenerator == null)
+            {
+                Debug.Log("Cant find map generator");
+                return;
+            }
+            var levels = Resources.LoadAll<TextAsset>("Levels");
+            if(levels == null || levels.Count() == 0)
+            {
+                Debug.Log("Cant find or invalid levels file");
+            }
+            if (levelIndex >= 0 && levelIndex < levels.Count())
+            {
+                Declarations.LevelData levelData;
+                DataReader.ReadLevelData(XElement.Parse(levels.ElementAt(levelIndex).text), out levelData, false);
+                if (levelData != null)
+                {
+                    image.sprite = TextureGenerator.GetTextureForLevel(levelData);
+                    mapGenerator.GenerateTileMap();
+                    mapGenerator.GenerateMap(levelData);
+                }
+                else
+                {
+                    Debug.Log("Cant parse level");
+                }
+            }
+            else
+            {
+                Debug.Log("Invalid level index");
+            }
+        }
+
+        if(GUILayout.Button("Clear Map"))
+        {
+            var mapGenerator = FindObjectOfType<MapGenerator>();
+            if (mapGenerator != null)
+            {
+                mapGenerator.ClearMap();
+            }
+            else
+            {
+                Debug.Log("Cant find map generator");
+                return;
+            }     
+        }
     }
 }
+//public class GameEditor : Editor
+//{
+
+//    [MenuItem("Tools/MapGenerator/GenerateMap")]
+
+//    private static void GenerateMap(MenuCommand a)
+//    {
+//        
+//    }
+
+//    [MenuItem("Tools/MapGenerator/ClearMap")]
+//    private static void ClearMap()
+//    {
+//        var mapGenerator = FindObjectOfType<MapGenerator>();
+//        mapGenerator.ClearMap();
+//    }
+//}
