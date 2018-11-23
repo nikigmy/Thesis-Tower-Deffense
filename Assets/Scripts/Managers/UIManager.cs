@@ -53,7 +53,6 @@ public class UIManager : MonoBehaviour {
 
     internal void ShowVictoryScreen()
     {
-        throw new NotImplementedException();
     }
 
     public void AddCheatMoney()

@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour
         else if(scene.name == "MainMenu")
         {
             LooeadDependencies(false);
-            MainMenu.LoadLevelSelector();
+            MainMenu.LoadLevelPreviews();
         }
     }
 
@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
         GameSpedUp = false;
         Paused = false;
 
-        SceneManager.LoadScene(2, LoadSceneMode.Single);
+        SceneManager.LoadScene("Level", LoadSceneMode.Single);
     }
 
     private void LooeadDependencies(bool level)

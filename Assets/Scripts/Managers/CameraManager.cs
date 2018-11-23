@@ -13,7 +13,7 @@ public class CameraManager : MonoBehaviour
     bool debugging = false;
     bool init;
     // Use this for initialization
-    void Start()
+    void Awake()
     {
         init = false;
         GameManager.instance.LevelLoaded.AddListener(LevelLoaded);
