@@ -102,7 +102,7 @@ public class GameManager : MonoBehaviour
         Health -= value;
         if (Health <= 0)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
         else
         {

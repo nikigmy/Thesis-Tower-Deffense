@@ -165,7 +165,7 @@ public class Enemy : MonoBehaviour
 
             if (pathTiles.Count > 0)
             {
-                var nextTileIndex = UnityEngine.Random.Range(0, pathTiles.Count - 1);
+                var nextTileIndex = Random.Range(0, pathTiles.Count - 1);
                 previousTile = currentTile;
                 currentTile = pathTiles[nextTileIndex];
             }

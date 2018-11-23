@@ -48,8 +48,8 @@ public class PlasmaBall : Projectile {
 
     private void Explode(Vector3 targetPosition, Vector3 targetCenter)
     {
-        PseudoVolumetricExplosion explosion = Instantiate(explosionPrefab, targetPosition, Quaternion.identity).GetComponent<PseudoVolumetricExplosion>();
-        explosion.SetRadius(explosionRange);
+        Instantiate(explosionPrefab, targetPosition, Quaternion.identity);
+        //explosion.SetRadius(explosionRange);PseudoVolumetricExplosion explosion =  .GetComponent<PseudoVolumetricExplosion>()
 
         for (int i = 0; i < GameManager.instance.SpawnManager.enemies.Count; i++)
         {

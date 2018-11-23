@@ -267,8 +267,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 310.3664, y: -47.206177}
-  m_SizeDelta: {x: 0, y: 90.41235}
+  m_AnchoredPosition: {x: 310.3664, y: -50.35327}
+  m_SizeDelta: {x: 0, y: 96.70654}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &118278138
 MonoBehaviour:
@@ -670,8 +670,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1747605994}
-        m_MethodName: 
+      - m_Target: {fileID: 1999344656}
+        m_MethodName: SellItemClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -902,8 +902,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 63.67328, y: -47.206177}
-  m_SizeDelta: {x: 0, y: 90.41235}
+  m_AnchoredPosition: {x: 63.67328, y: -50.35327}
+  m_SizeDelta: {x: 0, y: 96.70654}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1218231786
 MonoBehaviour:
@@ -1404,8 +1404,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 187.01984, y: -47.206177}
-  m_SizeDelta: {x: 0, y: 90.41235}
+  m_AnchoredPosition: {x: 187.01984, y: -50.35327}
+  m_SizeDelta: {x: 0, y: 96.70654}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1655987263
 MonoBehaviour:
