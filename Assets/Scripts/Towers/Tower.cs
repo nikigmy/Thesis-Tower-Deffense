@@ -83,14 +83,18 @@ public abstract class Tower : MonoBehaviour
         UpdateGunPartsReferences();
     }
 
-    protected void FindTarget()
+    protected void FindTarget(bool groundOnly = false)
     {
         var allEnemies = GameManager.instance.SpawnManager.enemies;
         Enemy closestEnemy = null;
         var distanceToClosestEnemy = float.MaxValue;
         for (int i = 0; i < allEnemies.Count; i++)
         {
-            var distanceToEnemy = Vector3.Distance(allEnemies[i].transform.position, transform.position);
+            if (groundOnly && !Helpers.IsGroundUnit(allEnemies[i].Type))
+            {
+                continue;
+            }
+            var distanceToEnemy = Vector3.Distance(allEnemies[i].GetCenter(), transform.position);
             if (distanceToEnemy <= towerData.CurrentRange && distanceToEnemy < distanceToClosestEnemy)
             {
                 closestEnemy = allEnemies[i];
@@ -107,12 +111,12 @@ public abstract class Tower : MonoBehaviour
     {
         if (target != null)
         {
-            var baseDir = target.transform.position - currentGunBase.position;
+            var baseDir = target.GetCenter() - currentGunBase.position;
             var baseLookRotation = Quaternion.LookRotation(baseDir);
             var baseRotation = Quaternion.Lerp(currentGunBase.rotation, baseLookRotation, Time.deltaTime * 4).eulerAngles;
             currentGunBase.localRotation = Quaternion.Euler(0, baseRotation.y, 0);
 
-            var headDir = target.transform.position - currentGunHead.position;
+            var headDir = target.GetCenter() - currentGunHead.position;
             var headLookRotation = Quaternion.LookRotation(headDir);
             var headRotation = Quaternion.Lerp(currentGunHead.rotation, headLookRotation, Time.deltaTime * 4).eulerAngles;
             currentGunHead.localRotation = Quaternion.Euler(headRotation.x, 0, 0);
@@ -123,8 +127,8 @@ public abstract class Tower : MonoBehaviour
     {
         if (target != null)
         {
-            var baseLookOffset = currentGunBase.rotation.eulerAngles.y - Quaternion.LookRotation(target.transform.position - currentGunBase.position).eulerAngles.y;
-            var towerLookOffset = currentGunHead.rotation.eulerAngles.x - Quaternion.LookRotation(target.transform.position - currentGunHead.position).eulerAngles.x;
+            var baseLookOffset = currentGunBase.rotation.eulerAngles.y - Quaternion.LookRotation(target.GetCenter() - currentGunBase.position).eulerAngles.y;
+            var towerLookOffset = currentGunHead.rotation.eulerAngles.x - Quaternion.LookRotation(target.GetCenter() - currentGunHead.position).eulerAngles.x;
             return Math.Abs(baseLookOffset) + Math.Abs(towerLookOffset) <= 30;//good enough
         }
         else
@@ -140,7 +144,7 @@ public abstract class Tower : MonoBehaviour
             Gizmos.DrawWireSphere(transform.position, towerData.CurrentRange);
             if (target != null)
             {
-                Gizmos.DrawLine(currentFirePoint.transform.position, target.transform.position);
+                Gizmos.DrawLine(currentFirePoint.transform.position, target.GetCenter());
 
             }
         }
@@ -154,7 +158,7 @@ public abstract class Tower : MonoBehaviour
 
     protected bool LostTarget()
     {
-        return (target != null && Vector3.Distance(target.transform.position, transform.position) > towerData.CurrentRange) || (target != null && !target.Alive);
+        return (target != null && Vector3.Distance(target.GetCenter(), transform.position) > towerData.CurrentRange) || (target != null && !target.Alive);
     }
 
 }

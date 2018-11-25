@@ -5,6 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    public bool MainMenuLoaded = false;
+    public bool MusicMuted;
+    public bool SoundMuted;
     public MainMenu MainMenu;
     public static GameManager instance;
     [Header("Setup")]
@@ -30,10 +33,17 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        DontDestroyOnLoad(this);
-        instance = this;
-        Def.Instance.LoadData(towersAssetData, enemyAssetData);
-        SceneManager.sceneLoaded += SceneLoaded;
+        if (instance == null)
+        {
+            DontDestroyOnLoad(this);
+            instance = this;
+            Def.Instance.LoadData(towersAssetData, enemyAssetData);
+            SceneManager.sceneLoaded += SceneLoaded;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void SceneLoaded(Scene scene, LoadSceneMode loadMode)
@@ -49,10 +59,12 @@ public class GameManager : MonoBehaviour
             SpawnManager.LevelCompleted.AddListener(LevelCompleted);
 
             LevelLoaded.Invoke();
+            Def.Instance.ResetTowerLevel();
         }
-        else if(scene.name == "MainMenu")
+        else if (scene.name == "MainMenu")
         {
             LooeadDependencies(false);
+
             MainMenu.LoadLevelPreviews();
         }
     }
@@ -99,10 +111,11 @@ public class GameManager : MonoBehaviour
 
     public void DealDamage(int value)
     {
+        Debug.Log("Dealed damage" + value);
         Health -= value;
         if (Health <= 0)
         {
-            //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            UIManager.ShowDefeatScreen();
         }
         else
         {
@@ -129,6 +142,32 @@ public class GameManager : MonoBehaviour
         else
         {
             Time.timeScale = GameSpedUp ? 2 : 1;
+        }
+    }
+
+    public void MuteUnmuteMusic()
+    {
+        MusicMuted = !MusicMuted;
+        if (MusicMuted)
+        {
+
+        }
+        else
+        {
+
+        }
+    }
+
+    public void MuteUnmuteSound()
+    {
+        SoundMuted = !SoundMuted;
+        if (SoundMuted)
+        {
+
+        }
+        else
+        {
+
         }
     }
 

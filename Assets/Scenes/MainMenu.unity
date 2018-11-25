@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311992, g: 0.38074034, b: 0.35872713, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311947, g: 0.38074005, b: 0.35872722, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -666,7 +666,7 @@ MonoBehaviour:
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
-    m_HorizontalOverflow: 0
+    m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Level Select
@@ -885,6 +885,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b9114692ff7b18408367d15b14b8f2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MainMenuLoaded: 0
+  MusicMuted: 0
+  SoundMuted: 0
   MainMenu: {fileID: 0}
   BuildManager: {fileID: 0}
   MapGenerator: {fileID: 0}
@@ -896,6 +899,7 @@ MonoBehaviour:
   enemyAssetData:
   - {fileID: 11400000, guid: f235ace6843d59240b416355b47e48c9, type: 2}
   - {fileID: 11400000, guid: ccc84da71342c2643b13d49987b403a5, type: 2}
+  - {fileID: 11400000, guid: 3927b5040e1d4364c87a198b0f20665e, type: 2}
   MoneyChanged:
     m_PersistentCalls:
       m_Calls: []

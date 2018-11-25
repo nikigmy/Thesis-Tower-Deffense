@@ -82,7 +82,7 @@ public class Plasma : Tower
         }
         else
         {
-            FindTarget();
+            FindTarget(true);
         }
     }
 

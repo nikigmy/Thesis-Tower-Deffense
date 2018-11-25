@@ -319,10 +319,12 @@ public class DataReader
     {
         switch (enemyType)
         {
-            case Declarations.EnemyType.Capsule:
-                return ReadCapsuleData(enemyData, assetData, out enemy);
+            case Declarations.EnemyType.Swordsman:
+                return ReadBaseEnemyData(enemyData, assetData, out enemy);
             case Declarations.EnemyType.Golem:
-                return ReadCapsuleData(enemyData, assetData, out enemy);
+                return ReadBaseEnemyData(enemyData, assetData, out enemy);
+            case Declarations.EnemyType.Dragon:
+                return ReadBaseEnemyData(enemyData, assetData, out enemy);
             default:
                 Debug.Log("Unknown enemy type");
                 break;
@@ -331,7 +333,7 @@ public class DataReader
         return false;
     }
 
-    private static bool ReadCapsuleData(XElement enemyData, EnemyAssetData assetData, out Declarations.EnemyData enemy)
+    private static bool ReadBaseEnemyData(XElement enemyData, EnemyAssetData assetData, out Declarations.EnemyData enemy)
     {
         int health = 0;
         float speed = 0;

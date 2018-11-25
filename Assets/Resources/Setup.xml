@@ -2,8 +2,9 @@
   <GeneralData>
   </GeneralData>
   <EnemyData>
-    <Capsule Speed="3" Health="100" Damage="1" Award="100"/>
-    <ElementalGolem Speed="1.5" Health="1000" Damage="5" Award="500"/>
+    <Swordsman Speed="3" Health="100" Damage="1" Award="100"/>
+    <Golem Speed="1.5" Health="1000" Damage="5" Award="500"/>
+    <Dragon Speed="2.5" Health="300" Damage="3" Award="200"/>
   </EnemyData>
   <TowerData>
     <Canon>

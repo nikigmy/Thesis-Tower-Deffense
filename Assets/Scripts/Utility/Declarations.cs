@@ -5,6 +5,15 @@ using UnityEngine.Events;
 
 public class Declarations
 {
+    public enum EffectType
+    {
+        Speed,
+        PhysicalResistance,
+        FireResistance,
+        FrostResistance,
+        Slow,
+        Stun
+    }
     public enum TileType
     {
         Spawn,
@@ -22,8 +31,9 @@ public class Declarations
     }
     public enum EnemyType
     {
-        Capsule,
-        Golem
+        Swordsman,
+        Golem,
+        Dragon
     }
 
     public enum WavePartType
@@ -259,6 +269,11 @@ public class Declarations
                 }
             }
         }
+
+        internal void ResetLevel()
+        {
+            CurrentLevel = 1;
+        }
     }
     public class CanonTower : TowerData
     {
@@ -295,7 +310,7 @@ public class Declarations
 
     public class EnemyData
     {
-        public EnemyType Type { get; protected set; }
+        public EnemyType Type { get; set; }
         public EnemyAssetData AssetData;
 
         public int Health { get; protected set; }
@@ -347,6 +362,27 @@ public class Declarations
         {
             ExplosionDamage = exprosionDamage;
             ExplosionRange = explosionRange;
+        }
+    }
+
+    public class Effect
+    {
+        public EffectType Type;
+        public float Duration;
+        public float Value;
+
+        public Effect(EffectType type, float duration, float value)
+        {
+            Type = type;
+            Duration = duration;
+            Value = value;
+        }
+
+        public Effect(Effect from)
+        {
+            Type = from.Type;
+            Duration = from.Duration;
+            Value = from.Value;
         }
     }
 }

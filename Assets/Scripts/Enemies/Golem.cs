@@ -4,17 +4,18 @@ using UnityEngine;
 
 public class Golem : Enemy {
 
-    Animator anim;
-	// Use this for initialization
-	void Start () {
-        anim = GetComponent<Animator>();
-	}
+    private void Awake()
+    {
+        enemyData = Def.Instance.EnemyDictionary[Declarations.EnemyType.Golem];
+        Init();
+    }
 
     protected override void Died()
     {
         Alive = false;
         GameManager.instance.SpawnManager.EnemyDestroyed(this);
         GameManager.instance.AddMoney(enemyData.Award);
+        anim.speed = 1;
         anim.SetTrigger("Died");
     }
 

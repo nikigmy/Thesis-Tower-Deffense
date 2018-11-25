@@ -4,18 +4,18 @@
     xxx////////////////////////$$$
     xxx//////////////////////###$$
     xxx/////#################////x
-    xxx/////#////////////#///////x
-    xxx/////#////////////#///////x
+    xxx/////#////////////////////x
+    xxx/////#////////////////////x
     xxx/////#////////#########///x
     xxx/////#########////////#///x
-    xxx///////##/////////////#///x
+    xxx//////////////////////#///x
     xxx/////########/////////#///x
     xxx/////#///////#////////#///x
     xxx/////#///////#########////x
     xxx/////#////////////////////x
     xxx/////#////////////////////x
     xxx//////############////////x
-    xxx///////////##////#////////x
+    xxx/////////////////#////////x
     ///////////##########////////x
     //////////#//////////////////x
     *##########//////////xxxxxxxxx
@@ -23,183 +23,185 @@
   </Map>
   <SpawnData>
     <Wave>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Dragon"/>
       <Delay Time="2"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="2"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="2"/>
+      <Enemy Type="Swordsman"/>
     </Wave>
     <Wave>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="2"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="2"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="2"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
     </Wave>
     <Wave>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="1"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="1"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="1"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="1"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
     </Wave>
     <Wave>
-      <Enemy Type="ElementalGolem"/>
+      <Enemy Type="Golem"/>
       <Delay Time="5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="1"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="1"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="1"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="1"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
     </Wave>
     <Wave>
-      <Enemy Type="ElementalGolem"/>
+      <Enemy Type="Golem"/>
       <Delay Time="1"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
     </Wave>
     <Wave>
-      <Enemy Type="ElementalGolem"/>
+      <Enemy Type="Golem"/>
       <Delay Time="1"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
-      <Enemy Type="ElementalGolem"/>
+      <Enemy Type="Swordsman"/>
+      <Enemy Type="Golem"/>
       <Delay Time="1"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
     </Wave>
     <Wave>
-      <Enemy Type="ElementalGolem"/>
+      <Enemy Type="Golem"/>
       <Delay Time="1"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="ElementalGolem"/>
+      <Enemy Type="Golem"/>
       <Delay Time="1"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="ElementalGolem"/>
+      <Enemy Type="Golem"/>
       <Delay Time="1"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="ElementalGolem"/>
+      <Enemy Type="Golem"/>
       <Delay Time="1"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="ElementalGolem"/>
+      <Enemy Type="Golem"/>
       <Delay Time="1"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="ElementalGolem"/>
+      <Enemy Type="Golem"/>
       <Delay Time="1"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
     </Wave>
     <Wave>
-      <Enemy Type="ElementalGolem"/>
+      <Enemy Type="Golem"/>
       <Delay Time="1"/>
-      <Enemy Type="ElementalGolem"/>
+      <Enemy Type="Golem"/>
       <Delay Time="1"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="ElementalGolem"/>
+      <Enemy Type="Golem"/>
       <Delay Time="1"/>
-      <Enemy Type="ElementalGolem"/>
+      <Enemy Type="Golem"/>
       <Delay Time="1"/>
-      <Enemy Type="ElementalGolem"/>
+      <Enemy Type="Golem"/>
       <Delay Time="1"/>
-      <Enemy Type="ElementalGolem"/>
+      <Enemy Type="Golem"/>
       <Delay Time="1"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Capsule"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
     </Wave>
   </SpawnData>

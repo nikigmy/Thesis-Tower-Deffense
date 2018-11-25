@@ -1,48 +1,63 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
+    protected const float distanceFromFrontEnemy = 1.1f;
+    protected const float rotationSpeed = 4;
+    [SerializeField]
     protected Transform healthBar;
+    [SerializeField]
     protected Slider healthSlider;
+    [SerializeField]
     protected Text healthText;
-    protected Renderer capsuleRenderer;
+    [SerializeField]
+    protected Renderer rend;
 
+    protected Animator anim;
     protected Declarations.EnemyData enemyData;
     protected Tile currentTile;
     protected Tile previousTile;
     protected int currentHealth;
     public float CurrentSpeed;
-    private const float distanceFromFrontEnemy = 1.1f;
     public bool Alive = true;
-
-    private void Awake()
+    public bool Moving = true;
+    public bool Attacking = false;
+    public Declarations.EnemyType Type { get { return enemyData.Type; } }
+    public List<Declarations.Effect> Effects;
+    
+    protected void Init()
     {
-        capsuleRenderer = transform.GetChild(0).GetComponent<MeshRenderer>();
-        if(capsuleRenderer == null)
-        {
-            capsuleRenderer = transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
-        }
-        healthBar = transform.GetChild(1);
-        healthSlider = healthBar.transform.GetChild(0).GetComponent<Slider>();
-        healthText = healthBar.transform.GetChild(1).GetComponent<Text>();
+        Effects = new List<Declarations.Effect>();
+        currentHealth = enemyData.Health;
+        UpdateUI();
     }
 
-    public void SetData(Declarations.EnemyData enemyData, Tile currentTile)
+    public void SetData(Tile startTile)
     {
-        this.enemyData = enemyData;
-        this.currentTile = currentTile;
-        this.currentHealth = enemyData.Health;
-        UpdateUI();
+        currentTile = startTile;
+        FindNextTile();
+        Rotate(true);
+    }
+
+    void Start()
+    {
+        anim = GetComponent<Animator>();
     }
 
     public Vector3 GetCenter()
     {
-        return capsuleRenderer.bounds.center;
+        return rend.bounds.center;
     }
 
-    private void UpdateUI()
+    public void AddEffect(Declarations.Effect effect)
+    {
+        Effects.Add(effect);
+    }
+
+    protected void UpdateUI()
     {
         healthText.text = currentHealth.ToString();
         healthSlider.value = (float)currentHealth / enemyData.Health;
@@ -52,6 +67,7 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
+        UpdateUI();
         if (Alive)
         {
             if ((currentTile.transform.position - transform.position).magnitude <= 0.3)
@@ -62,25 +78,61 @@ public class Enemy : MonoBehaviour
             {
                 if (currentTile.Type == Declarations.TileType.Objective)
                 {
-                    GameManager.instance.DealDamage(enemyData.Damage);
-                    GameManager.instance.SpawnManager.EnemyDestroyed(this);
-                    Destroy(gameObject);
+                    Attack();
                     return;
                 }
-                Move();
+                if (Moving)
+                {
+                    Rotate();
+                    UpdateSpeed();
+                    Move();
+                }
             }
         }
     }
 
-    protected void Move()
+    protected virtual void Attack()
+    {
+        GameManager.instance.DealDamage(enemyData.Damage);
+        GameManager.instance.SpawnManager.EnemyDestroyed(this);
+        Destroy(gameObject);
+    }
+
+    protected virtual void Move()
     {
         var dir = currentTile.transform.position - transform.position;
+        if (dir.magnitude < Time.deltaTime * CurrentSpeed)
+        {
+            transform.position = currentTile.transform.position;
+        }
+        else
+        {
+            transform.Translate(dir.normalized * Time.deltaTime * CurrentSpeed, Space.World);
+        }
+    }
 
+    protected virtual void Rotate(bool instant = false)
+    {
+        var dir = currentTile.transform.position - transform.position;
         var baseLookRotation = Quaternion.LookRotation(dir);
-        var baseRotation = Quaternion.Lerp(transform.rotation, baseLookRotation, Time.deltaTime * 4).eulerAngles;
-        transform.rotation = Quaternion.Euler(0, baseRotation.y, 0);
+        if (instant)
+        {
+            transform.rotation = Quaternion.Euler(0, baseLookRotation.eulerAngles.y, 0);
+        }
+        else
+        {
+            var baseRotation = Quaternion.Lerp(transform.rotation, baseLookRotation, Time.deltaTime * rotationSpeed).eulerAngles;
+            transform.rotation = Quaternion.Euler(0, baseRotation.y, 0);
+        }
+    }
 
-        var speed = enemyData.Speed;
+    private void UpdateSpeed()
+    {
+        if(Effects.Any(x => x.Type == Declarations.EffectType.Stun))
+        {
+            CurrentSpeed = 0;
+            return;
+        }
         var enemyInFront = GameManager.instance.SpawnManager.GetEnemyInFront(this);
         if (enemyInFront != null)
         {
@@ -106,26 +158,34 @@ public class Enemy : MonoBehaviour
                 CurrentSpeed = enemyData.Speed;
             }
         }
-
-        if (dir.magnitude < Time.deltaTime * CurrentSpeed)
+        var slow = Effects.FirstOrDefault(x => x.Type == Declarations.EffectType.Slow);
+        var speedUp = Effects.FirstOrDefault(x => x.Type == Declarations.EffectType.Speed);
+        if (speedUp != null)
         {
-            transform.position = currentTile.transform.position;
+            CurrentSpeed *= speedUp.Value; 
         }
-        else
+        else if(slow != null)
         {
-            transform.Translate(dir.normalized * Time.deltaTime * CurrentSpeed, Space.World);
+            CurrentSpeed -= CurrentSpeed * (slow.Value / 100);
+        }
+
+        if (Moving)
+        {
+            anim.speed = CurrentSpeed / enemyData.Speed;//keep the leg movement consistent
         }
     }
 
-    internal void DealDamage(int damage)
+    internal virtual void DealDamage(int damage)
     {
-        currentHealth -= damage;
-        if (currentHealth <= 0)
+        if (currentHealth > 0)
         {
-            Died();
-        }
-        else
-        {
+            currentHealth -= damage;
+            if (currentHealth <= 0)
+            {
+                currentHealth = 0;
+                Died();
+            }
+
             UpdateUI();
         }
     }

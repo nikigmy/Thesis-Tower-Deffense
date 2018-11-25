@@ -34,19 +34,24 @@ public class Helpers {
     {
         if (string.IsNullOrEmpty(type))
         {
-            enemyType = Declarations.EnemyType.Capsule;
+            Debug.Log("Enemy type cannon be null or empty");
+            enemyType = Declarations.EnemyType.Swordsman;
             return false;
         }
         switch (type)
         {
-            case "Capsule":
-                enemyType = Declarations.EnemyType.Capsule;
+            case "Swordsman":
+                enemyType = Declarations.EnemyType.Swordsman;
                 break;
-            case "ElementalGolem":
+            case "Golem":
                 enemyType = Declarations.EnemyType.Golem;
                 break;
+            case "Dragon":
+                enemyType = Declarations.EnemyType.Dragon;
+                break;
             default:
-                enemyType = Declarations.EnemyType.Capsule;
+                Debug.Log(string.Format("Unknown enemy type: '{0}'", type));
+                enemyType = Declarations.EnemyType.Swordsman;
                 return false;
         }
         return true;
@@ -76,5 +81,21 @@ public class Helpers {
                 break;
         }
         return tileType != Declarations.TileType.Unknown;
+    }
+
+    internal static bool IsGroundUnit(Declarations.EnemyType type)
+    {
+        switch (type)
+        {
+            case Declarations.EnemyType.Swordsman:
+                return true;
+            case Declarations.EnemyType.Golem:
+                return true;
+            case Declarations.EnemyType.Dragon:
+                return false;
+            default:
+                Debug.LogError("Unknown enemy type");
+                return true;
+        }
     }
 }

@@ -24,21 +24,19 @@ public class GrassTile : Tile
         }
 
         var buildManager = GameManager.instance.BuildManager;
-
-        if (glowMaterial != null &&
-            ((buildManager.CurrentTower != null &&
-            GameManager.instance.Money >= buildManager.CurrentTower.CurrentPrice) ||
-            buildManager.SellClicked))
+        if (glowMaterial != null)
         {
-            if (buildManager.Building)
-            {
-                BuildTower(buildManager);
-            }
-            else if (buildManager.Selling)
-            {
-                DestroyTower(buildManager);
-            }
             rend.material = glowMaterial;
+        }
+        if (currentTower == null &&
+            buildManager.CurrentTower != null && buildManager.Building &&
+            GameManager.instance.Money >= buildManager.CurrentTower.CurrentPrice)
+        {
+            BuildTower(buildManager);
+        }
+        else if (currentTower != null && buildManager.Selling)
+        {
+            DestroyTower(buildManager);
         }
     }
 
@@ -59,6 +57,7 @@ public class GrassTile : Tile
         else if (currentTower != null && buildManager.SellClicked)
         {
             DestroyTower(buildManager);
+            buildManager.Selling = true;
         }
     }
 

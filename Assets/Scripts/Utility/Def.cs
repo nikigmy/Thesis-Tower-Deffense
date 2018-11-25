@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using UnityEngine;
@@ -15,7 +17,7 @@ public class Def
     {
         get
         {
-            if(instance == null)
+            if (instance == null)
             {
                 instance = new Def();
             }
@@ -36,14 +38,51 @@ public class Def
     {
         TowerDictionary = new Dictionary<Declarations.TowerType, Declarations.TowerData>();
         EnemyDictionary = new Dictionary<Declarations.EnemyType, Declarations.EnemyData>();
-
-        LoadSetup(towersAssetData, enemyAssetData);
-        LoadLevels();
+        LoadAllData(towersAssetData, enemyAssetData);
     }
 
-    private void LoadSetup(TowerAssetData[] towersAssetData, EnemyAssetData[] enemyAssetData)
+    private void LoadAllData(TowerAssetData[] towersAssetData, EnemyAssetData[] enemyAssetData)
     {
-        var setup = XElement.Parse(Resources.Load<TextAsset>(cst_setup).text);
+        var setupFile = LoadSetupFile(Application.platform == RuntimePlatform.WindowsEditor);
+        LoadSetup(towersAssetData, enemyAssetData, setupFile);
+        var levels = LoadLevelFiles(Application.platform == RuntimePlatform.WindowsEditor);
+        LoadLevels(levels);
+    }
+
+    internal void ResetTowerLevel()
+    {
+        foreach (var tower in TowerDictionary)
+        {
+            tower.Value.ResetLevel();
+        }
+    }
+
+    private List<XElement> LoadLevelFiles(bool fromResources)
+    {
+        if (fromResources)
+        {
+            return Resources.LoadAll<TextAsset>(cst_levels).Select(x => XElement.Parse(x.text)).ToList();
+        }
+        else
+        {
+            return Directory.GetFiles(Path.Combine(Application.dataPath + "/../", "Levels")).Where(x => x.EndsWith(".xml")).Select(x => XElement.Load(x)).ToList();
+        }
+    }
+
+    private XElement LoadSetupFile(bool fromResources)
+    {
+        if (fromResources)
+        {
+            return XElement.Parse(Resources.Load<TextAsset>(cst_setup).text);
+        }
+        else
+        {
+            return XElement.Load(Path.Combine(Application.dataPath + "/../", "Setup.xml"));
+        }
+    }
+
+    private void LoadSetup(TowerAssetData[] towersAssetData, EnemyAssetData[] enemyAssetData, XElement setup)
+    {
         var towers = setup.Element(cst_towerData).Elements().ToList();
         for (int i = 0; i < towers.Count; i++)
         {
@@ -75,22 +114,33 @@ public class Def
                     Declarations.EnemyData enemy;
                     if (DataReader.ReadEnemyData(enemies[i], assetData, enemyType, out enemy))
                     {
+                        enemy.Type = enemyType;
                         EnemyDictionary.Add(enemyType, enemy);
                     }
+                    else
+                    {
+                        Debug.Log(string.Format("Cant read enemy data for enemy type: '{0}'", enemyType.ToString()));
+                    }
                 }
+                else
+                {
+                    Debug.Log(string.Format("No asset data for enemy type: '{0}'", enemyType.ToString()));
+                }
+            }
+            else if (parseResult)
+            {
+                Debug.Log(string.Format("Duplicating data for enemy type: '{0}' data will be ignorred!", enemyType.ToString()));
             }
         }
     }
 
-    public void LoadLevels()
+    public void LoadLevels(List<XElement> levels)
     {
-        var levels = Resources.LoadAll<TextAsset>(cst_levels);
-
-        Levels = new Declarations.LevelData[levels.Length];
-        for (int i = 0; i < levels.Length; i++)
+        Levels = new Declarations.LevelData[levels.Count];
+        for (int i = 0; i < levels.Count; i++)
         {
             Declarations.LevelData level;
-            if (DataReader.ReadLevelData(XElement.Parse(levels[i].text), out level))
+            if (DataReader.ReadLevelData(levels[i], out level))
             {
                 Levels[i] = level;
             }
