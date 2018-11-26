@@ -36,7 +36,7 @@ public class GameEditor : EditorWindow
             if (levelIndex >= 0 && levelIndex < levels.Count())
             {
                 Declarations.LevelData levelData;
-                DataReader.ReadLevelData(XElement.Parse(levels.ElementAt(levelIndex).text), out levelData, false);
+                DataReader.ReadLevelData(XElement.Parse(levels.ElementAt(levelIndex).text), out levelData, false, false);
                 if (levelData != null)
                 {
                     mapGenerator.GenerateTileMap();

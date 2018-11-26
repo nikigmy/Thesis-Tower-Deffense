@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class MapGenerator : MonoBehaviour
 {
+    [Header("Level")]
     [SerializeField]
     GameObject[] grassTiles;
     [SerializeField]
@@ -16,12 +17,45 @@ public class MapGenerator : MonoBehaviour
     [SerializeField]
     GameObject baseObj;
 
-    public Dictionary<Declarations.TileType, GameObject[]> TilesMap;
-    public Tile[,] Map;
+
+    [Header("Level Creator")]
+    [SerializeField]
+    GameObject editTile;
+    [SerializeField]
+    Material editMaterial;
+    [SerializeField]
+    Material editMaterialGlow;
+
+    [SerializeField]
+    Color GrassColor;
+    [SerializeField]
+    Color PathColor;
+    [SerializeField]
+    Color ObjectiveColor;
+    [SerializeField]
+    Color SpawnColor;
+    [SerializeField]
+    Color EnvironmentColor;
+    [SerializeField]
+    Color EmptyColor;
+    public Dictionary<Declarations.TileType, Material> TileMaterials;
+    public Dictionary<Declarations.TileType, Material> GlowMaterials;
+
+
+    private Dictionary<Declarations.TileType, GameObject[]> TilesMap;
+    private Tile[,] Map;
+    public Declarations.IntVector2 MapSize { get; private set; }
 
     private void Awake()
     {
-        GenerateTileMap();
+        if (grassTiles.Length > 0)
+        {
+            GenerateTileMap();
+        }
+        else if(editMaterial != null && editMaterialGlow != null)
+        {
+            GenerateMateralMap();
+        }
     }
 
     public void GenerateTileMap()
@@ -33,14 +67,33 @@ public class MapGenerator : MonoBehaviour
         TilesMap.Add(Declarations.TileType.Objective, objectiveTiles);
         TilesMap.Add(Declarations.TileType.Spawn, spawnTiles);
     }
-
+    
+    public void GenerateMateralMap()
+    {
+        TileMaterials = new Dictionary<Declarations.TileType, Material>();
+        GlowMaterials = new Dictionary<Declarations.TileType, Material>();
+        TileMaterials.Add(Declarations.TileType.Grass, new Material(editMaterial) { color = GrassColor, name = "Edit_Grass" });
+        TileMaterials.Add(Declarations.TileType.Path, new Material(editMaterial) { color = PathColor, name = "Edit_Path" });
+        TileMaterials.Add(Declarations.TileType.Objective, new Material(editMaterial) { color = ObjectiveColor, name = "Edit_Objective" });
+        TileMaterials.Add(Declarations.TileType.Spawn, new Material(editMaterial) { color = SpawnColor, name = "Edit_Spawn" });
+        TileMaterials.Add(Declarations.TileType.Environment, new Material(editMaterial) { color = EnvironmentColor, name = "Edit_Environment" });
+        TileMaterials.Add(Declarations.TileType.Empty, editMaterial);
+        foreach (var tileMaterial in TileMaterials)
+        {
+            var glowMat = new Material(editMaterialGlow) { color = tileMaterial.Value.color };
+            glowMat.SetColor("_EmissionColor", tileMaterial.Value.color);
+            glowMat.name += "_Glow";
+            GlowMaterials.Add(tileMaterial.Key, glowMat);
+        }
+    }
     public void GenerateMap(Declarations.LevelData levelData)
     {
         ClearMap();
-        Map = new Tile[levelData.MapSize.y, levelData.MapSize.x];
-        for (int row = 0; row < levelData.MapSize.y; row++)
+        MapSize = levelData.MapSize;
+        Map = new Tile[MapSize.y, MapSize.x];
+        for (int row = 0; row < MapSize.y; row++)
         {
-            for (int col = 0; col < levelData.MapSize.x; col++)
+            for (int col = 0; col < MapSize.x; col++)
             {
                 var tile = GetObjectByTileType(levelData.Map[row, col]);
                 Vector3 tilePosition = Helpers.GetPositionForTile(row, col);
@@ -54,32 +107,75 @@ public class MapGenerator : MonoBehaviour
         PutObjectives();
     }
 
+    public void GenerateMapForEdit(Declarations.IntVector2 mapSize, Declarations.TileType[,] map)
+    {
+        ClearMap();
+        MapSize = mapSize;
+        Map = new Tile[MapSize.y, MapSize.x];
+        for (int row = 0; row < MapSize.y; row++)
+        {
+            for (int col = 0; col < MapSize.x; col++)
+            {
+                Vector3 tilePosition = Helpers.GetPositionForTile(row, col);
+
+                var tileObj = Instantiate(editTile, tilePosition, Quaternion.identity, transform).GetComponent<EditableTile>();
+                tileObj.SetData(row, col, map[row, col]);
+                Map[row, col] = tileObj;
+            }
+        }
+    }
+
+    public Declarations.TileType[,] GetMap()
+    {
+        var result = new Declarations.TileType[MapSize.y, MapSize.x];
+        bool invalid = false;
+        for (int row = 0; row < MapSize.y; row++)
+        {
+            for (int col = 0; col < MapSize.x; col++)
+            {
+                result[row, col] = Map[row, col].Type;
+                if(Map[row, col].Type == Declarations.TileType.Unknown)
+                {
+                    invalid = true;
+                }
+            }
+        }
+        if (invalid)
+        {
+            Debug.Log("Map is invalid");
+        }
+        return result;
+    }
+
     private void PutObjectives()
     {
-        for (int row = 0; row < Map.GetLength(0); row++)
+        if (baseObj != null)
         {
-            for (int col = 0; col < Map.GetLength(1); col++)
+            for (int row = 0; row < Map.GetLength(0); row++)
             {
-                bool canPlaceBase = true;
-                var neibourCells = GetNeibourCells(row, col);
-                if (neibourCells.Count == 6)
+                for (int col = 0; col < Map.GetLength(1); col++)
                 {
-                    foreach (var cell in neibourCells)
+                    bool canPlaceBase = true;
+                    var neibourCells = GetNeibourCells(row, col);
+                    if (neibourCells.Count == 6)
                     {
-                        if (cell.Type != Declarations.TileType.Objective)
+                        foreach (var cell in neibourCells)
                         {
-                            canPlaceBase = false;
-                            break;
+                            if (cell.Type != Declarations.TileType.Objective)
+                            {
+                                canPlaceBase = false;
+                                break;
+                            }
                         }
                     }
-                }
-                else
-                {
-                    canPlaceBase = false;
-                }
-                if (canPlaceBase)
-                {
-                    Instantiate(baseObj, Helpers.GetPositionForTile(row, col), Quaternion.identity, transform).GetComponent<Tile>();
+                    else
+                    {
+                        canPlaceBase = false;
+                    }
+                    if (canPlaceBase)
+                    {
+                        Instantiate(baseObj, Helpers.GetPositionForTile(row, col), Quaternion.identity, transform).GetComponent<Tile>();
+                    }
                 }
             }
         }
@@ -102,20 +198,20 @@ public class MapGenerator : MonoBehaviour
             tiles.Add(Map[row - 1, col]);
             if (row % 2 == 0)
             {
-                if (col - 1 > 0)
+                if (col > 0)
                 {
                     tiles.Add(Map[row - 1, col - 1]);
                 }
             }
             else
             {
-                if (col + 1 < Map.GetLength(1))
+                if (col + 1 < MapSize.x)
                 {
                     tiles.Add(Map[row - 1, col + 1]);
                 }
             }
         }
-        if (col - 1 > 0)//left
+        if (col > 0)//left
         {
             tiles.Add(Map[row, col - 1]);
         }
@@ -128,7 +224,7 @@ public class MapGenerator : MonoBehaviour
             tiles.Add(Map[row + 1, col]);
             if (row % 2 == 0)
             {
-                if (col - 1 > 0)
+                if (col > 0)
                 {
                     tiles.Add(Map[row + 1, col - 1]);
                 }

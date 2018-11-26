@@ -26,12 +26,12 @@ public class CameraManager : MonoBehaviour
 
     private void InitCamera()
     {
-        var currentLevel = GameManager.instance.CurrentLevel;
-        var centerOfField = Helpers.GetPositionForTile(currentLevel.MapSize.y / 2, currentLevel.MapSize.x / 2);
+        var mapSize = GameManager.instance.MapGenerator.MapSize;
+        var centerOfField = Helpers.GetPositionForTile(mapSize.y / 2, mapSize.x / 2);
         centerOfField.y = transform.position.y;
         transform.position = centerOfField;
 
-        var bottomOfField = Helpers.GetPositionForTile(currentLevel.MapSize.y, currentLevel.MapSize.x);
+        var bottomOfField = Helpers.GetPositionForTile(mapSize.y, mapSize.x);
         minPositions = new Vector3(0, 3, bottomOfField.z - 15);
         maxPositions = new Vector3(bottomOfField.x, Def.Instance.MaxCameraHeight, -10);
         init = true;

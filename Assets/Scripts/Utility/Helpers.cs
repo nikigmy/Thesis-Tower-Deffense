@@ -57,7 +57,7 @@ public class Helpers {
         return true;
     }
 
-    public static bool GetTileType(char tileId, out Declarations.TileType tileType)
+    public static bool GetTileType(char tileId, out Declarations.TileType tileType, bool canHaveEmpty)
     {
         switch (tileId)
         {
@@ -76,11 +76,43 @@ public class Helpers {
             case 'x':
                 tileType = Declarations.TileType.Environment;
                 break;
+            case '@':
+                if (canHaveEmpty)
+                {
+                    tileType = Declarations.TileType.Empty;
+                }
+                else
+                {
+                    tileType = Declarations.TileType.Unknown;
+                }
+                break;
             default:
                 tileType = Declarations.TileType.Unknown;
                 break;
         }
         return tileType != Declarations.TileType.Unknown;
+    }
+
+    internal static string GetTileTypeChar(Declarations.TileType tileType)
+    {
+        switch (tileType)
+        {
+            case Declarations.TileType.Grass:
+                return "/";
+            case Declarations.TileType.Path:
+                return "#";
+            case Declarations.TileType.Objective:
+                return "$";
+            case Declarations.TileType.Spawn:
+                return "*";
+            case Declarations.TileType.Environment:
+                return "x";
+            case Declarations.TileType.Empty:
+                return "@";
+            default:
+                Debug.Log("Unknown tile");
+                return "";
+        }
     }
 
     internal static bool IsGroundUnit(Declarations.EnemyType type)

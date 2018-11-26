@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
     public MapGenerator MapGenerator;
     public SpawnManager SpawnManager;
     public UIManager UIManager;
+    public PaintManager PaintManager;
+    public LevelCreator LevelCreator;
     [SerializeField]
     private TowerAssetData[] towersAssetData;
     [SerializeField]
@@ -37,7 +39,6 @@ public class GameManager : MonoBehaviour
         {
             DontDestroyOnLoad(this);
             instance = this;
-            Def.Instance.LoadData(towersAssetData, enemyAssetData);
             SceneManager.sceneLoaded += SceneLoaded;
         }
         else
@@ -50,7 +51,7 @@ public class GameManager : MonoBehaviour
     {
         if (scene.name == "Level")
         {
-            LooeadDependencies(true);
+            LooeadDependencies(scene.name);
 
             MapGenerator.GenerateMap(CurrentLevel);
             SpawnManager.SpawnWaves(CurrentLevel.Waves);
@@ -63,9 +64,14 @@ public class GameManager : MonoBehaviour
         }
         else if (scene.name == "MainMenu")
         {
-            LooeadDependencies(false);
+            LooeadDependencies(scene.name);
+            Def.Instance.LoadData(towersAssetData, enemyAssetData);
 
             MainMenu.LoadLevelPreviews();
+        }
+        else if (scene.name == "LevelCreator")
+        {
+            LooeadDependencies(scene.name);
         }
     }
 
@@ -81,19 +87,25 @@ public class GameManager : MonoBehaviour
 
         SceneManager.LoadScene("Level", LoadSceneMode.Single);
     }
-
-    private void LooeadDependencies(bool level)
+    
+    private void LooeadDependencies(string sceneName)
     {
-        if (level)
+        if (sceneName == "Level")
         {
             BuildManager = FindObjectOfType<BuildManager>();
             MapGenerator = FindObjectOfType<MapGenerator>();
             SpawnManager = FindObjectOfType<SpawnManager>();
             UIManager = FindObjectOfType<UIManager>();
         }
-        else
+        else if(sceneName == "MainMenu")
         {
             MainMenu = FindObjectOfType<MainMenu>();
+        }
+        else if(sceneName == "LevelCreator")
+        {
+            MapGenerator = FindObjectOfType<MapGenerator>();
+            PaintManager = FindObjectOfType<PaintManager>();
+            LevelCreator = FindObjectOfType<LevelCreator>();
         }
     }
 

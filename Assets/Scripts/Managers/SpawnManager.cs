@@ -29,15 +29,15 @@ public class SpawnManager : MonoBehaviour
     private int currentWaveIndex;
     private int currentWavePartIndex;
 
-    private Declarations.WaveData[] currentWaves;
+    private List<Declarations.WaveData> currentWaves;
     private Declarations.WaveData currentWave;
 
     private void Start()
     {
         enemies = new List<Enemy>();
     }
-    
-    public void SpawnWaves(Declarations.WaveData[] waves)
+
+    public void SpawnWaves(List<Declarations.WaveData> waves)
     {
         currentWaves = waves;
         currentWaveIndex = 0;
@@ -52,7 +52,7 @@ public class SpawnManager : MonoBehaviour
 
     private void NextWavePart()
     {
-        if (currentWavePartIndex < currentWave.WaveParts.Length)
+        if (currentWavePartIndex < currentWave.WaveParts.Count)
         {
             if (currentWave.WaveParts[currentWavePartIndex].Type == Declarations.WavePartType.Delay)
             {
@@ -78,7 +78,7 @@ public class SpawnManager : MonoBehaviour
         }
         else
         {
-            if (currentWaveIndex < currentWaves.Length - 1)
+            if (currentWaveIndex < currentWaves.Count - 1)
             {
                 currentWavePartIndex = 0;
                 currentWaveIndex++;
@@ -94,9 +94,9 @@ public class SpawnManager : MonoBehaviour
         {
             var enemiesInFront = enemies.Take(enemyIndex);
             var isGroundUnit = Helpers.IsGroundUnit(enemy.Type);
-            for (int i = enemiesInFront.Count() - 1; i >= 0 ; i--)
+            for (int i = enemiesInFront.Count() - 1; i >= 0; i--)
             {
-                if(Helpers.IsGroundUnit(enemiesInFront.ElementAt(i).Type) == isGroundUnit)
+                if (Helpers.IsGroundUnit(enemiesInFront.ElementAt(i).Type) == isGroundUnit)
                 {
                     return enemiesInFront.ElementAt(i);
                 }
@@ -108,7 +108,7 @@ public class SpawnManager : MonoBehaviour
     internal void EnemyDestroyed(Enemy enemy)
     {
         enemies.Remove(enemy);
-        if (currentWaveIndex >= currentWaves.Length - 1 && currentWavePartIndex >= currentWave.WaveParts.Length - 1 && enemies.Count == 0)
+        if (currentWaveIndex >= currentWaves.Count - 1 && currentWavePartIndex >= currentWave.WaveParts.Count - 1 && enemies.Count == 0)
         {
             LevelCompleted.Invoke();
         }

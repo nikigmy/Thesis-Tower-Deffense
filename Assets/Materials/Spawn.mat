@@ -4,7 +4,7 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Spawn
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
@@ -72,5 +72,5 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.103773594, g: 0.103773594, b: 0.103773594, a: 1}
+    - _Color: {r: 0.101960786, g: 0.101960786, b: 0.101960786, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

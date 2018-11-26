@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Xml.Linq;
 using UnityEngine;
 using UnityEngine.Events;
@@ -16,11 +18,12 @@ public class Declarations
     }
     public enum TileType
     {
-        Spawn,
-        Objective,
         Grass,
         Path,
+        Objective,
+        Spawn,
         Environment,
+        Empty,
         Unknown
     }
 
@@ -57,14 +60,14 @@ public class Declarations
     public class LevelData
     {
         public IntVector2 MapSize { get; private set; }
-        public TileType[,] Map { get; private set; }
+        public TileType[,] Map { get; set; }
 
         public int StartMoney { get; private set; }
         public int StartHealth { get; private set; }
-        public WaveData[] Waves { get; private set; }
+        public List<WaveData> Waves { get; private set; }
         public Sprite previewSprite { get; private set; }
 
-        public LevelData(IntVector2 mapSize, TileType[,] map, WaveData[] waves, int startMoney, int startHealth)
+        public LevelData(IntVector2 mapSize, TileType[,] map, List<WaveData> waves, int startMoney, int startHealth)
         {
             MapSize = mapSize;
             Map = map;
@@ -73,13 +76,51 @@ public class Declarations
             Waves = waves;
             previewSprite = TextureGenerator.GetTextureForLevel(this);
         }
+
+        public XElement Export()
+        {
+            var level = new XElement("Level", new object[] { new XAttribute("StartMoney", StartMoney), new XAttribute("StartHealth", StartHealth) });
+            StringBuilder mapString = new StringBuilder("\n");
+            for (int i = 0; i < MapSize.y; i++)
+            {
+                for (int j = 0; j < MapSize.x; j++)
+                {
+                    mapString.Append(Helpers.GetTileTypeChar(Map[i, j]));
+                }
+                mapString.Append("\n");
+            }
+            var mapElement = new XElement("Map", new object[] { new XAttribute("Width", MapSize.x), new XAttribute("Height", MapSize.y), mapString.ToString() });
+
+            var spawnData = new XElement("SpawnData");
+            foreach (var wave in Waves)
+            {
+                var waveElement = new XElement("Wave");
+                foreach (var wavePart in wave.WaveParts)
+                {
+                    if(wavePart.Type == WavePartType.Spawn)
+                    {
+                        waveElement.Add(new XElement("Enemy", new object[] { new XAttribute("Type", ((SpawnWavePart)wavePart).EnemyToSpawn.Type.ToString()) }));
+                    }
+                    else
+                    {
+                        waveElement.Add(new XElement("Delay", new object[] { new XAttribute("Time", ((DelayWavePart)wavePart).Delay.ToString()) }));
+                    }
+                }
+                spawnData.Add(waveElement);
+            }
+
+            level.Add(mapElement);
+            level.Add(spawnData);
+
+            return level;
+        }
     }
 
     public class WaveData
     {
-        public WavePart[] WaveParts { get; private set; }
+        public List<WavePart> WaveParts { get; private set; }
 
-        public WaveData(WavePart[] waveParts)
+        public WaveData(List<WavePart> waveParts)
         {
             WaveParts = waveParts;
         }
@@ -92,7 +133,7 @@ public class Declarations
 
     public class SpawnWavePart : WavePart
     {
-        public EnemyData EnemyToSpawn { get; private set; }
+        public EnemyData EnemyToSpawn { get; set; }
 
         public SpawnWavePart(EnemyData enemyToSpawn)
         {
@@ -103,7 +144,7 @@ public class Declarations
 
     public class DelayWavePart : WavePart
     {
-        public float Delay { get; private set; }
+        public float Delay { get;  set; }
 
         public DelayWavePart(float delay)
         {

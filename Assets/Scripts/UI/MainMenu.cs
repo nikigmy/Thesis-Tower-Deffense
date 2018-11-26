@@ -2,12 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour {
 
     [SerializeField]
     GameObject levelSelectButton;
+    [SerializeField]
+    GameObject levelEditorButton;
     [SerializeField]
     GameObject quitButton;
     [SerializeField]
@@ -36,6 +39,11 @@ public class MainMenu : MonoBehaviour {
         }
     }
 
+    public void LevelCreatorClicked()
+    {
+        SceneManager.LoadScene("LevelCreator");
+    }
+
     public void SwitchPanels(bool toLevelSelect)
     {
         if (toLevelSelect)
@@ -44,6 +52,7 @@ public class MainMenu : MonoBehaviour {
             levelSelectBack.SetActive(true);
 
             levelSelectButton.SetActive(false);
+            levelEditorButton.SetActive(false);
             quitButton.SetActive(false);
         }
         else
@@ -51,6 +60,7 @@ public class MainMenu : MonoBehaviour {
             levelSelectPanel.SetActive(false);
             levelSelectBack.SetActive(false);
 
+            levelEditorButton.SetActive(true);
             levelSelectButton.SetActive(true);
             quitButton.SetActive(true);
 

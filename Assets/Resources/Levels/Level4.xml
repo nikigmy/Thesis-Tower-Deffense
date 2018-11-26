@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Level StartMoney="500" StartHealth="10">
+  <Map Width="10" Height="10">
+xxxxxxx/$$
+xxxxxx/$$$
+xxxxx//#$$
+xxxx//#///
+xxxx//#///
+xxx//#////
+xxx//#//xx
+xx//#//xxx
+////#//xxx
+*###///xxx
+</Map>
+  <SpawnData>
+    <Wave>
+      <Enemy Type="Dragon" />
+      <Delay Time="1" />
+      <Enemy Type="Dragon" />
+    </Wave>
+    <Wave>
+      <Enemy Type="Golem" />
+      <Delay Time="1" />
+      <Enemy Type="Swordsman" />
+    </Wave>
+  </SpawnData>
+</Level>

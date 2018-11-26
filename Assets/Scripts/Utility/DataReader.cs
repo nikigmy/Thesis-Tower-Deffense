@@ -32,7 +32,7 @@ public class DataReader
 
 
     #region LevelReading
-    public static bool ReadLevelData(XElement levelFile, out Declarations.LevelData levelData, bool readWaves = true)
+    public static bool ReadLevelData(XElement levelFile, out Declarations.LevelData levelData, bool canHaveEmptyTiles = false, bool readWaves = true)
     {
         var mapElement = levelFile.Element(cst_Map);
         var spawnData = levelFile.Element(cst_spawnData);
@@ -42,8 +42,8 @@ public class DataReader
             int startHealth;
             Declarations.IntVector2 mapSize;
             Declarations.TileType[,] map;
-            Declarations.WaveData[] waves;
-            if (int.TryParse(levelFile.Attribute(cst_StartMoney).Value, out startMoney) && int.TryParse(levelFile.Attribute(cst_StartHealth).Value, out startHealth) && ReadMapData(mapElement, out mapSize, out map))
+            List<Declarations.WaveData> waves;
+            if (int.TryParse(levelFile.Attribute(cst_StartMoney).Value, out startMoney) && int.TryParse(levelFile.Attribute(cst_StartHealth).Value, out startHealth) && ReadMapData(mapElement, out mapSize, out map, canHaveEmptyTiles))
             {
                 waves = null;
                 if (!readWaves || ReadWaveData(spawnData, out waves))
@@ -57,14 +57,14 @@ public class DataReader
         return false;
     }
 
-    private static bool ReadWaveData(XElement spawnData, out Declarations.WaveData[] waves)
+    private static bool ReadWaveData(XElement spawnData, out List<Declarations.WaveData> waves)
     {
         var wavesData = spawnData.Elements(cst_wave).ToList();
-        waves = new Declarations.WaveData[wavesData.Count];
+        waves = new List<Declarations.WaveData>();
         for (int i = 0; i < wavesData.Count; i++)
         {
             var wavePartsData = wavesData[i].Elements().ToList();
-            Declarations.WavePart[] waveParts = new Declarations.WavePart[wavePartsData.Count];
+            List<Declarations.WavePart> waveParts = new List<Declarations.WavePart>();
             for (int j = 0; j < wavePartsData.Count; j++)
             {
                 var partName = wavePartsData[j].Name.LocalName;
@@ -75,7 +75,7 @@ public class DataReader
                     if (enemyTypeAttribute != null && !string.IsNullOrEmpty(enemyTypeAttribute.Value) && Helpers.GetEnemyTypeFromString(enemyTypeAttribute.Value, out enemyType))
                     {
                         if (Def.Instance.EnemyDictionary.ContainsKey(enemyType))
-                            waveParts[j] = new Declarations.SpawnWavePart(Def.Instance.EnemyDictionary[enemyType]);
+                            waveParts.Add(new Declarations.SpawnWavePart(Def.Instance.EnemyDictionary[enemyType]));
                     }
                     else
                     {
@@ -88,7 +88,7 @@ public class DataReader
                     var timeAttribute = wavePartsData[j].Attribute(cst_time);
                     if (timeAttribute != null && !string.IsNullOrEmpty(timeAttribute.Value) && float.TryParse(timeAttribute.Value, out delay))
                     {
-                        waveParts[j] = new Declarations.DelayWavePart(delay);
+                        waveParts.Add(new Declarations.DelayWavePart(delay));
                     }
                     else
                     {
@@ -100,13 +100,14 @@ public class DataReader
                     return false;
                 }
             }
-            waves[i] = new Declarations.WaveData(waveParts);
+            waves.Add(new Declarations.WaveData(waveParts));
         }
         return true;
     }
 
-    private static bool ReadMapData(XElement mapElement, out Declarations.IntVector2 mapSize, out Declarations.TileType[,] map)
+    private static bool ReadMapData(XElement mapElement, out Declarations.IntVector2 mapSize, out Declarations.TileType[,] map, bool canHaveEmptyTiles)
     {
+        var result = true;
         var width = mapElement.Attribute("Width");
         var height = mapElement.Attribute("Height");
         if (width != null && height != null && !string.IsNullOrEmpty(width.Value) && !string.IsNullOrEmpty(height.Value))
@@ -125,7 +126,7 @@ public class DataReader
                         for (int col = 0; col < mapSize.x; col++)
                         {
                             Declarations.TileType tileType;
-                            if (Helpers.GetTileType(line[col], out tileType))
+                            if (Helpers.GetTileType(line[col], out tileType, canHaveEmptyTiles))
                             {
                                 map[row, col] = tileType;
                             }
@@ -145,7 +146,7 @@ public class DataReader
         }
         mapSize = null;
         map = null;
-        return false;
+        return result;
     }
 
     #endregion
