@@ -19,8 +19,12 @@ public class DataReader
     private const string cst_FireRate = "FireRate";
     private const string cst_Price = "Price";
     private const string cst_Range = "Range";
-    private const string cst_UpgradePrice = "UpgradePrice"; 
+    private const string cst_UpgradePrice = "UpgradePrice";
     private const string cst_ExplosionRange = "ExplosionRange";
+    private const string cst_SlowEffect = "SlowEffect"; 
+    private const string cst_SlowDuration = "SlowDuration"; 
+    private const string cst_MaxBounces = "MaxBounces";
+    private const string cst_BounceRange = "BounceRange"; 
     private const string cst_Map = "Map";
     private const string cst_spawnData = "SpawnData";
     private const string cst_wave = "Wave";
@@ -160,6 +164,10 @@ public class DataReader
                 return ReadCanonData(towerData, assetData, out tower);
             case Declarations.TowerType.Plasma:
                 return ReadPlasmaData(towerData, assetData, out tower);
+            case Declarations.TowerType.Crystal:
+                return ReadCrystalData(towerData, assetData, out tower);
+            case Declarations.TowerType.Tesla:
+                return ReadTeslaData(towerData, assetData, out tower);
             default:
                 Debug.Log("Unknown tower type");
                 break;
@@ -168,70 +176,6 @@ public class DataReader
         return false;
     }
 
-    private static bool ReadPlasmaData(XElement towerData, TowerAssetData assetData, out Declarations.TowerData tower)
-    {
-        var levels = new Declarations.PlasmaLevelData[3];
-
-        bool failed = false;
-
-        
-        #region Level1
-        var level1 = towerData.Element(cst_Level1);
-
-        if (level1 != null)
-        {
-            levels[0] = new Declarations.PlasmaLevelData(ReadInt(level1, cst_Price, ref failed),
-                                                        ReadFloat(level1, cst_Range, ref failed),
-                                                        ReadFloat(level1, cst_FireRate, ref failed),
-                                                        ReadInt(level1, cst_Damage, ref failed),
-                                                        ReadFloat(level1, cst_ExplosionRange, ref failed));
-        }
-        else
-        {
-            failed = true;
-        }
-        #endregion
-
-        #region Level2
-        var level2 = towerData.Element(cst_Level2);
-        if (level2 != null)
-        {
-            levels[1] = new Declarations.PlasmaLevelData(ReadInt(level2, cst_UpgradePrice, ref failed),
-                                                        ReadFloat(level2, cst_Range, ref failed),
-                                                        ReadFloat(level2, cst_FireRate, ref failed),
-                                                        ReadInt(level2, cst_Damage, ref failed),
-                                                        ReadFloat(level2, cst_ExplosionRange, ref failed));
-        }
-        else
-        {
-            failed = true;
-        }
-        #endregion
-
-        #region Level3
-        var level3 = towerData.Element(cst_Level3);
-        if (level3 != null)
-        {
-            levels[2] = new Declarations.PlasmaLevelData(ReadInt(level3, cst_UpgradePrice, ref failed),
-                                                        ReadFloat(level3, cst_Range, ref failed),
-                                                        ReadFloat(level3, cst_FireRate, ref failed),
-                                                        ReadInt(level3, cst_Damage, ref failed),
-                                                        ReadFloat(level3, cst_ExplosionRange, ref failed));
-        }
-        #endregion
-
-        if (failed)
-        {
-            Debug.Log("Filed to read plasma tower");
-            tower = null;
-            return false;
-        }
-        else
-        {
-            tower = new Declarations.PlasmaTower(assetData, levels);
-            return true;
-        }
-    }
 
     private static bool ReadCanonData(XElement towerData, TowerAssetData assetData, out Declarations.TowerData tower)
     {
@@ -292,6 +236,204 @@ public class DataReader
         }
     }
 
+    private static bool ReadPlasmaData(XElement towerData, TowerAssetData assetData, out Declarations.TowerData tower)
+    {
+        var levels = new Declarations.PlasmaLevelData[3];
+
+        bool failed = false;
+
+        #region Level1
+        var level1 = towerData.Element(cst_Level1);
+
+        if (level1 != null)
+        {
+            levels[0] = new Declarations.PlasmaLevelData(ReadInt(level1, cst_Price, ref failed),
+                                                        ReadFloat(level1, cst_Range, ref failed),
+                                                        ReadFloat(level1, cst_FireRate, ref failed),
+                                                        ReadInt(level1, cst_Damage, ref failed),
+                                                        ReadFloat(level1, cst_ExplosionRange, ref failed));
+        }
+        else
+        {
+            failed = true;
+        }
+        #endregion
+
+        #region Level2
+        var level2 = towerData.Element(cst_Level2);
+        if (level2 != null)
+        {
+            levels[1] = new Declarations.PlasmaLevelData(ReadInt(level2, cst_UpgradePrice, ref failed),
+                                                        ReadFloat(level2, cst_Range, ref failed),
+                                                        ReadFloat(level2, cst_FireRate, ref failed),
+                                                        ReadInt(level2, cst_Damage, ref failed),
+                                                        ReadFloat(level2, cst_ExplosionRange, ref failed));
+        }
+        else
+        {
+            failed = true;
+        }
+        #endregion
+
+        #region Level3
+        var level3 = towerData.Element(cst_Level3);
+        if (level3 != null)
+        {
+            levels[2] = new Declarations.PlasmaLevelData(ReadInt(level3, cst_UpgradePrice, ref failed),
+                                                        ReadFloat(level3, cst_Range, ref failed),
+                                                        ReadFloat(level3, cst_FireRate, ref failed),
+                                                        ReadInt(level3, cst_Damage, ref failed),
+                                                        ReadFloat(level3, cst_ExplosionRange, ref failed));
+        }
+        #endregion
+
+        if (failed)
+        {
+            Debug.Log("Filed to read plasma tower");
+            tower = null;
+            return false;
+        }
+        else
+        {
+            tower = new Declarations.PlasmaTower(assetData, levels);
+            return true;
+        }
+    }
+
+    private static bool ReadCrystalData(XElement towerData, TowerAssetData assetData, out Declarations.TowerData tower)
+    {
+        var levels = new Declarations.CrystalLevelData[3];
+
+        bool failed = false;
+
+        #region Level1
+        var level1 = towerData.Element(cst_Level1);
+
+        if (level1 != null)
+        {
+            levels[0] = new Declarations.CrystalLevelData(ReadInt(level1, cst_Price, ref failed),
+                                                        ReadFloat(level1, cst_Range, ref failed),
+                                                        ReadFloat(level1, cst_FireRate, ref failed),
+                                                        ReadInt(level1, cst_Damage, ref failed),
+                                                        ReadInt(level1, cst_SlowEffect, ref failed),
+                                                        ReadFloat(level1, cst_SlowDuration, ref failed));
+        }
+        else
+        {
+            failed = true;
+        }
+        #endregion
+
+        #region Level2
+        var level2 = towerData.Element(cst_Level2);
+        if (level2 != null)
+        {
+            levels[1] = new Declarations.CrystalLevelData(ReadInt(level2, cst_UpgradePrice, ref failed),
+                                                        ReadFloat(level2, cst_Range, ref failed),
+                                                        ReadFloat(level2, cst_FireRate, ref failed),
+                                                        ReadInt(level2, cst_Damage, ref failed),
+                                                        ReadInt(level2, cst_SlowEffect, ref failed),
+                                                        ReadFloat(level2, cst_SlowDuration, ref failed));
+        }
+        else
+        {
+            failed = true;
+        }
+        #endregion
+
+        #region Level3
+        var level3 = towerData.Element(cst_Level3);
+        if (level3 != null)
+        {
+            levels[2] = new Declarations.CrystalLevelData(ReadInt(level3, cst_UpgradePrice, ref failed),
+                                                        ReadFloat(level3, cst_Range, ref failed),
+                                                        ReadFloat(level3, cst_FireRate, ref failed),
+                                                        ReadInt(level3, cst_Damage, ref failed),
+                                                        ReadInt(level3, cst_SlowEffect, ref failed),
+                                                        ReadFloat(level3, cst_SlowDuration, ref failed));
+        }
+        #endregion
+
+        if (failed)
+        {
+            Debug.Log("Filed to read crystal tower");
+            tower = null;
+            return false;
+        }
+        else
+        {
+            tower = new Declarations.CrystalTower(assetData, levels);
+            return true;
+        }
+    }
+
+    private static bool ReadTeslaData(XElement towerData, TowerAssetData assetData, out Declarations.TowerData tower)
+    {
+        var levels = new Declarations.TeslaLevelData[3];
+
+        bool failed = false;
+
+        #region Level1
+        var level1 = towerData.Element(cst_Level1);
+
+        if (level1 != null)
+        {
+            levels[0] = new Declarations.TeslaLevelData(ReadInt(level1, cst_Price, ref failed),
+                                                        ReadFloat(level1, cst_Range, ref failed),
+                                                        ReadFloat(level1, cst_FireRate, ref failed),
+                                                        ReadInt(level1, cst_Damage, ref failed),
+                                                        ReadInt(level1, cst_MaxBounces, ref failed),
+                                                        ReadFloat(level1, cst_BounceRange, ref failed));
+        }
+        else
+        {
+            failed = true;
+        }
+        #endregion
+
+        #region Level2
+        var level2 = towerData.Element(cst_Level2);
+        if (level2 != null)
+        {
+            levels[1] = new Declarations.TeslaLevelData(ReadInt(level2, cst_UpgradePrice, ref failed),
+                                                        ReadFloat(level2, cst_Range, ref failed),
+                                                        ReadFloat(level2, cst_FireRate, ref failed),
+                                                        ReadInt(level2, cst_Damage, ref failed),
+                                                        ReadInt(level2, cst_MaxBounces, ref failed),
+                                                        ReadFloat(level2, cst_BounceRange, ref failed));
+        }
+        else
+        {
+            failed = true;
+        }
+        #endregion
+
+        #region Level3
+        var level3 = towerData.Element(cst_Level3);
+        if (level3 != null)
+        {
+            levels[2] = new Declarations.TeslaLevelData(ReadInt(level3, cst_UpgradePrice, ref failed),
+                                                        ReadFloat(level3, cst_Range, ref failed),
+                                                        ReadFloat(level3, cst_FireRate, ref failed),
+                                                        ReadInt(level3, cst_Damage, ref failed),
+                                                        ReadInt(level3, cst_MaxBounces, ref failed),
+                                                        ReadFloat(level3, cst_BounceRange, ref failed));
+        }
+        #endregion
+
+        if (failed)
+        {
+            Debug.Log("Filed to read tesla tower");
+            tower = null;
+            return false;
+        }
+        else
+        {
+            tower = new Declarations.TeslaTower(assetData, levels);
+            return true;
+        }
+    }
+    
     private static float ReadFloat(XElement element, string attributeName, ref bool failed)
     {
         var result = 0.0f;

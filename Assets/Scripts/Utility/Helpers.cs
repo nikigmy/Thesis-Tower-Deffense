@@ -1,7 +1,8 @@
 ﻿using System;
 using UnityEngine;
 
-public class Helpers {
+public class Helpers
+{
 
     public static Vector3 GetPositionForTile(int row, int col)
     {
@@ -23,7 +24,13 @@ public class Helpers {
                 break;
             case "Plasma":
                 towerType = Declarations.TowerType.Plasma;
-                    break;
+                break;
+            case "Crystal":
+                towerType = Declarations.TowerType.Crystal;
+                break;
+            case "Tesla":
+                towerType = Declarations.TowerType.Tesla;
+                break;
             default:
                 towerType = Declarations.TowerType.Canon;
                 return false;

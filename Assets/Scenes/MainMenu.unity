@@ -188,6 +188,34 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.ScrollRect+ScrollRectEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!1 &192936442
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 192936443}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &192936443
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 192936442}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1077.1338, y: 357.09866, z: -11.386798}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &209775954
 GameObject:
   m_ObjectHideFlags: 0
@@ -993,6 +1021,8 @@ MonoBehaviour:
   towersAssetData:
   - {fileID: 11400000, guid: 655221aacb329c34189e51687c1bf012, type: 2}
   - {fileID: 11400000, guid: dc9453e847e8d5641ab3e9182b5fba86, type: 2}
+  - {fileID: 11400000, guid: b4018e48946415647b72c022d26550e0, type: 2}
+  - {fileID: 11400000, guid: 2deb5d863ae2f7741a6c98f6fd18a603, type: 2}
   enemyAssetData:
   - {fileID: 11400000, guid: f235ace6843d59240b416355b47e48c9, type: 2}
   - {fileID: 11400000, guid: ccc84da71342c2643b13d49987b403a5, type: 2}

@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Plasma : Tower
 {
-
     [SerializeField]
     private GameObject plasmaBall;
     [SerializeField]
@@ -99,7 +98,7 @@ public class Plasma : Tower
     private void Fire()
     {
         var projectile = Instantiate(plasmaBall, currentFirePoint.position, currentFirePoint.rotation);
-        projectile.GetComponent<Projectile>().SetTarget(new Declarations.PlasmaBallData(target, (towerData as Declarations.PlasmaTower).CurrentDamage, (towerData as Declarations.PlasmaTower).CurrentExplosionRange));
+        projectile.GetComponent<Projectile>().SetTarget(new Declarations.PlasmaBallData(target, towerData.CurrentDamage, (towerData as Declarations.PlasmaTower).CurrentExplosionRange));
     }
 
     protected override void UpdateGunPartsReferences()

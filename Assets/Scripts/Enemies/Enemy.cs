@@ -15,6 +15,8 @@ public class Enemy : MonoBehaviour
     protected Text healthText;
     [SerializeField]
     protected Renderer rend;
+    [SerializeField]
+    protected ParticleSystem slowEffect;
 
     protected Animator anim;
     protected Declarations.EnemyData enemyData;
@@ -27,7 +29,7 @@ public class Enemy : MonoBehaviour
     public bool Attacking = false;
     public Declarations.EnemyType Type { get { return enemyData.Type; } }
     public List<Declarations.Effect> Effects;
-    
+
     protected void Init()
     {
         Effects = new List<Declarations.Effect>();
@@ -88,6 +90,30 @@ public class Enemy : MonoBehaviour
                     Move();
                 }
             }
+            UpdateEffects();
+        }
+    }
+
+    private void UpdateEffects()
+    {
+        for (int i = 0; i < Effects.Count; i++)
+        {
+            var curreEffect = Effects[i];
+            curreEffect.Duration -= Time.deltaTime;
+            if (curreEffect.Duration <= 0)
+            {
+                RemoveEffect(curreEffect);
+            }
+        }
+    }
+
+    private void RemoveEffect(Declarations.Effect curreEffect)
+    {
+        Effects.Remove(curreEffect);
+        if (curreEffect.Type == Declarations.EffectType.Slow && Effects.All(x => x.Type != Declarations.EffectType.Slow))
+        {
+            slowEffect.Stop();
+            slowEffect.Clear();
         }
     }
 
@@ -128,19 +154,29 @@ public class Enemy : MonoBehaviour
 
     private void UpdateSpeed()
     {
-        if(Effects.Any(x => x.Type == Declarations.EffectType.Stun))
+        if (Effects.Any(x => x.Type == Declarations.EffectType.Stun))
         {
+            Debug.Log("Stunned");
             CurrentSpeed = 0;
-            return;
         }
-        var enemyInFront = GameManager.instance.SpawnManager.GetEnemyInFront(this);
-        if (enemyInFront != null)
+        else
         {
-            if (Vector3.Distance(transform.position, enemyInFront.transform.position) <= distanceFromFrontEnemy)
+            var enemyInFront = GameManager.instance.SpawnManager.GetEnemyInFront(this);
+            if (enemyInFront != null)
             {
-                if (enemyInFront.CurrentSpeed < CurrentSpeed)
+                if (Vector3.Distance(transform.position, enemyInFront.transform.position) <= distanceFromFrontEnemy)
                 {
-                    CurrentSpeed = enemyInFront.CurrentSpeed;
+                    if (enemyInFront.CurrentSpeed < CurrentSpeed)
+                    {
+                        CurrentSpeed = enemyInFront.CurrentSpeed;
+                    }
+                }
+                else
+                {
+                    if (CurrentSpeed < enemyData.Speed)
+                    {
+                        CurrentSpeed = enemyData.Speed;
+                    }
                 }
             }
             else
@@ -150,32 +186,25 @@ public class Enemy : MonoBehaviour
                     CurrentSpeed = enemyData.Speed;
                 }
             }
-        }
-        else
-        {
-            if (CurrentSpeed < enemyData.Speed)
+            var slow = Effects.FirstOrDefault(x => x.Type == Declarations.EffectType.Slow);
+            var speedUp = Effects.FirstOrDefault(x => x.Type == Declarations.EffectType.Speed);
+            if (speedUp != null)
             {
-                CurrentSpeed = enemyData.Speed;
+                CurrentSpeed *= speedUp.Value;
             }
-        }
-        var slow = Effects.FirstOrDefault(x => x.Type == Declarations.EffectType.Slow);
-        var speedUp = Effects.FirstOrDefault(x => x.Type == Declarations.EffectType.Speed);
-        if (speedUp != null)
-        {
-            CurrentSpeed *= speedUp.Value; 
-        }
-        else if(slow != null)
-        {
-            CurrentSpeed -= CurrentSpeed * (slow.Value / 100);
-        }
+            else if (slow != null)
+            {
+                CurrentSpeed -= CurrentSpeed * (slow.Value / 100);
+            }
 
+        }
         if (Moving)
         {
             anim.speed = CurrentSpeed / enemyData.Speed;//keep the leg movement consistent
         }
     }
 
-    internal virtual void DealDamage(int damage)
+    internal virtual void DealDamage(int damage, Declarations.Effect effect = null)
     {
         if (currentHealth > 0)
         {
@@ -187,6 +216,14 @@ public class Enemy : MonoBehaviour
             }
 
             UpdateUI();
+        }
+        if (effect != null)
+        {
+            Effects.Add(effect);
+            if (effect.Type == Declarations.EffectType.Slow)
+            {
+                slowEffect.Play();
+            }
         }
     }
 
@@ -225,7 +262,7 @@ public class Enemy : MonoBehaviour
 
             if (pathTiles.Count > 0)
             {
-                var nextTileIndex = Random.Range(0, pathTiles.Count - 1);
+                var nextTileIndex = UnityEngine.Random.Range(0, pathTiles.Count - 1);
                 previousTile = currentTile;
                 currentTile = pathTiles[nextTileIndex];
             }
@@ -241,8 +278,10 @@ public class Enemy : MonoBehaviour
     protected virtual void Died()
     {
         Alive = false;
+        slowEffect.Stop();
+        slowEffect.Clear();
+        anim.speed = 1;
         GameManager.instance.SpawnManager.EnemyDestroyed(this);
         GameManager.instance.AddMoney(enemyData.Award);
-        Destroy(gameObject);
     }
 }

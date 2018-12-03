@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Canon : Tower
 {
-
     [SerializeField]
     private GameObject cannonBall;
     private float timeFromPreviousShot;
@@ -13,7 +12,7 @@ public class Canon : Tower
     private void Awake()
     {
         towerData = Def.Instance.TowerDictionary[Declarations.TowerType.Canon];
-        timeFromPreviousShot = 0;
+        timeFromPreviousShot = towerData.CurrentFireRate;
     }
 
     private void Update()
@@ -27,7 +26,7 @@ public class Canon : Tower
         if (target != null)
         {
             LookAtTarget();
-            if (CanShoot() && timeFromPreviousShot >= (towerData as Declarations.CanonTower).CurrentFireRate)
+            if (CanShoot() && timeFromPreviousShot >= towerData.CurrentFireRate)
             {
                 Fire();
                 timeFromPreviousShot = 0;

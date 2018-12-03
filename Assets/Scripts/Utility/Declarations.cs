@@ -16,6 +16,7 @@ public class Declarations
         Slow,
         Stun
     }
+
     public enum TileType
     {
         Grass,
@@ -30,8 +31,11 @@ public class Declarations
     public enum TowerType
     {
         Canon,
-        Plasma
+        Plasma,
+        Crystal,
+        Tesla
     }
+
     public enum EnemyType
     {
         Swordsman,
@@ -57,6 +61,7 @@ public class Declarations
         }
     }
 
+    #region Levels
     public class LevelData
     {
         public IntVector2 MapSize { get; private set; }
@@ -152,7 +157,9 @@ public class Declarations
             Delay = delay;
         }
     }
+    #endregion Levels
 
+    #region Towers
     public class TowerLevelData
     {
         public int Price { get; protected set; }
@@ -179,6 +186,30 @@ public class Declarations
         public PlasmaLevelData(int price, float range, float fireRate, int damage, float explosionRange) : base(price, range, fireRate, damage)
         {
             ExplosionRange = explosionRange;
+        }
+    }
+
+    public class CrystalLevelData : TowerLevelData
+    {
+        public int SlowEffect { get; protected set; }
+        public float SlowDuration { get; protected set; }
+
+        public CrystalLevelData(int price, float range, float fireRate, int damage, int slowEffect, float slowDuration) : base(price, range, fireRate, damage)
+        {
+            SlowEffect = slowEffect;
+            SlowDuration = slowDuration;
+        }
+    }
+
+    public class TeslaLevelData : TowerLevelData
+    {
+        public int MaxBounces { get; protected set; }
+        public float BounceRange { get; protected set; }
+
+        public TeslaLevelData(int price, float range, float fireRate, int damage, int maxBounces, float bounceRange) : base(price, range, fireRate, damage)
+        {
+            MaxBounces = maxBounces;
+            BounceRange = bounceRange;
         }
     }
 
@@ -316,6 +347,7 @@ public class Declarations
             CurrentLevel = 1;
         }
     }
+
     public class CanonTower : TowerData
     {
         public CanonTower(TowerAssetData assetData, TowerLevelData[] levels) :
@@ -349,6 +381,96 @@ public class Declarations
         }
     }
 
+    public class CrystalTower : TowerData
+    {
+        public int CurrentSlowEffect
+        {
+            get
+            {
+                switch (CurrentLevel)
+                {
+                    case 1:
+                        return (Levels[0] as CrystalLevelData).SlowEffect;
+                    case 2:
+                        return (Levels[1] as CrystalLevelData).SlowEffect;
+                    case 3:
+                        return (Levels[2] as CrystalLevelData).SlowEffect;
+                    default:
+                        return (Levels[2] as CrystalLevelData).SlowEffect;
+                }
+            }
+        }
+
+        public float CurrentSlowDuration
+        {
+            get
+            {
+                switch (CurrentLevel)
+                {
+                    case 1:
+                        return (Levels[0] as CrystalLevelData).SlowDuration;
+                    case 2:
+                        return (Levels[1] as CrystalLevelData).SlowDuration;
+                    case 3:
+                        return (Levels[2] as CrystalLevelData).SlowDuration;
+                    default:
+                        return (Levels[2] as CrystalLevelData).SlowDuration;
+                }
+            }
+        }
+
+        public CrystalTower(TowerAssetData assetData, CrystalLevelData[] levels) :
+            base(TowerType.Crystal, assetData, levels)
+        {
+        }
+    }
+
+    public class TeslaTower : TowerData
+    {
+        public int CurrentMaxBounces
+        {
+            get
+            {
+                switch (CurrentLevel)
+                {
+                    case 1:
+                        return (Levels[0] as TeslaLevelData).MaxBounces;
+                    case 2:
+                        return (Levels[1] as TeslaLevelData).MaxBounces;
+                    case 3:
+                        return (Levels[2] as TeslaLevelData).MaxBounces;
+                    default:
+                        return (Levels[2] as TeslaLevelData).MaxBounces;
+                }
+            }
+        }
+
+        public float CurrentBounceRange
+        {
+            get
+            {
+                switch (CurrentLevel)
+                {
+                    case 1:
+                        return (Levels[0] as TeslaLevelData).BounceRange;
+                    case 2:
+                        return (Levels[1] as TeslaLevelData).BounceRange;
+                    case 3:
+                        return (Levels[2] as TeslaLevelData).BounceRange;
+                    default:
+                        return (Levels[2] as TeslaLevelData).BounceRange;
+                }
+            }
+        }
+
+        public TeslaTower(TowerAssetData assetData, TeslaLevelData[] levels) :
+            base(TowerType.Tesla, assetData, levels)
+        {
+        }
+    }
+    #endregion Towers
+
+    #region Enemies
     public class EnemyData
     {
         public EnemyType Type { get; set; }
@@ -368,7 +490,9 @@ public class Declarations
             Award = award;
         }
     }
+    #endregion Enemies
 
+    #region Projectiles
     public interface IProjectileData
     {
 
@@ -405,6 +529,38 @@ public class Declarations
             ExplosionRange = explosionRange;
         }
     }
+
+    public class LightningBoltData : TargetableProjectileData
+    {
+        public int Damage;
+        public int MaxBounces;
+        public float BounceRange;
+        public GameObject StartPosition;
+
+        public LightningBoltData(Enemy target, GameObject startPosition, int damage, int maxBounces, float bounceRange) : base(target)
+        {
+            MaxBounces = maxBounces;
+            BounceRange = bounceRange;
+            StartPosition = startPosition;
+            Damage = damage;
+        }
+    }
+
+    public class IceMissileData : TargetableProjectileData
+    {
+        public int Damage;
+        public int SlowEfect;
+        public float SlowDuration;
+
+        public IceMissileData(Enemy target, int damage, int slowEfect, float slowDuration) : base(target)
+        {
+            SlowDuration = slowDuration;
+            SlowEfect = slowEfect;
+            Damage = damage;
+        }
+    }
+
+    #endregion Projectiles
 
     public class Effect
     {

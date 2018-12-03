@@ -8,31 +8,52 @@
   </EnemyData>
   <TowerData>
     <Canon>
-      <Level1  Damage="15" FireRate="0.5" Price="100" Range="3"/>
-      <Level2  Damage="20" FireRate="0.5" UpgradePrice="100" Range="3.5"/>
-      <Level3  Damage="30" FireRate="0.3" UpgradePrice="150" Range="3.5"/>
+      <Level1  Range="3" Damage="15" FireRate="0.5" Price="100"/>
+      <Level2  Range="3.5" Damage="20" FireRate="0.5" UpgradePrice="100"/>
+      <Level3  Range="3.5" Damage="30" FireRate="0.3" UpgradePrice="150"/>
     </Canon>
     <Plasma>
-      <Level1  Damage="35" FireRate="1.75" Price="200" ExplosionRange="1" Range="4.5"/>
-      <Level2  Damage="40" FireRate="1.5" UpgradePrice="150" ExplosionRange="1.25" Range="4.5"/>
-      <Level3  Damage="50" FireRate="1.25" UpgradePrice="200" ExplosionRange="1.5" Range="4.5"/>
+      <Level1  Range="4.5" Damage="35" FireRate="1.75" Price="200" ExplosionRange="1"/>
+      <Level2  Range="4.5" Damage="40" FireRate="1.5" UpgradePrice="150" ExplosionRange="1.25"/>
+      <Level3  Range="4.5" Damage="50" FireRate="1.25" UpgradePrice="200" ExplosionRange="1.5"/>
     </Plasma>
+    <Crystal>
+      <Level1  Range="3.5" Damage="20" FireRate="1.5" Price="350" SlowEffect="30" SlowDuration="1"/>
+      <Level2  Range="3.5" Damage="25" FireRate="1.25" UpgradePrice="200" SlowEffect="40" SlowDuration="1.5"/>
+      <Level3  Range="4" Damage="25" FireRate="1" UpgradePrice="300" SlowEffect="50" SlowDuration="2"/>
+    </Crystal>
+    <Tesla>
+      <Level1  Range="2.5" Damage="35" FireRate="1.5" Price="200" MaxBounces="2" BounceRange="3"/>
+      <Level2  Range="3" Damage="40" FireRate="1.5" UpgradePrice="150" MaxBounces="3" BounceRange="3"/>
+      <Level3  Range="3.5" Damage="50" FireRate="1.25" UpgradePrice="200" MaxBounces="4" BounceRange="3"/>
+    </Tesla>
   </TowerData>
 </Setup>
 <!--/*
-* Canon   Damage, FireRate
-* Plazma  Damage, ChargeTime, ExplosionRange
-* Tesla   Damage, FireRate
-* Gatling Damage, FireRate
-* Gauss   Damage, ChargeTime, LaserRange
-* Mortar  Damage, FireRate, ExplosionRange
-*
-* Crystal Damage, FireRate, SlowEffect
-* Fire    Damage, FireRange
-* Laser   BaseDamage, DamgaeIncrease
-* Crosbow Damage, FireRate
-
-* Rocket  Damage, FireRate, ExplosionRange
+* Canon   Range, Damage, FireRate
+* Plazma  Range, Damage, ChargeTime, ExplosionRange
+* Crystal Range, Damage, FireRate, SlowEffect
+* Tesla   Range, Damage, FireRate
+* Gauss   Range, Damage, ChargeTime, LaserRange
+*         Range, 
+* Radar   Range, 
+* Mortar  Range, Damage, FireRate, ExplosionRange
+* Gatling Range, Damage, FireRate
+* Fire    Range, Damage, FireRange
+* Laser   Range, BaseDamage, DamgaeIncrease
+* Crosbow Range, Damage, FireRate
+          Range, 
+* Rocket  Range, Damage, FireRate, ExplosionRange
 * Acid
-* Radar
+
+fire flies blue
+Ice misile
+
+beamup cylinder - revive
+Portal - spawn
+Demo 8 - powerups
+Rocket misile
+
+
+PComponent Air Explosion
 -->

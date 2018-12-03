@@ -105,6 +105,10 @@ public abstract class Tower : MonoBehaviour
         {
             target = closestEnemy;
         }
+        else
+        {
+            target = null;
+        }
     }
 
     protected virtual void LookAtTarget()

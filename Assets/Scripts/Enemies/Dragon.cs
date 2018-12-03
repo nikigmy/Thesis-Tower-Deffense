@@ -12,15 +12,13 @@ public class Dragon : Enemy {
 
     protected override void Died()
     {
-        Alive = false;
-        GameManager.instance.SpawnManager.EnemyDestroyed(this);
-        GameManager.instance.AddMoney(enemyData.Award);
+        base.Died();
         anim.SetTrigger("Die");
     }
 
-    internal override void DealDamage(int damage)
+    internal override void DealDamage(int damage, Declarations.Effect effect = null)
     {
-        base.DealDamage(damage);
+        base.DealDamage(damage, effect);
         if (Alive)
         {
             anim.SetTrigger("Take Damage");

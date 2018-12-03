@@ -123,7 +123,6 @@ public class GameManager : MonoBehaviour
 
     public void DealDamage(int value)
     {
-        Debug.Log("Dealed damage" + value);
         Health -= value;
         if (Health <= 0)
         {

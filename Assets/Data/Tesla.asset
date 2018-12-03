@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f1559f59aa8bbe4cad19168a03d98d9, type: 3}
+  m_Name: Tesla
+  m_EditorClassIdentifier: 
+  Description: LIGHTNING
+  Type: 3
+  Level1Sprite: {fileID: 21300000, guid: 6fe2a71c7eb902146b9c9408e7172c26, type: 3}
+  Level2Sprite: {fileID: 21300000, guid: 5aca351642bbaff4aba723b6f5322306, type: 3}
+  Level3Sprite: {fileID: 21300000, guid: 911bdd860cf896f4680ba2c36feceda7, type: 3}
+  Prefab: {fileID: 1233743314017974, guid: bbc447947d7ba7c49890ae17b7655e8e, type: 2}

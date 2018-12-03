@@ -12,10 +12,7 @@ public class Golem : Enemy {
 
     protected override void Died()
     {
-        Alive = false;
-        GameManager.instance.SpawnManager.EnemyDestroyed(this);
-        GameManager.instance.AddMoney(enemyData.Award);
-        anim.speed = 1;
+        base.Died();
         anim.SetTrigger("Died");
     }
 
