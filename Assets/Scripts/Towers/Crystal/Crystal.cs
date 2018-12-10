@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Crystal : Tower {
-
+    
     [SerializeField]
     private GameObject iceMisile;
     private float timeFromPreviousShot;
@@ -11,7 +11,7 @@ public class Crystal : Tower {
     private void Awake()
     {
         towerData = Def.Instance.TowerDictionary[Declarations.TowerType.Crystal];
-        timeFromPreviousShot = towerData.CurrentFireRate;
+        timeFromPreviousShot = (towerData as Declarations.CrystalTower).CurrentFireRate;
     }
 
     private void Update()
@@ -24,7 +24,7 @@ public class Crystal : Tower {
 
         if (target != null)
         {
-            if (timeFromPreviousShot >= towerData.CurrentFireRate)
+            if (timeFromPreviousShot >= (towerData as Declarations.CrystalTower).CurrentFireRate)
             {
                 Fire();
                 timeFromPreviousShot = 0;
@@ -46,6 +46,6 @@ public class Crystal : Tower {
     private void Fire()
     {
         var projectile = Instantiate(iceMisile, currentFirePoint.position, currentFirePoint.rotation);
-        projectile.GetComponent<Projectile>().SetTarget(new Declarations.IceMissileData(target, towerData.CurrentDamage, (towerData as Declarations.CrystalTower).CurrentSlowEffect, (towerData as Declarations.CrystalTower).CurrentSlowDuration));
+        projectile.GetComponent<Projectile>().SetTarget(new Declarations.IceMissileData(target, (towerData as Declarations.CrystalTower).CurrentDamage, (towerData as Declarations.CrystalTower).CurrentSlowEffect, (towerData as Declarations.CrystalTower).CurrentSlowDuration));
     }
 }

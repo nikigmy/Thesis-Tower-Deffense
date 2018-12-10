@@ -1023,10 +1023,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: dc9453e847e8d5641ab3e9182b5fba86, type: 2}
   - {fileID: 11400000, guid: b4018e48946415647b72c022d26550e0, type: 2}
   - {fileID: 11400000, guid: 2deb5d863ae2f7741a6c98f6fd18a603, type: 2}
+  - {fileID: 11400000, guid: 649a7ce0015acb04394be73eed842ed9, type: 2}
+  - {fileID: 11400000, guid: 3f0c9af6f6a65584786139e16b7fad0c, type: 2}
   enemyAssetData:
   - {fileID: 11400000, guid: f235ace6843d59240b416355b47e48c9, type: 2}
   - {fileID: 11400000, guid: ccc84da71342c2643b13d49987b403a5, type: 2}
   - {fileID: 11400000, guid: 3927b5040e1d4364c87a198b0f20665e, type: 2}
+  - {fileID: 11400000, guid: ea3d0e1ed45b8cd4ba084e5f8766a21b, type: 2}
   MoneyChanged:
     m_PersistentCalls:
       m_Calls: []

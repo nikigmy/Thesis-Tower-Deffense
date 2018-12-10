@@ -20,6 +20,8 @@ public abstract class Tower : MonoBehaviour
     protected Transform currentGunHead;
     protected Transform currentFirePoint;
 
+    protected int rotationSpeed = 6;
+
     public Declarations.TowerType Type
     {
         get
@@ -62,7 +64,7 @@ public abstract class Tower : MonoBehaviour
         currentGunHead = nextGunHead;
     }
 
-    private void UpgradeTower()
+    protected virtual void UpgradeTower()
     {
         switch (towerData.CurrentLevel)
         {
@@ -90,11 +92,15 @@ public abstract class Tower : MonoBehaviour
         var distanceToClosestEnemy = float.MaxValue;
         for (int i = 0; i < allEnemies.Count; i++)
         {
-            if (groundOnly && !Helpers.IsGroundUnit(allEnemies[i].Type))
+            if ((groundOnly && !Helpers.IsGroundUnit(allEnemies[i].Type)) || !allEnemies[i].Visible)
             {
                 continue;
             }
             var distanceToEnemy = Vector3.Distance(allEnemies[i].GetCenter(), transform.position);
+            if (towerData == null)
+            {
+                Debug.Log("null in find");
+            }
             if (distanceToEnemy <= towerData.CurrentRange && distanceToEnemy < distanceToClosestEnemy)
             {
                 closestEnemy = allEnemies[i];
@@ -117,19 +123,19 @@ public abstract class Tower : MonoBehaviour
         {
             var baseDir = target.GetCenter() - currentGunBase.position;
             var baseLookRotation = Quaternion.LookRotation(baseDir);
-            var baseRotation = Quaternion.Lerp(currentGunBase.rotation, baseLookRotation, Time.deltaTime * 4).eulerAngles;
+            var baseRotation = Quaternion.Lerp(currentGunBase.rotation, baseLookRotation, Time.deltaTime * rotationSpeed).eulerAngles;
             currentGunBase.localRotation = Quaternion.Euler(0, baseRotation.y, 0);
 
             var headDir = target.GetCenter() - currentGunHead.position;
             var headLookRotation = Quaternion.LookRotation(headDir);
-            var headRotation = Quaternion.Lerp(currentGunHead.rotation, headLookRotation, Time.deltaTime * 4).eulerAngles;
+            var headRotation = Quaternion.Lerp(currentGunHead.rotation, headLookRotation, Time.deltaTime * rotationSpeed).eulerAngles;
             currentGunHead.localRotation = Quaternion.Euler(headRotation.x, 0, 0);
         }
     }
 
     protected bool CanShoot()
     {
-        if (target != null)
+        if (target != null && target.Visible)
         {
             var baseLookOffset = currentGunBase.rotation.eulerAngles.y - Quaternion.LookRotation(target.GetCenter() - currentGunBase.position).eulerAngles.y;
             var towerLookOffset = currentGunHead.rotation.eulerAngles.x - Quaternion.LookRotation(target.GetCenter() - currentGunHead.position).eulerAngles.x;
@@ -162,7 +168,6 @@ public abstract class Tower : MonoBehaviour
 
     protected bool LostTarget()
     {
-        return (target != null && Vector3.Distance(target.GetCenter(), transform.position) > towerData.CurrentRange) || (target != null && !target.Alive);
+        return target != null && (Vector3.Distance(target.GetCenter(), transform.position) > towerData.CurrentRange || !target.Alive || !target.Visible);
     }
-
 }

@@ -31,6 +31,12 @@ public class Helpers
             case "Tesla":
                 towerType = Declarations.TowerType.Tesla;
                 break;
+            case "Laser":
+                towerType = Declarations.TowerType.Laser;
+                break;
+            case "Radar":
+                towerType = Declarations.TowerType.Radar;
+                break;
             default:
                 towerType = Declarations.TowerType.Canon;
                 return false;
@@ -55,6 +61,9 @@ public class Helpers
                 break;
             case "Dragon":
                 enemyType = Declarations.EnemyType.Dragon;
+                break;
+            case "Rogue":
+                enemyType = Declarations.EnemyType.Rogue;
                 break;
             default:
                 Debug.Log(string.Format("Unknown enemy type: '{0}'", type));
@@ -83,16 +92,6 @@ public class Helpers
             case 'x':
                 tileType = Declarations.TileType.Environment;
                 break;
-            case '@':
-                if (canHaveEmpty)
-                {
-                    tileType = Declarations.TileType.Empty;
-                }
-                else
-                {
-                    tileType = Declarations.TileType.Unknown;
-                }
-                break;
             default:
                 tileType = Declarations.TileType.Unknown;
                 break;
@@ -114,8 +113,6 @@ public class Helpers
                 return "*";
             case Declarations.TileType.Environment:
                 return "x";
-            case Declarations.TileType.Empty:
-                return "@";
             default:
                 Debug.Log("Unknown tile");
                 return "";
@@ -127,8 +124,8 @@ public class Helpers
         switch (type)
         {
             case Declarations.EnemyType.Swordsman:
-                return true;
             case Declarations.EnemyType.Golem:
+            case Declarations.EnemyType.Rogue:
                 return true;
             case Declarations.EnemyType.Dragon:
                 return false;

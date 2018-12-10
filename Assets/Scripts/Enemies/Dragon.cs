@@ -16,7 +16,7 @@ public class Dragon : Enemy {
         anim.SetTrigger("Die");
     }
 
-    internal override void DealDamage(int damage, Declarations.Effect effect = null)
+    internal override void DealDamage(float damage, Declarations.Effect effect = null)
     {
         base.DealDamage(damage, effect);
         if (Alive)

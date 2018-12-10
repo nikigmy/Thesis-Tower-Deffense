@@ -11,7 +11,8 @@ public class DataReader
     private const string cst_Level2 = "Level2";
     private const string cst_Level3 = "Level3";
 
-    private const string cst_Speed = "Speed";
+    private const string cst_Speed = "Speed"; 
+    private const string cst_RunSpeed = "RunSpeed";
     private const string cst_Health = "Health";
     private const string cst_StartHealth = "StartHealth";
     private const string cst_StartMoney = "StartMoney";
@@ -26,20 +27,20 @@ public class DataReader
     private const string cst_MaxBounces = "MaxBounces";
     private const string cst_BounceRange = "BounceRange"; 
     private const string cst_Map = "Map";
-    private const string cst_spawnData = "SpawnData";
-    private const string cst_wave = "Wave";
-    private const string cst_enemy = "Enemy";
-    private const string cst_delay = "Delay";
-    private const string cst_time = "Time";
-    private const string cst_type = "Type";
-    private const string cst_award = "Award";
+    private const string cst_SpawnData = "SpawnData";
+    private const string cst_Wave = "Wave";
+    private const string cst_Enemy = "Enemy";
+    private const string cst_Delay = "Delay";
+    private const string cst_Time = "Time";
+    private const string cst_Type = "Type";
+    private const string cst_Award = "Award";
 
 
     #region LevelReading
     public static bool ReadLevelData(XElement levelFile, out Declarations.LevelData levelData, bool canHaveEmptyTiles = false, bool readWaves = true)
     {
         var mapElement = levelFile.Element(cst_Map);
-        var spawnData = levelFile.Element(cst_spawnData);
+        var spawnData = levelFile.Element(cst_SpawnData);
         if (mapElement != null && spawnData != null)
         {
             int startMoney;
@@ -63,7 +64,7 @@ public class DataReader
 
     private static bool ReadWaveData(XElement spawnData, out List<Declarations.WaveData> waves)
     {
-        var wavesData = spawnData.Elements(cst_wave).ToList();
+        var wavesData = spawnData.Elements(cst_Wave).ToList();
         waves = new List<Declarations.WaveData>();
         for (int i = 0; i < wavesData.Count; i++)
         {
@@ -72,10 +73,10 @@ public class DataReader
             for (int j = 0; j < wavePartsData.Count; j++)
             {
                 var partName = wavePartsData[j].Name.LocalName;
-                if (partName == cst_enemy)
+                if (partName == cst_Enemy)
                 {
                     Declarations.EnemyType enemyType;
-                    var enemyTypeAttribute = wavePartsData[j].Attribute(cst_type);
+                    var enemyTypeAttribute = wavePartsData[j].Attribute(cst_Type);
                     if (enemyTypeAttribute != null && !string.IsNullOrEmpty(enemyTypeAttribute.Value) && Helpers.GetEnemyTypeFromString(enemyTypeAttribute.Value, out enemyType))
                     {
                         if (Def.Instance.EnemyDictionary.ContainsKey(enemyType))
@@ -86,10 +87,10 @@ public class DataReader
                         return false;
                     }
                 }
-                else if (partName == cst_delay)
+                else if (partName == cst_Delay)
                 {
                     float delay;
-                    var timeAttribute = wavePartsData[j].Attribute(cst_time);
+                    var timeAttribute = wavePartsData[j].Attribute(cst_Time);
                     if (timeAttribute != null && !string.IsNullOrEmpty(timeAttribute.Value) && float.TryParse(timeAttribute.Value, out delay))
                     {
                         waveParts.Add(new Declarations.DelayWavePart(delay));
@@ -168,6 +169,10 @@ public class DataReader
                 return ReadCrystalData(towerData, assetData, out tower);
             case Declarations.TowerType.Tesla:
                 return ReadTeslaData(towerData, assetData, out tower);
+            case Declarations.TowerType.Laser:
+                return ReadLaserData(towerData, assetData, out tower);
+            case Declarations.TowerType.Radar:
+                return ReadRadarData(towerData, assetData, out tower);
             default:
                 Debug.Log("Unknown tower type");
                 break;
@@ -179,14 +184,14 @@ public class DataReader
 
     private static bool ReadCanonData(XElement towerData, TowerAssetData assetData, out Declarations.TowerData tower)
     {
-        var levels = new Declarations.TowerLevelData[3];
+        var levels = new Declarations.FiringTowerLevelData[3];
 
         bool failed = false;
         #region Level1
         var level1 = towerData.Element(cst_Level1);
         if (level1 != null)
         {
-            levels[0] = new Declarations.TowerLevelData(ReadInt(level1, cst_Price, ref failed),
+            levels[0] = new Declarations.FiringTowerLevelData(ReadInt(level1, cst_Price, ref failed),
                                                         ReadFloat(level1, cst_Range, ref failed),
                                                         ReadFloat(level1, cst_FireRate, ref failed),
                                                         ReadInt(level1, cst_Damage, ref failed));
@@ -201,7 +206,7 @@ public class DataReader
         var level2 = towerData.Element(cst_Level2);
         if (level2 != null)
         {
-            levels[1] = new Declarations.TowerLevelData(ReadInt(level2, cst_UpgradePrice, ref failed),
+            levels[1] = new Declarations.FiringTowerLevelData(ReadInt(level2, cst_UpgradePrice, ref failed),
                                                         ReadFloat(level2, cst_Range, ref failed),
                                                         ReadFloat(level2, cst_FireRate, ref failed),
                                                         ReadInt(level2, cst_Damage, ref failed));
@@ -216,7 +221,7 @@ public class DataReader
         var level3 = towerData.Element(cst_Level3);
         if (level3 != null)
         {
-            levels[2] = new Declarations.TowerLevelData(ReadInt(level3, cst_UpgradePrice, ref failed), 
+            levels[2] = new Declarations.FiringTowerLevelData(ReadInt(level3, cst_UpgradePrice, ref failed), 
                                                         ReadFloat(level3, cst_Range, ref failed), 
                                                         ReadFloat(level3, cst_FireRate, ref failed),
                                                         ReadInt(level3, cst_Damage, ref failed));
@@ -433,7 +438,116 @@ public class DataReader
             return true;
         }
     }
-    
+
+    private static bool ReadLaserData(XElement towerData, TowerAssetData assetData, out Declarations.TowerData tower)
+    {
+        var levels = new Declarations.DamageTowerLevelData[3];
+
+        bool failed = false;
+        #region Level1
+        var level1 = towerData.Element(cst_Level1);
+        if (level1 != null)
+        {
+            levels[0] = new Declarations.DamageTowerLevelData(ReadInt(level1, cst_Price, ref failed),
+                                                        ReadFloat(level1, cst_Range, ref failed),
+                                                        ReadInt(level1, cst_Damage, ref failed));
+        }
+        else
+        {
+            failed = true;
+        }
+        #endregion
+
+        #region Level2
+        var level2 = towerData.Element(cst_Level2);
+        if (level2 != null)
+        {
+            levels[1] = new Declarations.DamageTowerLevelData(ReadInt(level2, cst_UpgradePrice, ref failed),
+                                                        ReadFloat(level2, cst_Range, ref failed),
+                                                        ReadInt(level2, cst_Damage, ref failed));
+        }
+        else
+        {
+            failed = true;
+        }
+        #endregion
+
+        #region Level3
+        var level3 = towerData.Element(cst_Level3);
+        if (level3 != null)
+        {
+            levels[2] = new Declarations.DamageTowerLevelData(ReadInt(level3, cst_UpgradePrice, ref failed),
+                                                        ReadFloat(level3, cst_Range, ref failed),
+                                                        ReadInt(level3, cst_Damage, ref failed));
+        }
+        #endregion
+
+        if (failed)
+        {
+            Debug.Log("Filed to read laser tower");
+            tower = null;
+            return false;
+        }
+        else
+        {
+            tower = new Declarations.LaserTower(assetData, levels);
+            return true;
+        }
+    }
+
+    private static bool ReadRadarData(XElement towerData, TowerAssetData assetData, out Declarations.TowerData tower)
+    {
+        var levels = new Declarations.TowerLevelData[3];
+
+        bool failed = false;
+        #region Level1
+        var level1 = towerData.Element(cst_Level1);
+        if (level1 != null)
+        {
+            levels[0] = new Declarations.TowerLevelData(ReadInt(level1, cst_Price, ref failed),
+                                                        ReadFloat(level1, cst_Range, ref failed));
+        }
+        else
+        {
+            failed = true;
+        }
+        #endregion
+
+        #region Level2
+        var level2 = towerData.Element(cst_Level2);
+        if (level2 != null)
+        {
+            levels[1] = new Declarations.TowerLevelData(ReadInt(level2, cst_UpgradePrice, ref failed),
+                                                        ReadFloat(level2, cst_Range, ref failed));
+        }
+        else
+        {
+            failed = true;
+        }
+        #endregion
+
+        #region Level3
+        var level3 = towerData.Element(cst_Level3);
+        if (level3 != null)
+        {
+            levels[2] = new Declarations.TowerLevelData(ReadInt(level3, cst_UpgradePrice, ref failed),
+                                                        ReadFloat(level3, cst_Range, ref failed));
+        }
+        #endregion
+
+        if (failed)
+        {
+            Debug.Log("Filed to read radar tower");
+            tower = null;
+            return false;
+        }
+        else
+        {
+            tower = new Declarations.RadarTower(assetData, levels);
+            return true;
+        }
+    }
+
     private static float ReadFloat(XElement element, string attributeName, ref bool failed)
     {
         var result = 0.0f;
@@ -468,6 +582,8 @@ public class DataReader
                 return ReadBaseEnemyData(enemyData, assetData, out enemy);
             case Declarations.EnemyType.Dragon:
                 return ReadBaseEnemyData(enemyData, assetData, out enemy);
+            case Declarations.EnemyType.Rogue:
+                return ReadRogueData(enemyData, assetData, out enemy);
             default:
                 Debug.Log("Unknown enemy type");
                 break;
@@ -476,36 +592,37 @@ public class DataReader
         return false;
     }
 
-    private static bool ReadBaseEnemyData(XElement enemyData, EnemyAssetData assetData, out Declarations.EnemyData enemy)
+    private static bool ReadRogueData(XElement enemyData, EnemyAssetData assetData, out Declarations.EnemyData enemy)
     {
-        int health = 0;
-        float speed = 0;
-        int damage = 0;
-        int award = 0;
-
         bool failed = false;
 
-        var damageAttribute = enemyData.Attribute(cst_Damage);
-        if (!(damageAttribute != null && !string.IsNullOrEmpty(damageAttribute.Value) && int.TryParse(damageAttribute.Value, out damage)))
-        {
-            failed = true;
-        }
-        var speedAttribute = enemyData.Attribute(cst_Speed);
-        if (!(speedAttribute != null && !string.IsNullOrEmpty(speedAttribute.Value) && float.TryParse(speedAttribute.Value, out speed)))
-        {
-            failed = true;
-        }
-        var healthAttribute = enemyData.Attribute(cst_Health);
-        if (!(healthAttribute != null && !string.IsNullOrEmpty(healthAttribute.Value) && int.TryParse(healthAttribute.Value, out health)))
-        {
-            failed = true;
-        }
-        var awardAttribute = enemyData.Attribute(cst_award);
-        if (!(awardAttribute != null && !string.IsNullOrEmpty(awardAttribute.Value) && int.TryParse(awardAttribute.Value, out award)))
-        {
-            failed = true;
-        }
+        int health = ReadInt(enemyData, cst_Health, ref failed);
+        float speed = ReadFloat(enemyData, cst_Speed, ref failed);
+        float runSpeed = ReadFloat(enemyData, cst_RunSpeed, ref failed);
+        int damage = ReadInt(enemyData, cst_Damage, ref failed);
+        int award = ReadInt(enemyData, cst_Award, ref failed);
 
+        if (failed)
+        {
+            enemy = null;
+            return false;
+        }
+        else
+        {
+            enemy = new Declarations.RogueData(assetData, health, speed, runSpeed, damage, award);
+            return true;
+        }
+    }
+
+    private static bool ReadBaseEnemyData(XElement enemyData, EnemyAssetData assetData, out Declarations.EnemyData enemy)
+    {
+        bool failed = false;
+
+        int health = ReadInt(enemyData, cst_Health, ref failed);
+        float speed = ReadFloat(enemyData, cst_Speed, ref failed);
+        int damage = ReadInt(enemyData, cst_Damage, ref failed);
+        int award = ReadInt(enemyData, cst_Award, ref failed);
+        
         if (failed)
         {
             enemy = null;

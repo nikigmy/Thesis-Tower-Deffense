@@ -23,7 +23,7 @@
   </Map>
   <SpawnData>
     <Wave>
-      <Enemy Type="Dragon"/>
+      <Enemy Type="Swordsman"/>
       <Delay Time="2"/>
       <Enemy Type="Swordsman"/>
       <Delay Time="2"/>
@@ -54,15 +54,40 @@
     <Wave>
       <Enemy Type="Golem"/>
       <Delay Time="5"/>
-      <Enemy Type="Swordsman"/>
+      <Enemy Type="Rogue"/>
+      <Delay Time="1"/>
+      <Enemy Type="Rogue"/>
+      <Delay Time="1"/>
+      <Enemy Type="Rogue"/>
+      <Delay Time="1"/>
+      <Enemy Type="Rogue"/>
+      <Delay Time="1"/>
+      <Enemy Type="Rogue"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Rogue"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Rogue"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Rogue"/>
+    </Wave>
+    <Wave>
+      <Enemy Type="Golem"/>
       <Delay Time="1"/>
       <Enemy Type="Swordsman"/>
-      <Delay Time="1"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Dragon"/>
+      <Delay Time="0.5"/>
       <Enemy Type="Swordsman"/>
-      <Delay Time="1"/>
+      <Delay Time="0.5"/>
       <Enemy Type="Swordsman"/>
-      <Delay Time="1"/>
+      <Delay Time="0.5"/>
       <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Dragon"/>
       <Delay Time="0.5"/>
       <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
@@ -79,32 +104,7 @@
       <Delay Time="0.5"/>
       <Enemy Type="Swordsman"/>
       <Delay Time="0.5"/>
-      <Enemy Type="Swordsman"/>
-      <Delay Time="0.5"/>
-      <Enemy Type="Swordsman"/>
-      <Delay Time="0.5"/>
-      <Enemy Type="Swordsman"/>
-      <Delay Time="0.5"/>
-      <Enemy Type="Swordsman"/>
-      <Delay Time="0.5"/>
-      <Enemy Type="Swordsman"/>
-      <Delay Time="0.5"/>
-      <Enemy Type="Swordsman"/>
-      <Delay Time="0.5"/>
-      <Enemy Type="Swordsman"/>
-      <Delay Time="0.5"/>
-      <Enemy Type="Swordsman"/>
-    </Wave>
-    <Wave>
-      <Enemy Type="Golem"/>
-      <Delay Time="1"/>
-      <Enemy Type="Swordsman"/>
-      <Delay Time="0.5"/>
-      <Enemy Type="Swordsman"/>
-      <Delay Time="0.5"/>
-      <Enemy Type="Swordsman"/>
-      <Delay Time="0.5"/>
-      <Enemy Type="Swordsman"/>
+      <Enemy Type="Dragon"/>
       <Delay Time="0.5"/>
       <Enemy Type="Swordsman"/>
       <Enemy Type="Golem"/>

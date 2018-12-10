@@ -77,7 +77,6 @@ public class MapGenerator : MonoBehaviour
         TileMaterials.Add(Declarations.TileType.Objective, new Material(editMaterial) { color = ObjectiveColor, name = "Edit_Objective" });
         TileMaterials.Add(Declarations.TileType.Spawn, new Material(editMaterial) { color = SpawnColor, name = "Edit_Spawn" });
         TileMaterials.Add(Declarations.TileType.Environment, new Material(editMaterial) { color = EnvironmentColor, name = "Edit_Environment" });
-        TileMaterials.Add(Declarations.TileType.Empty, editMaterial);
         foreach (var tileMaterial in TileMaterials)
         {
             var glowMat = new Material(editMaterialGlow) { color = tileMaterial.Value.color };

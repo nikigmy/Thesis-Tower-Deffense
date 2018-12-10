@@ -11,7 +11,7 @@ public class Tesla : Tower
     private void Awake()
     {
         towerData = Def.Instance.TowerDictionary[Declarations.TowerType.Tesla];
-        timeFromPreviousShot = towerData.CurrentFireRate;
+        timeFromPreviousShot = (towerData as Declarations.TeslaTower).CurrentFireRate;
     }
 
     private void Update()
@@ -21,7 +21,7 @@ public class Tesla : Tower
 
         if (target != null)
         {
-            if (timeFromPreviousShot >= towerData.CurrentFireRate)
+            if (timeFromPreviousShot >= (towerData as Declarations.TeslaTower).CurrentFireRate)
             {
                 Fire();
                 timeFromPreviousShot = 0;
@@ -37,6 +37,6 @@ public class Tesla : Tower
     private void Fire()
     {
         var projectile = Instantiate(lightningBolt, currentFirePoint.position, currentFirePoint.rotation);
-        projectile.GetComponent<Projectile>().SetTarget(new Declarations.LightningBoltData(target, currentFirePoint.gameObject, towerData.CurrentDamage, (towerData as Declarations.TeslaTower).CurrentMaxBounces, (towerData as Declarations.TeslaTower).CurrentBounceRange));
+        projectile.GetComponent<Projectile>().SetTarget(new Declarations.LightningBoltData(target, currentFirePoint.gameObject, (towerData as Declarations.TeslaTower).CurrentDamage, (towerData as Declarations.TeslaTower).CurrentMaxBounces, (towerData as Declarations.TeslaTower).CurrentBounceRange));
     }
 }

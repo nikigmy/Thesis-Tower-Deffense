@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Level StartMoney="500" StartHealth="10">
+  <Map Width="30" Height="30">
+xxxxxxxxxxxxx###/xxxxxx////xxx
+xxxxxxxxxxxx#//#/xxxxx/###/xxx
+xxxxxxxxxxx/#/x/#/xxxx/#//#/xx
+xxxxxxxxxx/#/xx/#/xxx/#///#/xx
+xxxxxxxxxx//#/xx/#/xx/#////#/x
+xxxxx/xxxx/#/xxx/#xx/#//xx/#//
+xxxxx///xxx/#/xx/#xxx#//xxx/#/
+xxxx////xxx#/xxx/#xx/#/xxx//#/
+xxxx//###xxx#/xxx#/xx/#/xxx//#
+xxx//#//#xx#/xxx/#/xx/#/xxx/#/
+xxxx/#/x/#xx#/xxx/#/x//#/x//#/
+xxx/#/x/#xxx#//xx/#////#///#//
+xxx/#/xx#/xxx##/xx/#####///#//
+xx/#/xx#//xx//#/xx///////##///
+xxx#/xx/#/xxxx/#/xxxxx///#////
+xxx#xx/#/xxxxx/#/xxxxx//#//xxx
+xxx#/xx#/xxxxxx/#/xxxx//#//xxx
+xxx#/xx#/xxxxxx/#/xxx///#/xxxx
+xxx#//xx#/x//xxx/#/xxx//#/xxxx
+xxx#//xx#/////xx/#/xxx//#xxxxx
+xxxx##/x/#####/xx/#/xxx/#/xxxx
+xxxxx##x/////#/xx/#/xxx/#/xxxx
+xxxxxxx#xx////#/xx/#/xxx/#/xxx
+xxxxxxx##xxx//#/xx/#/xxx/#/xxx
+xxxxxxxxx#xxx//#/xx/#xxxxx#/xx
+xx$$xxxxx#xxx/#/xxx/#xxxx#//xx
+xx$$$xxxx#xxxx/#/xx/#######//x
+xx$$#####xxxxx/##//#xxxxxx#/xx
+xxxxxxxxxxxxxxx//###/xxxx//#/x
+xxxxxxxxxxxxxxx/////xxxxx//*//
+</Map>
+  <SpawnData>
+    <Wave>
+      <Enemy Type="Golem" />
+      <Delay Time="1" />
+      <Enemy Type="Swordsman" />
+      <Enemy Type="Dragon" />
+      <Delay Time="0.5" />
+      <Enemy Type="Swordsman" />
+      <Delay Time="0.5" />
+      <Enemy Type="Golem" />
+      <Delay Time="0.5" />
+      <Enemy Type="Golem" />
+      <Enemy Type="Dragon" />
+      <Delay Time="1" />
+      <Enemy Type="Swordsman" />
+      <Enemy Type="Dragon" />
+    </Wave>
+  </SpawnData>
+</Level>

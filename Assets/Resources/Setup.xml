@@ -5,6 +5,7 @@
     <Swordsman Speed="3" Health="100" Damage="1" Award="100"/>
     <Golem Speed="1.5" Health="1000" Damage="5" Award="500"/>
     <Dragon Speed="2.5" Health="300" Damage="3" Award="200"/>
+    <Rogue Speed="2" RunSpeed="4" Health="50" Damage="1" Award="50"/>
   </EnemyData>
   <TowerData>
     <Canon>
@@ -27,6 +28,16 @@
       <Level2  Range="3" Damage="40" FireRate="1.5" UpgradePrice="150" MaxBounces="3" BounceRange="3"/>
       <Level3  Range="3.5" Damage="50" FireRate="1.25" UpgradePrice="200" MaxBounces="4" BounceRange="3"/>
     </Tesla>
+    <Laser>
+      <Level1  Range="2.5" Damage="15" Price="150"/>
+      <Level2  Range="3" Damage="25" UpgradePrice="150"/>
+      <Level3  Range="3" Damage="25" UpgradePrice="150"/>
+    </Laser>
+    <Radar>
+      <Level1  Range="5" Price="100"/>
+      <Level2  Range="6" UpgradePrice="100"/>
+      <Level3  Range="7" UpgradePrice="150"/>
+    </Radar>
   </TowerData>
 </Setup>
 <!--/*

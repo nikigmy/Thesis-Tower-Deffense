@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,6 +17,19 @@ public class BuildManager : MonoBehaviour {
             Building = false;
             Selling = false;
         }
+    }
+
+    internal Tower[] GetBuiltTowersOfType(Declarations.TowerType towerType)
+    {
+        List<Tower> towers = new List<Tower>();
+        foreach (var tower in CurrentTowers)
+        {
+            if (tower.Type == towerType)
+            {
+                towers.Add(tower);
+            }
+        }
+        return towers.ToArray();
     }
 
     public void DestroyTower(Tower tower)
@@ -42,14 +56,6 @@ public class BuildManager : MonoBehaviour {
 
     public int GetBuiltTowersCount(Declarations.TowerType towerType)
     {
-        int count = 0;
-        foreach (var tower in CurrentTowers)
-        {
-            if(tower.Type == towerType)
-            {
-                count++;
-            }
-        }
-        return count;
+        return GetBuiltTowersOfType(towerType).Length;
     }
 }

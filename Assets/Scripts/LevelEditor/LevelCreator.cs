@@ -166,7 +166,7 @@ public class LevelCreator : MonoBehaviour
             {
                 for (int j = 0; j < width; j++)
                 {
-                    map[i, j] = Declarations.TileType.Empty;
+                    map[i, j] = Declarations.TileType.Grass;
                 }
             }
             currentlyLoadedLevel = new Declarations.LevelData(new Declarations.IntVector2(width, height), map, new List<Declarations.WaveData>(), 500, 10);

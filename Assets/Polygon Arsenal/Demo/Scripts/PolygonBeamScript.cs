@@ -129,26 +129,26 @@ public class PolygonBeamScript : MonoBehaviour {
 
     void ShootBeamInDir(Vector3 start, Vector3 dir)
     {
-        line.positionCount = 2;
-        line.SetPosition(0, start);
-        beamStart.transform.position = start;
+            line.positionCount = 2;
+            line.SetPosition(0, start);
+            beamStart.transform.position = start;
 
-        Vector3 end = Vector3.zero;
-        RaycastHit hit;
-        if (Physics.Raycast(start, dir, out hit))
-            end = hit.point - (dir.normalized * beamEndOffset);
-        else
-            end = transform.position + (dir * 100);
+            Vector3 end = Vector3.zero;
+            RaycastHit hit;
+            if (Physics.Raycast(start, dir, out hit))
+                end = hit.point - (dir.normalized * beamEndOffset);
+            else
+                end = transform.position + (dir * 100);
 
-        beamEnd.transform.position = end;
-        line.SetPosition(1, end);
+            beamEnd.transform.position = end;
+            line.SetPosition(1, end);
 
-        beamStart.transform.LookAt(beamEnd.transform.position);
-        beamEnd.transform.LookAt(beamStart.transform.position);
+            beamStart.transform.LookAt(beamEnd.transform.position);
+            beamEnd.transform.LookAt(beamStart.transform.position);
 
-        float distance = Vector3.Distance(start, end);
-        line.sharedMaterial.mainTextureScale = new Vector2(distance / textureLengthScale, 1);
-        line.sharedMaterial.mainTextureOffset -= new Vector2(Time.deltaTime * textureScrollSpeed, 0);
+            float distance = Vector3.Distance(start, end);
+            line.sharedMaterial.mainTextureScale = new Vector2(distance / textureLengthScale, 1);
+            line.sharedMaterial.mainTextureOffset -= new Vector2(Time.deltaTime * textureScrollSpeed, 0);
+        }
     }
-}
 }

@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Level StartMoney="500" StartHealth="10">
+  <Map Width="30" Height="30">
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx$$xxxxxx
+xxxxxxxxxxxxxxxxxxxxx$$$xxxxxx
+xxxxxxxxxxxxxxxxxxxxxx$$xxxxxx
+xxxxxxxxxxxxxxxxxxx###xxxxxxxx
+xxxxxxxxxxxxxxxxxxx#xxxxxxxxxx
+xxxxxxxxxxxxxxxxx##xxxxxxxxxxx
+xxxxxxxxxxxxx/xxx#xxxxxxxxxxxx
+xxxxxxxxxxx///x##xxxxxxxxxxxxx
+xxxxxxxxxx/////#xxxxxxxxxxxxxx
+xxxxxxxx/////##/xxxxxxxxxxxxxx
+xxxxxxxxx/////#/xxxxxxxxxxxxxx
+xxxxxxxx/////#//xxxxxxxxxxxxxx
+xxxxxxxx/////##///xxxxxxxxxxxx
+xxxxxxx////##////xxxxxxxxxxxxx
+xxxxxxx///##/////xxxxxxxxxxxxx
+xxxxxx//##///////xxxxxxxxxxxxx
+xxxxxxx/#/////////xxxxxxxxxxxx
+xxxxxx##//////////xxxxxxxxxxxx
+xxxxx##xx////////xxxxxxxxxxxxx
+xxxx#xxxxxxxxx/xxxxxxxxxxxxxxx
+xxxxx#xxxxxxxxxxxxxxxxxxxxxxxx
+xxxx*xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+</Map>
+  <SpawnData>
+    <Wave>
+      <Enemy Type="Golem" />
+      <Delay Time="1" />
+      <Enemy Type="Swordsman" />
+    </Wave>
+  </SpawnData>
+</Level>

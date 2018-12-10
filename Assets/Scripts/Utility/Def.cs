@@ -99,6 +99,10 @@ public class Def
                         TowerDictionary.Add(towerType, tower);
                     }
                 }
+                else
+                {
+                    Debug.Log("No tower asset data for tower:" + towerType);
+                }
             }
         }
         var enemies = setup.Element(cst_enemyData).Elements().ToList();

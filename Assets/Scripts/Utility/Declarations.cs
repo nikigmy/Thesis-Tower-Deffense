@@ -24,7 +24,6 @@ public class Declarations
         Objective,
         Spawn,
         Environment,
-        Empty,
         Unknown
     }
 
@@ -33,14 +32,17 @@ public class Declarations
         Canon,
         Plasma,
         Crystal,
-        Tesla
+        Tesla,
+        Laser,
+        Radar
     }
 
     public enum EnemyType
     {
         Swordsman,
         Golem,
-        Dragon
+        Dragon,
+        Rogue
     }
 
     public enum WavePartType
@@ -102,7 +104,7 @@ public class Declarations
                 var waveElement = new XElement("Wave");
                 foreach (var wavePart in wave.WaveParts)
                 {
-                    if(wavePart.Type == WavePartType.Spawn)
+                    if (wavePart.Type == WavePartType.Spawn)
                     {
                         waveElement.Add(new XElement("Enemy", new object[] { new XAttribute("Type", ((SpawnWavePart)wavePart).EnemyToSpawn.Type.ToString()) }));
                     }
@@ -149,7 +151,7 @@ public class Declarations
 
     public class DelayWavePart : WavePart
     {
-        public float Delay { get;  set; }
+        public float Delay { get; set; }
 
         public DelayWavePart(float delay)
         {
@@ -166,20 +168,34 @@ public class Declarations
 
         public float Range { get; protected set; }
 
-        public float FireRate { get; protected set; }
-
-        public int Damage { get; private set; }
-
-        public TowerLevelData(int price, float range, float fireRate, int damage)
+        public TowerLevelData(int price, float range)
         {
             Price = price;
             Range = range;
-            FireRate = fireRate;
+        }
+    }
+
+    public class DamageTowerLevelData : TowerLevelData
+    {
+        public int Damage { get; private set; }
+
+        public DamageTowerLevelData(int price, float range, int damage) : base(price, range)
+        {
             Damage = damage;
         }
     }
 
-    public class PlasmaLevelData : TowerLevelData
+    public class FiringTowerLevelData : DamageTowerLevelData
+    {
+        public float FireRate { get; protected set; }
+
+        public FiringTowerLevelData(int price, float range, float fireRate, int damage) : base(price, range, damage)
+        {
+            FireRate = fireRate;
+        }
+    }
+
+    public class PlasmaLevelData : FiringTowerLevelData
     {
         public float ExplosionRange { get; protected set; }
 
@@ -189,7 +205,7 @@ public class Declarations
         }
     }
 
-    public class CrystalLevelData : TowerLevelData
+    public class CrystalLevelData : FiringTowerLevelData
     {
         public int SlowEffect { get; protected set; }
         public float SlowDuration { get; protected set; }
@@ -201,7 +217,7 @@ public class Declarations
         }
     }
 
-    public class TeslaLevelData : TowerLevelData
+    public class TeslaLevelData : FiringTowerLevelData
     {
         public int MaxBounces { get; protected set; }
         public float BounceRange { get; protected set; }
@@ -275,43 +291,7 @@ public class Declarations
                 }
             }
         }
-
-        public int CurrentDamage
-        {
-            get
-            {
-                switch (CurrentLevel)
-                {
-                    case 1:
-                        return Levels[0].Damage;
-                    case 2:
-                        return Levels[1].Damage;
-                    case 3:
-                        return Levels[2].Damage;
-                    default:
-                        return Levels[3].Damage;
-                }
-            }
-        }
-
-        public float CurrentFireRate
-        {
-            get
-            {
-                switch (CurrentLevel)
-                {
-                    case 1:
-                        return Levels[0].FireRate;
-                    case 2:
-                        return Levels[1].FireRate;
-                    case 3:
-                        return Levels[2].FireRate;
-                    default:
-                        return Levels[2].FireRate;
-                }
-            }
-        }
-
+        
         protected TowerData(TowerType type, TowerAssetData assetData, TowerLevelData[] levels)
         {
             Type = type;
@@ -348,15 +328,65 @@ public class Declarations
         }
     }
 
-    public class CanonTower : TowerData
+    public abstract class DamageTowerData : TowerData
     {
-        public CanonTower(TowerAssetData assetData, TowerLevelData[] levels) :
+        public int CurrentDamage
+        {
+            get
+            {
+                switch (CurrentLevel)
+                {
+                    case 1:
+                        return (Levels[0] as DamageTowerLevelData).Damage;
+                    case 2:
+                        return (Levels[1] as DamageTowerLevelData).Damage;
+                    case 3:
+                        return (Levels[2] as DamageTowerLevelData).Damage;
+                    default:
+                        return (Levels[3] as DamageTowerLevelData).Damage;
+                }
+            }
+        }
+
+        protected DamageTowerData(TowerType type, TowerAssetData assetData, DamageTowerLevelData[] levels):base(type, assetData, levels)
+        {
+        }
+    }
+
+    public abstract class FiringTowerData : DamageTowerData
+    {
+        public float CurrentFireRate
+        {
+            get
+            {
+                switch (CurrentLevel)
+                {
+                    case 1:
+                        return (Levels[0] as FiringTowerLevelData).FireRate;
+                    case 2:
+                        return (Levels[1] as FiringTowerLevelData).FireRate;
+                    case 3:
+                        return (Levels[2] as FiringTowerLevelData).FireRate;
+                    default:
+                        return (Levels[2] as FiringTowerLevelData).FireRate;
+                }
+            }
+        }
+
+        protected FiringTowerData(TowerType type, TowerAssetData assetData, FiringTowerLevelData[] levels) : base(type, assetData, levels)
+        {
+        }
+    }
+
+    public class CanonTower : FiringTowerData
+    {
+        public CanonTower(TowerAssetData assetData, FiringTowerLevelData[] levels) :
             base(TowerType.Canon, assetData, levels)
         {
         }
     }
 
-    public class PlasmaTower : TowerData
+    public class PlasmaTower : FiringTowerData
     {
         public float CurrentExplosionRange
         {
@@ -381,7 +411,7 @@ public class Declarations
         }
     }
 
-    public class CrystalTower : TowerData
+    public class CrystalTower : FiringTowerData
     {
         public int CurrentSlowEffect
         {
@@ -425,7 +455,7 @@ public class Declarations
         }
     }
 
-    public class TeslaTower : TowerData
+    public class TeslaTower : FiringTowerData
     {
         public int CurrentMaxBounces
         {
@@ -468,6 +498,22 @@ public class Declarations
         {
         }
     }
+
+    public class LaserTower : DamageTowerData
+    {
+        public LaserTower(TowerAssetData assetData, DamageTowerLevelData[] levels) :
+            base(TowerType.Laser, assetData, levels)
+        {
+        }
+    }
+
+    public class RadarTower : TowerData
+    {
+        public RadarTower(TowerAssetData assetData, TowerLevelData[] levels) :
+            base(TowerType.Radar, assetData, levels)
+        {
+        }
+    }
     #endregion Towers
 
     #region Enemies
@@ -488,6 +534,16 @@ public class Declarations
             Speed = speed;
             Damage = damage;
             Award = award;
+        }
+    }
+
+    public class RogueData : EnemyData
+    {
+        public float RunSpeed { get; protected set; }
+
+        public RogueData(EnemyAssetData assetData, int health, float speed, float runSpeed, int damage, int award):base(assetData, health, speed, damage, award)
+        {
+            RunSpeed = runSpeed;
         }
     }
     #endregion Enemies

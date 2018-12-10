@@ -8,11 +8,7 @@ public class Enemy : MonoBehaviour
     protected const float distanceFromFrontEnemy = 1.1f;
     protected const float rotationSpeed = 4;
     [SerializeField]
-    protected Transform healthBar;
-    [SerializeField]
-    protected Slider healthSlider;
-    [SerializeField]
-    protected Text healthText;
+    protected HealthBar healthBar;
     [SerializeField]
     protected Renderer rend;
     [SerializeField]
@@ -22,11 +18,12 @@ public class Enemy : MonoBehaviour
     protected Declarations.EnemyData enemyData;
     protected Tile currentTile;
     protected Tile previousTile;
-    protected int currentHealth;
+    protected float currentHealth;
     public float CurrentSpeed;
     public bool Alive = true;
     public bool Moving = true;
     public bool Attacking = false;
+    public bool Visible = true;
     public Declarations.EnemyType Type { get { return enemyData.Type; } }
     public List<Declarations.Effect> Effects;
 
@@ -34,7 +31,7 @@ public class Enemy : MonoBehaviour
     {
         Effects = new List<Declarations.Effect>();
         currentHealth = enemyData.Health;
-        UpdateUI();
+        Visible = true;
     }
 
     public void SetData(Tile startTile)
@@ -61,13 +58,21 @@ public class Enemy : MonoBehaviour
 
     protected void UpdateUI()
     {
-        healthText.text = currentHealth.ToString();
-        healthSlider.value = (float)currentHealth / enemyData.Health;
+        if (!healthBar.gameObject.activeSelf)
+        {
+            healthBar.gameObject.SetActive(true);
+        }
+        healthBar.SetBar(currentHealth / enemyData.Health);
 
-        healthBar.LookAt(Camera.main.transform);
+        healthBar.transform.LookAt(Camera.main.transform);
     }
 
     private void Update()
+    {
+        UpdateEnemy();
+    }
+
+    protected void UpdateEnemy()
     {
         UpdateUI();
         if (Alive)
@@ -152,11 +157,10 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void UpdateSpeed()
+    protected virtual void UpdateSpeed()
     {
         if (Effects.Any(x => x.Type == Declarations.EffectType.Stun))
         {
-            Debug.Log("Stunned");
             CurrentSpeed = 0;
         }
         else
@@ -204,26 +208,26 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    internal virtual void DealDamage(int damage, Declarations.Effect effect = null)
+    internal virtual void DealDamage(float damage, Declarations.Effect effect = null)
     {
-        if (currentHealth > 0)
+        if (Alive)
         {
             currentHealth -= damage;
             if (currentHealth <= 0)
             {
                 currentHealth = 0;
                 Died();
+                return;
             }
-
-            UpdateUI();
-        }
-        if (effect != null)
-        {
-            Effects.Add(effect);
-            if (effect.Type == Declarations.EffectType.Slow)
+            if (effect != null)
             {
-                slowEffect.Play();
+                Effects.Add(effect);
+                if (effect.Type == Declarations.EffectType.Slow)
+                {
+                    slowEffect.Play();
+                }
             }
+            UpdateUI();
         }
     }
 
@@ -262,7 +266,7 @@ public class Enemy : MonoBehaviour
 
             if (pathTiles.Count > 0)
             {
-                var nextTileIndex = UnityEngine.Random.Range(0, pathTiles.Count - 1);
+                var nextTileIndex = UnityEngine.Random.Range(0, pathTiles.Count);
                 previousTile = currentTile;
                 currentTile = pathTiles[nextTileIndex];
             }
@@ -278,8 +282,7 @@ public class Enemy : MonoBehaviour
     protected virtual void Died()
     {
         Alive = false;
-        slowEffect.Stop();
-        slowEffect.Clear();
+        slowEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         anim.speed = 1;
         GameManager.instance.SpawnManager.EnemyDestroyed(this);
         GameManager.instance.AddMoney(enemyData.Award);
