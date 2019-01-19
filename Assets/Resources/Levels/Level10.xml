@@ -1,0 +1,239 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Level Name="Level10" StartMoney="500" StartHealth="10">
+  <Map Width="50" Height="50">
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx////
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/////
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/###/
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/#//#/
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/#//#/
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/#///#/
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/#///#/
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/#///#//
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx//#////#/
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx//#////#//
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx//#////#//
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx///#/xx/#///
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx///#/xxx/#//
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx///#/xxx/#///
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx////#/xxx/#///
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx////#//xxx/#///
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx////#//xxx/#///
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx///##//xxx//#///
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx///#///xxx//#///
+xxxxxxxxxxxxxxxxxxxxx/////xxxxxxx//##//xxxx//#////
+xxxxxxxxxxxxxxxxxx/////////xxxxx///#///xxxx/##////
+xxxxxxxxxxxxxxx////////////xxx////#///xxxx/#//////
+xxxxxxxxxxxxxx////////#####////####///xxxx/#///$$/
+xxxxxxxxxxxxx///////##////#####////xxxxxx/#///$$$/
+xxxxxxxxxxxxx//////##/////xx////xxxxxxxx///#//#$$/
+xxxxxxxxxxxx////###///xxxxxxxxxxxxxxxxxxx//###////
+xxxxxxxxxxxxx//##/////xxxxxxxxxxxxxxxxxxxx////////
+xxxxxxxxxxxxx/#///////xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx//####////xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx/////###/////xxxx///////xxx////xxxxxx
+xxxxxxxxxxxxxx///////#######/////////#####////xxxx
+xxxxxxxxxxxxxxxxx//////////##########////####/xxxx
+xxxxxxxxxxxxxxxxxx//////////////////////xxx//#xxxx
+xxxxxxxxxxxxxxxxx///##////xxx///xxxxxxxxxxx//#xxxx
+xxxxxxxxxxxxxxxxx///#/##//xxxxxxxxxxxxxxxxx//#xxxx
+xxxxxxxxxxxxxx///###///#//xxxxxxxxxxxxxxxx///#xxxx
+xxxxxxxxxxxxxx///#//////#///xxxxxxxxxxxx//####xxxx
+xxxxxxxxxxxx///##///xx//#///////xxxxxxx###////xxxx
+xxxxxxxxxx///###////xxxx/###////xxxxxxx#///////xxx
+xxxxxxxxx///#//////xxxxxx//####/xxx//##///////xxxx
+xxxxx//////##/////xxxxxxxxx////#////##///////xxxxx
+xxxxx////##////xxxxxxxxxxxxx///#####//////xxxxxxxx
+xxxxx#####////xxxxxxxxxxxxxxxxx/////////xxxxxxxxxx
+xxxx#x//////xxxxxxxxxxxxxxxxxxxxx/////xxxxxxxxxxxx
+xxxx#xx///xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx#xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx*#xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+</Map>
+<SpawnData>
+    <Wave>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="2"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="2"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="2"/>
+      <Enemy Type="Swordsman"/>
+    </Wave>
+    <Wave>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="2"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="2"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="2"/>
+      <Enemy Type="Swordsman"/>
+    </Wave>
+    <Wave>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="1"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="1"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="1"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="1"/>
+      <Enemy Type="Swordsman"/>
+    </Wave>
+    <Wave>
+      <Enemy Type="Golem"/>
+      <Delay Time="5"/>
+      <Enemy Type="Rogue"/>
+      <Delay Time="1"/>
+      <Enemy Type="Rogue"/>
+      <Delay Time="1"/>
+      <Enemy Type="Rogue"/>
+      <Delay Time="1"/>
+      <Enemy Type="Rogue"/>
+      <Delay Time="1"/>
+      <Enemy Type="Rogue"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Rogue"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Rogue"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Rogue"/>
+    </Wave>
+    <Wave>
+      <Enemy Type="Golem"/>
+      <Delay Time="1"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Dragon"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Dragon"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+    </Wave>
+    <Wave>
+      <Enemy Type="Golem"/>
+      <Delay Time="1"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Dragon"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Enemy Type="Golem"/>
+      <Delay Time="1"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+    </Wave>
+    <Wave>
+      <Enemy Type="Golem"/>
+      <Delay Time="1"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Golem"/>
+      <Delay Time="1"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Golem"/>
+      <Delay Time="1"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Golem"/>
+      <Delay Time="1"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Golem"/>
+      <Delay Time="1"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Golem"/>
+      <Delay Time="1"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+    </Wave>
+    <Wave>
+      <Enemy Type="Golem"/>
+      <Delay Time="1"/>
+      <Enemy Type="Golem"/>
+      <Delay Time="1"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Golem"/>
+      <Delay Time="1"/>
+      <Enemy Type="Golem"/>
+      <Delay Time="1"/>
+      <Enemy Type="Golem"/>
+      <Delay Time="1"/>
+      <Enemy Type="Golem"/>
+      <Delay Time="1"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+      <Enemy Type="Swordsman"/>
+      <Delay Time="0.5"/>
+    </Wave>
+  </SpawnData>
+</Level>

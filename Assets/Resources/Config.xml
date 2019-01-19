@@ -1,0 +1,9 @@
+<Config>
+  <Setting Name="CameraMoveSpeed" Value="30"/>
+  <Setting Name="CameraZoomSpeed" Value="40"/>
+  <Setting Name="MaxCameraHeight" Value="60"/>
+  <Setting Name="MusicLevel" Value="100"/>
+  <Setting Name="MusicMuted" Value="false"/>
+  <Setting Name="SFXLevel" Value="100"/>
+  <Setting Name="SFXMuted" Value="false"/>
+</Config>

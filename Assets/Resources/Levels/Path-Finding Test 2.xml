@@ -1,0 +1,230 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Level Name="Path-Finding Test 2" StartMoney="0" StartHealth="100">
+  <Map Width="22" Height="22">
+xxxxxxxxxxxxxxxxxxxxx$
+x####################x
+x####################x
+x####################x
+x####################x
+x####################x
+x####################x
+x####################x
+x####################x
+x####################x
+x####################x
+x####################x
+x####################x
+x####################x
+x####################x
+x####################x
+x####################x
+x####################x
+x####################x
+x####################x
+x####################x
+*xxxxxxxxxxxxxxxxxxxxx
+</Map>
+<SpawnData>
+    <Wave>
+      <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+      <Delay Time="1" />
+	  <Enemy Type="Swordsman" />
+    </Wave>
+  </SpawnData>
+</Level>
