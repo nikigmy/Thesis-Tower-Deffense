@@ -2,6 +2,8 @@
 
 public class Tile : MonoBehaviour
 {
+
+    public Lifter lifter { get; protected set; }
     public int Row { get; private set; }
     public int Col { get; private set; }
     public Declarations.TileType Type { get; protected set; }
@@ -18,6 +20,11 @@ public class Tile : MonoBehaviour
         Row = row;
         Col = col;
         Type = type;
+    }
+
+    public void SetLifter(Lifter lifterToSet)
+    {
+        lifter = lifterToSet;
     }
 
     private void OnDrawGizmos()

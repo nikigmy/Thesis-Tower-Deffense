@@ -14,6 +14,8 @@ public abstract class Tower : MonoBehaviour
     protected GameObject Level2Gun;
     [SerializeField]
     protected GameObject Level3Gun;
+    [SerializeField]
+    protected GameObject RangeGizmo;
 
     protected GameObject currentGun;
     protected Transform currentGunBase;
@@ -47,6 +49,7 @@ public abstract class Tower : MonoBehaviour
         else
         {
             UpdateGunPartsReferences();
+            UpdateGizmoSize();
         }
         towerData.Upgraded.AddListener(UpgradeTower);
     }
@@ -83,6 +86,13 @@ public abstract class Tower : MonoBehaviour
                 break;
         }
         UpdateGunPartsReferences();
+        UpdateGizmoSize();
+    }
+
+    private void UpdateGizmoSize()
+    {
+        var factor = towerData.CurrentRange * 2 * 2; //first is because the scale is diameter and not radius and the second is because the tower object is scaled down
+        RangeGizmo.transform.localScale = new Vector3(factor, factor, factor);
     }
 
     protected void FindTarget(bool groundOnly = false)
@@ -92,11 +102,11 @@ public abstract class Tower : MonoBehaviour
         var distanceToClosestEnemy = float.MaxValue;
         for (int i = 0; i < allEnemies.Count; i++)
         {
-            if ((groundOnly && !Helpers.IsGroundUnit(allEnemies[i].Type)) || !allEnemies[i].Visible)
+            if ((groundOnly && !Helpers.IsGroundUnit(allEnemies[i].Type)) || !allEnemies[i].Visible || !allEnemies[i].Alive)
             {
                 continue;
             }
-            var distanceToEnemy = Vector3.Distance(allEnemies[i].GetCenter(), transform.position);
+            var distanceToEnemy = Vector3.Distance(allEnemies[i].GetCenter(), currentGun.transform.position);
             if (towerData == null)
             {
                 Debug.Log("null in find");
@@ -151,7 +161,7 @@ public abstract class Tower : MonoBehaviour
     {
         if (towerData != null)
         {
-            Gizmos.DrawWireSphere(transform.position, towerData.CurrentRange);
+            Gizmos.DrawWireSphere(currentGun.transform.position, towerData.CurrentRange);
             if (target != null)
             {
                 Gizmos.DrawLine(currentFirePoint.transform.position, target.GetCenter());
@@ -166,8 +176,18 @@ public abstract class Tower : MonoBehaviour
         Destroy(gameObject);
     }
 
+    public void DisableRangeGizmo()
+    {
+        RangeGizmo.gameObject.SetActive(false);
+    }
+
+    public void EnableRangeGizmo()
+    {
+        RangeGizmo.gameObject.SetActive(true);
+    }
+
     protected bool LostTarget()
     {
-        return target != null && (Vector3.Distance(target.GetCenter(), transform.position) > towerData.CurrentRange || !target.Alive || !target.Visible);
+        return target != null && (Vector3.Distance(target.GetCenter(), currentGun.transform.position) > towerData.CurrentRange || !target.Alive || !target.Visible);
     }
 }

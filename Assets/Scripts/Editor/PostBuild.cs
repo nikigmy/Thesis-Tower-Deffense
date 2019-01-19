@@ -15,14 +15,15 @@ public class PostBuild
         {
             if (target == BuildTarget.StandaloneWindows || target == BuildTarget.StandaloneWindows64)
             {
-                var levelsPath = pathToBuiltProject + "/../Levels";
+                var levelsPath = pathToBuiltProject + "/../" + Constants.cst_Levels;
                 System.IO.Directory.CreateDirectory(levelsPath);
-                foreach (var level in Directory.GetFiles(Application.dataPath + "/Resources/Levels").Where(x => x.EndsWith(".xml")))
+                foreach (var level in Directory.GetFiles(Application.dataPath + "/Resources/" + Constants.cst_Levels).Where(x => x.EndsWith(Constants.cst_Xml)))
                 {
                     var fileName = Path.GetFileNameWithoutExtension(level);
-                    File.Copy(level, levelsPath + "/" + fileName + ".xml");
+                    File.Copy(level, levelsPath + "/" + fileName + Constants.cst_Xml);
                 }
-                File.Copy(Application.dataPath + "/Resources/Setup.xml", pathToBuiltProject + "/../Setup.xml");
+                File.Copy(Application.dataPath + "/Resources/" + Constants.cst_Setup + Constants.cst_Xml, pathToBuiltProject + "/../" + Constants.cst_Setup + Constants.cst_Xml);
+                File.Copy(Application.dataPath + "/Resources/" + Constants.cst_Config + Constants.cst_Xml, pathToBuiltProject + "/../" + Constants.cst_Config + Constants.cst_Xml);
             }
         }
         catch (System.Exception)

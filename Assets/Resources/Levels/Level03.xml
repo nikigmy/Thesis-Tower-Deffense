@@ -1,4 +1,4 @@
-<Level StartMoney="500" StartHealth="10">
+<Level Name="Level03" StartMoney="500" StartHealth="10">
   <Map Width="30" Height="20">
     xxxxxxxxxxxxxxxxxxxxxxx/////$$
     xxx////////////////////////$$$

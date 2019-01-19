@@ -42,7 +42,8 @@ public class Declarations
         Swordsman,
         Golem,
         Dragon,
-        Rogue
+        Rogue,
+        Boss
     }
 
     public enum WavePartType
@@ -66,6 +67,7 @@ public class Declarations
     #region Levels
     public class LevelData
     {
+        public string Name { get; set; }
         public IntVector2 MapSize { get; private set; }
         public TileType[,] Map { get; set; }
 
@@ -73,20 +75,25 @@ public class Declarations
         public int StartHealth { get; private set; }
         public List<WaveData> Waves { get; private set; }
         public Sprite previewSprite { get; private set; }
+        public bool Unlocked { get; set; }
+        public int Stars { get; set; }
 
-        public LevelData(IntVector2 mapSize, TileType[,] map, List<WaveData> waves, int startMoney, int startHealth)
+        public LevelData(string name, IntVector2 mapSize, TileType[,] map, List<WaveData> waves, int startMoney, int startHealth)
         {
+            Name = name;
             MapSize = mapSize;
             Map = map;
             StartMoney = startMoney;
             StartHealth = startHealth;
             Waves = waves;
             previewSprite = TextureGenerator.GetTextureForLevel(this);
+            Unlocked = false;
+            Stars = 0;
         }
 
         public XElement Export()
         {
-            var level = new XElement("Level", new object[] { new XAttribute("StartMoney", StartMoney), new XAttribute("StartHealth", StartHealth) });
+            var level = new XElement(Constants.cst_Level, new object[] {new XAttribute(Constants.cst_Name, Name), new XAttribute(Constants.cst_StartMoney, StartMoney), new XAttribute(Constants.cst_StartHealth, StartHealth) });
             StringBuilder mapString = new StringBuilder("\n");
             for (int i = 0; i < MapSize.y; i++)
             {
@@ -96,21 +103,21 @@ public class Declarations
                 }
                 mapString.Append("\n");
             }
-            var mapElement = new XElement("Map", new object[] { new XAttribute("Width", MapSize.x), new XAttribute("Height", MapSize.y), mapString.ToString() });
+            var mapElement = new XElement(Constants.cst_Map, new object[] { new XAttribute(Constants.cst_Width, MapSize.x), new XAttribute(Constants.cst_Height, MapSize.y), mapString.ToString() });
 
-            var spawnData = new XElement("SpawnData");
+            var spawnData = new XElement(Constants.cst_SpawnData);
             foreach (var wave in Waves)
             {
-                var waveElement = new XElement("Wave");
+                var waveElement = new XElement(Constants.cst_Wave);
                 foreach (var wavePart in wave.WaveParts)
                 {
                     if (wavePart.Type == WavePartType.Spawn)
                     {
-                        waveElement.Add(new XElement("Enemy", new object[] { new XAttribute("Type", ((SpawnWavePart)wavePart).EnemyToSpawn.Type.ToString()) }));
+                        waveElement.Add(new XElement(Constants.cst_Enemy, new object[] { new XAttribute(Constants.cst_Type, ((SpawnWavePart)wavePart).EnemyToSpawn.Type.ToString()) }));
                     }
                     else
                     {
-                        waveElement.Add(new XElement("Delay", new object[] { new XAttribute("Time", ((DelayWavePart)wavePart).Delay.ToString()) }));
+                        waveElement.Add(new XElement(Constants.cst_Delay, new object[] { new XAttribute(Constants.cst_Time, ((DelayWavePart)wavePart).Delay.ToString()) }));
                     }
                 }
                 spawnData.Add(waveElement);
@@ -291,7 +298,25 @@ public class Declarations
                 }
             }
         }
-        
+
+        public Sprite CurrentSprite
+        {
+            get
+            {
+                switch (CurrentLevel)
+                {
+                    case 1:
+                        return AssetData.Level1Sprite;
+                    case 2:
+                        return AssetData.Level2Sprite;
+                    case 3:
+                        return AssetData.Level3Sprite;
+                    default:
+                        return AssetData.Level3Sprite;
+                }
+            }
+        }
+
         protected TowerData(TowerType type, TowerAssetData assetData, TowerLevelData[] levels)
         {
             Type = type;
@@ -326,6 +351,15 @@ public class Declarations
         {
             CurrentLevel = 1;
         }
+
+        public virtual Dictionary<string, string> GetStatDictionary()
+        {
+            var result = new Dictionary<string, string>();
+
+            result.Add("Range", CurrentRange.ToString());
+
+            return result;
+        }
     }
 
     public abstract class DamageTowerData : TowerData
@@ -351,6 +385,15 @@ public class Declarations
         protected DamageTowerData(TowerType type, TowerAssetData assetData, DamageTowerLevelData[] levels):base(type, assetData, levels)
         {
         }
+
+        public override Dictionary<string, string> GetStatDictionary()
+        {
+            var result = base.GetStatDictionary();
+
+            result.Add("Damage", CurrentDamage.ToString());
+
+            return result; 
+        }
     }
 
     public abstract class FiringTowerData : DamageTowerData
@@ -375,6 +418,15 @@ public class Declarations
 
         protected FiringTowerData(TowerType type, TowerAssetData assetData, FiringTowerLevelData[] levels) : base(type, assetData, levels)
         {
+        }
+
+        public override Dictionary<string, string> GetStatDictionary()
+        {
+            var result = base.GetStatDictionary();
+
+            result.Add("Fire Rate", CurrentFireRate.ToString());
+
+            return result;
         }
     }
 
@@ -408,6 +460,15 @@ public class Declarations
         public PlasmaTower(TowerAssetData assetData, PlasmaLevelData[] levels) :
             base(TowerType.Plasma, assetData, levels)
         {
+        }
+
+        public override Dictionary<string, string> GetStatDictionary()
+        {
+            var result = base.GetStatDictionary();
+
+            result.Add("Explosion Range", CurrentExplosionRange.ToString());
+
+            return result;
         }
     }
 
@@ -453,6 +514,17 @@ public class Declarations
             base(TowerType.Crystal, assetData, levels)
         {
         }
+
+        public override Dictionary<string, string> GetStatDictionary()
+        {
+            var result = base.GetStatDictionary();
+
+            result.Add("Slow Effect", CurrentSlowEffect.ToString());
+            result.Add("Slow Duration", CurrentSlowDuration.ToString());
+
+            return result;
+        }
+
     }
 
     public class TeslaTower : FiringTowerData
@@ -497,6 +569,17 @@ public class Declarations
             base(TowerType.Tesla, assetData, levels)
         {
         }
+
+        public override Dictionary<string, string> GetStatDictionary()
+        {
+            var result = base.GetStatDictionary();
+
+            result.Add("Max Bounces", CurrentMaxBounces.ToString());
+            result.Add("Bounce Range", CurrentBounceRange.ToString());
+
+            return result;
+        }
+
     }
 
     public class LaserTower : DamageTowerData
@@ -544,6 +627,18 @@ public class Declarations
         public RogueData(EnemyAssetData assetData, int health, float speed, float runSpeed, int damage, int award):base(assetData, health, speed, damage, award)
         {
             RunSpeed = runSpeed;
+        }
+    }
+
+    public class BossData : EnemyData
+    {
+        public int GolemHealth { get; protected set; }
+        public float GolemSpeed { get; protected set; }
+
+        public BossData(EnemyAssetData assetData, int health, float speed, int damage, int award, int golemHealth, float golemSpeed) : base(assetData, health, speed, damage, award)
+        {
+            GolemHealth = golemHealth;
+            GolemSpeed = golemSpeed;
         }
     }
     #endregion Enemies
@@ -636,6 +731,48 @@ public class Declarations
             Type = from.Type;
             Duration = from.Duration;
             Value = from.Value;
+        }
+    }
+
+    public class Settings
+    {
+        public bool Fullscreen { get; internal set; }
+        public Vector2 Resolution { get; internal set; }
+        public int QualityLevel { get; internal set; }
+        public float CameraMoveSpeed { get; internal set; } //= 30;//read this
+        public float CameraZoomSpeed { get; internal set; } // = 40;//read this
+        public int MusicLevel { get; internal set; }
+        public int SFXLevel { get; internal set; }
+        public bool FastBuilding { get; internal set; }
+        
+        public Settings(bool fullscreen, Vector2 resolution, int qualityLevel, float cameraMoveSpeed, float cameraZoomSpeed, int musicLevel, int sFXLevel, bool fastBuilding)
+        {
+            Fullscreen = fullscreen;
+            Resolution = resolution;
+            QualityLevel = qualityLevel;
+            CameraMoveSpeed = cameraMoveSpeed;
+            CameraZoomSpeed = cameraZoomSpeed;
+            MusicLevel = musicLevel;
+            SFXLevel = sFXLevel;
+            FastBuilding = fastBuilding;
+        }
+
+        internal XElement Export()
+        {
+            var config = new XElement(Constants.cst_Config);
+
+            config.Add(new XElement(Constants.cst_Setting, new object[] { new XAttribute(Constants.cst_Name, Constants.cst_Fullscreen), new XAttribute(Constants.cst_Value, Fullscreen) }));
+            config.Add(new XElement(Constants.cst_Setting, new object[] { new XAttribute(Constants.cst_Name, Constants.cst_Resolution), new XAttribute(Constants.cst_Value, Resolution.x + "x" + Resolution.y) }));
+            config.Add(new XElement(Constants.cst_Setting, new object[] { new XAttribute(Constants.cst_Name, Constants.cst_Quality), new XAttribute(Constants.cst_Value, QualityLevel) }));
+
+            config.Add(new XElement(Constants.cst_Setting, new object[] { new XAttribute(Constants.cst_Name, Constants.cst_MusicLevel), new XAttribute(Constants.cst_Value, MusicLevel) }));
+            config.Add(new XElement(Constants.cst_Setting, new object[] { new XAttribute(Constants.cst_Name, Constants.cst_SFXLevel), new XAttribute(Constants.cst_Value, SFXLevel) }));
+
+            config.Add(new XElement(Constants.cst_Setting, new object[] { new XAttribute(Constants.cst_Name, Constants.cst_CameraMoveSpeed), new XAttribute(Constants.cst_Value, CameraMoveSpeed) }));
+            config.Add(new XElement(Constants.cst_Setting, new object[] { new XAttribute(Constants.cst_Name, Constants.cst_CameraZoomSpeed), new XAttribute(Constants.cst_Value, CameraZoomSpeed) }));
+            config.Add(new XElement(Constants.cst_Setting, new object[] { new XAttribute(Constants.cst_Name, Constants.cst_FastBuilding), new XAttribute(Constants.cst_Value, FastBuilding) }));
+
+            return config;
         }
     }
 }

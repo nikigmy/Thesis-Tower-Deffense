@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using UnityEngine;
 
 public class Helpers
@@ -6,8 +7,9 @@ public class Helpers
 
     public static Vector3 GetPositionForTile(int row, int col)
     {
+        var rowAbs = Math.Abs(row);
         float h = (float)((Math.Sqrt(3) / 2));
-        return new Vector3(col * h * 2 + (row % 2 == 1 ? h : 0), 0, -(row * 1.5f));
+        return new Vector3(col * h * 2 + (rowAbs % 2 == 1 ? h : 0), 0, -(row * 1.5f));
     }
 
     public static bool GetTowerTypeFromString(string type, out Declarations.TowerType towerType)
@@ -43,6 +45,7 @@ public class Helpers
         }
         return true;
     }
+
     public static bool GetEnemyTypeFromString(string type, out Declarations.EnemyType enemyType)
     {
         if (string.IsNullOrEmpty(type))
@@ -65,12 +68,23 @@ public class Helpers
             case "Rogue":
                 enemyType = Declarations.EnemyType.Rogue;
                 break;
+            case "Boss":
+                enemyType = Declarations.EnemyType.Boss;
+                break;
             default:
                 Debug.Log(string.Format("Unknown enemy type: '{0}'", type));
                 enemyType = Declarations.EnemyType.Swordsman;
                 return false;
         }
         return true;
+    }
+
+    internal static void SaveAndSetSettings()
+    {
+        Def.Instance.Settings.Export().Save(Path.Combine(Application.dataPath + "/../", Constants.cst_Config + Constants.cst_Xml));
+        
+        Screen.SetResolution((int)Def.Instance.Settings.Resolution.x, (int)Def.Instance.Settings.Resolution.y, Def.Instance.Settings.Fullscreen);
+        QualitySettings.SetQualityLevel(Def.Instance.Settings.QualityLevel, true);
     }
 
     public static bool GetTileType(char tileId, out Declarations.TileType tileType, bool canHaveEmpty)
@@ -126,6 +140,7 @@ public class Helpers
             case Declarations.EnemyType.Swordsman:
             case Declarations.EnemyType.Golem:
             case Declarations.EnemyType.Rogue:
+            case Declarations.EnemyType.Boss:
                 return true;
             case Declarations.EnemyType.Dragon:
                 return false;

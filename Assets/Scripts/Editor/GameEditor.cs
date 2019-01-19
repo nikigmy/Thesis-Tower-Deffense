@@ -6,18 +6,29 @@ using System.Xml.Linq;
 public class GameEditor : EditorWindow
 {
     int levelIndex = -1;
+    public bool devMode = false;
     [MenuItem("Window/EditorTools")]
     static void Init()
     {
         // Get existing open window or if none, make a new one:
         GameEditor window = (GameEditor)EditorWindow.GetWindow(typeof(GameEditor));
+        window.devMode = bool.Parse(PlayerPrefs.GetString(Constants.cst_DeveloperMode, "false"));
         window.Show();
     }
 
     void OnGUI()
     {
         GUILayout.Label("EditorTools", EditorStyles.boldLabel);
-
+        var temp = EditorGUILayout.Toggle("Developer Mode", devMode);
+        if (temp != devMode)
+        {
+            devMode = temp;
+            PlayerPrefs.SetString(Constants.cst_DeveloperMode, devMode.ToString());
+        }
+        if (GUILayout.Button("Reset Level Data"))
+        {
+            PlayerPrefs.DeleteKey(Constants.cst_LevelData);
+        }
         levelIndex = EditorGUILayout.IntField("Level index", levelIndex);
 
         if (GUILayout.Button("Generate Map"))

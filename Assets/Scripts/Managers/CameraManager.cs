@@ -31,9 +31,9 @@ public class CameraManager : MonoBehaviour
         centerOfField.y = transform.position.y;
         transform.position = centerOfField;
 
-        var bottomOfField = Helpers.GetPositionForTile(mapSize.y, mapSize.x);
-        minPositions = new Vector3(0, 3, bottomOfField.z - 15);
-        maxPositions = new Vector3(bottomOfField.x, Def.Instance.MaxCameraHeight, -10);
+        var bottomOfField = Helpers.GetPositionForTile(mapSize.y - 1, mapSize.x - 1);
+        minPositions = new Vector3(7, 6, bottomOfField.z - 4);
+        maxPositions = new Vector3(bottomOfField.x - 7, 25, -15);
         init = true;
     }
 
@@ -49,29 +49,29 @@ public class CameraManager : MonoBehaviour
         var mouseWheelInput = Input.GetAxis(mouseCroll);
         if (mouseWheelInput > 0f)
         {
-            vectorToMove += transform.forward * Def.Instance.CameraZoomSpeed;
+            vectorToMove += transform.forward * Def.Instance.Settings.CameraZoomSpeed;
         }
         else if (mouseWheelInput < 0f) // backwards
         {
-            vectorToMove -= transform.forward * Def.Instance.CameraZoomSpeed;
+            vectorToMove -= transform.forward * Def.Instance.Settings.CameraZoomSpeed;
         }
 
         var mousePos = Input.mousePosition;
         if (mousePos.x >= Screen.width - panBorderThickness && transform.position.x < maxPositions.x && (mousePos.x < Screen.width || !debugging))//right
         {
-            vectorToMove += Vector3.right * Def.Instance.CameraMoveSpeed;
+            vectorToMove += Vector3.right * Def.Instance.Settings.CameraMoveSpeed;
         }
         if (mousePos.x <= panBorderThickness && transform.position.x > minPositions.x && (mousePos.x > 0 || !debugging))//left
         {
-            vectorToMove -= Vector3.right * Def.Instance.CameraMoveSpeed;
+            vectorToMove -= Vector3.right * Def.Instance.Settings.CameraMoveSpeed;
         }
         if (mousePos.y >= Screen.height - panBorderThickness && transform.position.z < maxPositions.z && (mousePos.y < Screen.height || !debugging))//up
         {
-            vectorToMove += Vector3.forward * Def.Instance.CameraMoveSpeed;
+            vectorToMove += Vector3.forward * Def.Instance.Settings.CameraMoveSpeed;
         }
         if (mousePos.y <= panBorderThickness && transform.position.z > minPositions.z && (mousePos.y > 0 || !debugging))//down
         {
-            vectorToMove -= Vector3.forward * Def.Instance.CameraMoveSpeed;
+            vectorToMove -= Vector3.forward * Def.Instance.Settings.CameraMoveSpeed;
         }
 
         vectorToMove = vectorToMove * Time.unscaledDeltaTime;
@@ -79,7 +79,8 @@ public class CameraManager : MonoBehaviour
         vectorToMove.x = Mathf.Clamp(vectorToMove.x, -(transform.position.x - minPositions.x), maxPositions.x - transform.position.x);
         vectorToMove.y = Mathf.Clamp(vectorToMove.y, -(transform.position.y - minPositions.y), maxPositions.y - transform.position.y);
         vectorToMove.z = Mathf.Clamp(vectorToMove.z, -(transform.position.z - minPositions.z), maxPositions.z - transform.position.z);
-        
+        var rotation = ((transform.position.y + vectorToMove.y - 6) / 19 * 30) + 40;//the gigher the camera is the more its rotated(40 - 70)) ((current position above 6(min) / movementRange) * rotationRange) + minRotation
+        transform.Rotate(new Vector3(rotation - transform.rotation.eulerAngles.x, 0, 0), Space.World);
         transform.Translate(vectorToMove, Space.World);
     }
 }

@@ -12,10 +12,18 @@ public class InformationPanel : MonoBehaviour
     private Text towerLevel;
 
     [SerializeField]
-    private Text towerDescription;
+    private Image image;
+
+    [SerializeField]
+    private GameObject[] statObjects;
 
     [SerializeField]
     private Button upgradeButton;
+
+    [SerializeField]
+    private Sprite greenSprite;
+    [SerializeField]
+    private Sprite redSprite;
 
     [SerializeField]
     private Text upgradeButtonText;
@@ -31,9 +39,7 @@ public class InformationPanel : MonoBehaviour
     {
         currentTower = towerData;
         towerName.text = currentTower.Type.ToString();
-        towerLevel.text = "Level: " + currentTower.CurrentLevel;
-        towerDescription.text = currentTower.AssetData.Description;
-        UpdateUpgradeButton();
+        UpdateInfoPanel();
 
         upgradeButton.onClick.AddListener(UpgradeTowerClicked);
     }
@@ -41,33 +47,55 @@ public class InformationPanel : MonoBehaviour
     private void UpgradeTowerClicked()
     {
         currentTower.Upgrade();
-        towerLevel.text = "Level: " + currentTower.CurrentLevel;
+
+        UpdateInfoPanel();
+    }
+
+    void UpdateInfoPanel()
+    {
+        towerLevel.text = "Lvl. " + currentTower.CurrentLevel;
+        image.sprite = currentTower.CurrentSprite;
+        
+        var index = 0;
+        foreach (var stat in currentTower.GetStatDictionary())
+        {
+            statObjects[index].transform.GetChild(0).GetComponent<Text>().text = stat.Key;
+            statObjects[index].transform.GetChild(1).GetComponent<Text>().text = stat.Value;
+            index++;
+        }
+        for (; index < 5; index++)
+        {
+            statObjects[index].transform.GetChild(0).GetComponent<Text>().text = "";
+            statObjects[index].transform.GetChild(1).GetComponent<Text>().text = "";
+        }
+
         UpdateUpgradeButton();
     }
 
-    void UpdateUpgradeButton()
+    private void UpdateUpgradeButton()
     {
         var currentMoney = GameManager.instance.Money;
 
         if (currentTower.CurrentUpgradePrice == 0)
         {
-            upgradeButton.image.color = Color.grey;
-            upgradeButtonText.text = "Tower can't be upgraded further!";
+            upgradeButton.image.sprite = redSprite;
+            upgradeButtonText.text = "Max Level";
             upgradeButton.enabled = false;
         }
         else
         {
             if (currentTower.CurrentUpgradePrice <= currentMoney)
             {
-                upgradeButton.image.color = Color.green;
+                upgradeButton.image.sprite = greenSprite;
                 upgradeButton.enabled = true;
             }
             else
             {
-                upgradeButton.image.color = Color.red;
+                upgradeButton.image.sprite = redSprite;
                 upgradeButton.enabled = false;
             }
-            upgradeButtonText.text = string.Format("Upgrade for {0}?", currentTower.CurrentUpgradePrice);
+            //upgradeButtonText.text = string.Format("Upgrade for:\n{0}?", currentTower.CurrentUpgradePrice);
+            upgradeButtonText.text = currentTower.CurrentUpgradePrice.ToString();
         }
     }
 }

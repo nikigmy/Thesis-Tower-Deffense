@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -150,6 +151,7 @@ public class LevelCreator : MonoBehaviour
     {
         if (currentlyLoadedLevel != null)
         {
+            currentlyLoadedLevel.Name = System.IO.Path.GetFileNameWithoutExtension(path);
             currentlyLoadedLevel.Export().Save(path);
         }
         Debug.Log(path);
@@ -157,9 +159,28 @@ public class LevelCreator : MonoBehaviour
 
     public void CreateLevelClicked()
     {
-        var width = int.Parse(newLevelPanel.transform.GetChild(1).GetComponent<InputField>().text);
-        var height = int.Parse(newLevelPanel.transform.GetChild(2).GetComponent<InputField>().text);
-        if (width > 0 && height > 0)
+        var invalidSymbols = new List<char> { '\\', '/', ':', '*', '?', '"', '<', '>', '|' };
+        //var name = newLevelPanel.transform.GetChild(1).GetComponent<InputField>().text;
+        //int width;
+        //int height;
+        //int startMoney;
+        //int startHealth;
+        //if (int.TryParse(newLevelPanel.transform.GetChild(2).GetComponent<InputField>().text, out width) &&
+        //    int.TryParse(newLevelPanel.transform.GetChild(3).GetComponent<InputField>().text, out height) &&
+        //    int.TryParse(newLevelPanel.transform.GetChild(4).GetComponent<InputField>().text, out startMoney) &&
+        //    int.TryParse(newLevelPanel.transform.GetChild(5).GetComponent<InputField>().text, out startHealth) &&
+        //    width > 0 && height > 0 && startMoney > 0 && startHealth > 0
+        //    && !string.IsNullOrEmpty(name) && !name.Any(x => invalidSymbols.Contains(x)))
+        //{
+        var name = "CreatedLevel";
+        int width;
+        int height;
+        int startMoney = 500;
+        int startHealth = 10;
+        if (int.TryParse(newLevelPanel.transform.GetChild(1).GetComponent<InputField>().text, out width) &&
+            int.TryParse(newLevelPanel.transform.GetChild(2).GetComponent<InputField>().text, out height) &&
+            width > 0 && height > 0 && startMoney > 0 && startHealth > 0
+            && !string.IsNullOrEmpty(name) && !name.Any(x => invalidSymbols.Contains(x)))
         {
             var map = new Declarations.TileType[height, width];
             for (int i = 0; i < height; i++)
@@ -169,7 +190,7 @@ public class LevelCreator : MonoBehaviour
                     map[i, j] = Declarations.TileType.Grass;
                 }
             }
-            currentlyLoadedLevel = new Declarations.LevelData(new Declarations.IntVector2(width, height), map, new List<Declarations.WaveData>(), 500, 10);
+            currentlyLoadedLevel = new Declarations.LevelData(name, new Declarations.IntVector2(width, height), map, new List<Declarations.WaveData>(), startMoney, startHealth);
             LoadLevel();
             newLevelPanel.SetActive(false);
         }

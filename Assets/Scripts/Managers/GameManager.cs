@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -31,12 +34,17 @@ public class GameManager : MonoBehaviour
     public bool GameSpedUp = false;
 
     public int Health;
+    private int AddedHealth;
     public int Money;
+    public bool DeveloperMode;
+    float timeOfStart;
+    public List<int> stepsMade;
 
     private void Awake()
     {
         if (instance == null)
         {
+            stepsMade = new List<int>();
             DontDestroyOnLoad(this);
             instance = this;
             SceneManager.sceneLoaded += SceneLoaded;
@@ -49,8 +57,11 @@ public class GameManager : MonoBehaviour
 
     private void SceneLoaded(Scene scene, LoadSceneMode loadMode)
     {
+        bool.TryParse(PlayerPrefs.GetString(Constants.cst_DeveloperMode, "false"), out DeveloperMode);
         if (scene.name == "Level")
         {
+            Def.Instance.ResetTowerLevel();
+            timeOfStart = Time.realtimeSinceStartup;
             LooeadDependencies(scene.name);
 
             MapGenerator.GenerateMap(CurrentLevel);
@@ -60,14 +71,12 @@ public class GameManager : MonoBehaviour
             SpawnManager.LevelCompleted.AddListener(LevelCompleted);
 
             LevelLoaded.Invoke();
-            Def.Instance.ResetTowerLevel();
+            AddedHealth = 0;
         }
         else if (scene.name == "MainMenu")
         {
             LooeadDependencies(scene.name);
             Def.Instance.LoadData(towersAssetData, enemyAssetData);
-
-            MainMenu.LoadLevelPreviews();
         }
         else if (scene.name == "LevelCreator")
         {
@@ -75,17 +84,37 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    internal void SetDevMode(bool isSet)
+    {
+        DeveloperMode = isSet;
+        PlayerPrefs.SetString(Constants.cst_DeveloperMode, isSet.ToString());
+    }
+
     public void LoadLevel(int index)
     {
-        CurrentLevel = Def.Instance.Levels[index];
-        Health = CurrentLevel.StartHealth;
-        Money = CurrentLevel.StartMoney;
+        LoadLevel(Def.Instance.Levels[index]);
+    }
+
+    public void LoadLevel(Declarations.LevelData level)
+    {
+        CurrentLevel = level;
+        Health = level.StartHealth;
+        Money = level.StartMoney;
 
         Time.timeScale = 1;
         GameSpedUp = false;
         Paused = false;
 
         SceneManager.LoadScene("Level", LoadSceneMode.Single);
+    }
+
+    public void LoadNextLevel()
+    {
+        var nextLevelIndex = Def.Instance.Levels.IndexOf(CurrentLevel) + 1;
+        if(nextLevelIndex < Def.Instance.Levels.Count)
+        {
+            LoadLevel(nextLevelIndex);
+        }
     }
     
     private void LooeadDependencies(string sceneName)
@@ -97,11 +126,11 @@ public class GameManager : MonoBehaviour
             SpawnManager = FindObjectOfType<SpawnManager>();
             UIManager = FindObjectOfType<UIManager>();
         }
-        else if(sceneName == "MainMenu")
+        else if (sceneName == "MainMenu")
         {
             MainMenu = FindObjectOfType<MainMenu>();
         }
-        else if(sceneName == "LevelCreator")
+        else if (sceneName == "LevelCreator")
         {
             MapGenerator = FindObjectOfType<MapGenerator>();
             PaintManager = FindObjectOfType<PaintManager>();
@@ -121,12 +150,28 @@ public class GameManager : MonoBehaviour
         MoneyChanged.Invoke();
     }
 
+    public void AddHealth(int value)
+    {
+        AddedHealth += value;
+        Health += value;
+        HealthChanged.Invoke();
+    }
+
     public void DealDamage(int value)
     {
         Health -= value;
         if (Health <= 0)
         {
+            Health = 0;
+            HealthChanged.Invoke();
             UIManager.ShowDefeatScreen();
+
+            var totalSeconds = Time.realtimeSinceStartup - timeOfStart;
+            int minutes = (int)totalSeconds / 60;
+            int hours = minutes / 60;
+            Debug.Log("Hours: " + hours + " Minutes: " + minutes % 60 + " Seconds: " + (int)totalSeconds % 60 + " Total Seconds: " + totalSeconds);
+            Debug.Log("Average Steps: " + stepsMade.Average());
+            Debug.Log("Total Steps: " + stepsMade.Sum());
         }
         else
         {
@@ -184,6 +229,70 @@ public class GameManager : MonoBehaviour
 
     private void LevelCompleted()
     {
-        UIManager.ShowVictoryScreen();
+        var currentLevelIndex = Def.Instance.Levels.IndexOf(CurrentLevel);
+        var isLastLevel = currentLevelIndex == Def.Instance.Levels.Count - 1;
+        var stars = CalculateStars();
+        if (CurrentLevel.Unlocked)
+        {
+            bool shouldUpdateSave = false;
+            if (stars > CurrentLevel.Stars)
+            {
+                CurrentLevel.Stars = stars;
+                shouldUpdateSave = true;
+            }
+            if (isLastLevel)
+            {
+                SetDevMode(true);
+            }
+            else if (!Def.Instance.Levels[currentLevelIndex + 1].Unlocked)
+            {
+                Def.Instance.Levels[currentLevelIndex + 1].Unlocked = true;
+                shouldUpdateSave = true;
+            }
+            if (shouldUpdateSave)
+            {
+                UpdateSave();
+            }
+        }
+        UIManager.ShowVictoryScreen(stars, !isLastLevel);
+    }
+
+    public void LoadMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    private void UpdateSave()
+    {
+        StringBuilder result = new StringBuilder();
+        foreach (var level in Def.Instance.Levels)
+        {
+            if (level.Unlocked)
+            {
+                result.Append(level.Name + ":" + level.Stars + "\\");
+            }
+        }
+        PlayerPrefs.SetString(Constants.cst_LevelData, result.ToString());
+    }
+
+    private int CalculateStars()
+    {
+        var health = Health - AddedHealth;
+        if (health == CurrentLevel.StartHealth)
+        {
+            return 3;
+        }
+        else if (health >= (CurrentLevel.StartHealth / 3) * 2)
+        {
+            return 2;
+        }
+        else if (health >= CurrentLevel.StartHealth / 3)
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
     }
 }

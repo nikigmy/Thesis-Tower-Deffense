@@ -27,6 +27,8 @@ public class Enemy : MonoBehaviour
     public Declarations.EnemyType Type { get { return enemyData.Type; } }
     public List<Declarations.Effect> Effects;
 
+    int stepsMade;
+
     protected void Init()
     {
         Effects = new List<Declarations.Effect>();
@@ -36,8 +38,9 @@ public class Enemy : MonoBehaviour
 
     public void SetData(Tile startTile)
     {
+        stepsMade = 0;
         currentTile = startTile;
-        FindNextTile();
+        FindNextTile(false);
         Rotate(true);
     }
 
@@ -62,7 +65,7 @@ public class Enemy : MonoBehaviour
         {
             healthBar.gameObject.SetActive(true);
         }
-        healthBar.SetBar(currentHealth / enemyData.Health);
+        healthBar.SetBar(currentHealth / GetCurrentMaxHealth());
 
         healthBar.transform.LookAt(Camera.main.transform);
     }
@@ -79,7 +82,7 @@ public class Enemy : MonoBehaviour
         {
             if ((currentTile.transform.position - transform.position).magnitude <= 0.3)
             {
-                FindNextTile();
+                FindNextTile(currentTile.Type != Declarations.TileType.Spawn);
             }
             if (currentTile != null)
             {
@@ -124,6 +127,7 @@ public class Enemy : MonoBehaviour
 
     protected virtual void Attack()
     {
+        GameManager.instance.stepsMade.Add(stepsMade);
         GameManager.instance.DealDamage(enemyData.Damage);
         GameManager.instance.SpawnManager.EnemyDestroyed(this);
         Destroy(gameObject);
@@ -157,8 +161,19 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    protected virtual float GetCurrentNormalSpeed()
+    {
+        return enemyData.Speed;
+    }
+
+    protected virtual int GetCurrentMaxHealth()
+    {
+        return enemyData.Health;
+    }
+
     protected virtual void UpdateSpeed()
     {
+        float normalSpeed = GetCurrentNormalSpeed();
         if (Effects.Any(x => x.Type == Declarations.EffectType.Stun))
         {
             CurrentSpeed = 0;
@@ -177,17 +192,17 @@ public class Enemy : MonoBehaviour
                 }
                 else
                 {
-                    if (CurrentSpeed < enemyData.Speed)
+                    if (CurrentSpeed < normalSpeed)
                     {
-                        CurrentSpeed = enemyData.Speed;
+                        CurrentSpeed = normalSpeed;
                     }
                 }
             }
             else
             {
-                if (CurrentSpeed < enemyData.Speed)
+                if (CurrentSpeed < normalSpeed)
                 {
-                    CurrentSpeed = enemyData.Speed;
+                    CurrentSpeed = normalSpeed;
                 }
             }
             var slow = Effects.FirstOrDefault(x => x.Type == Declarations.EffectType.Slow);
@@ -204,7 +219,7 @@ public class Enemy : MonoBehaviour
         }
         if (Moving)
         {
-            anim.speed = CurrentSpeed / enemyData.Speed;//keep the leg movement consistent
+            anim.speed = CurrentSpeed / normalSpeed;//keep the leg movement consistent
         }
     }
 
@@ -231,8 +246,9 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void FindNextTile()
+    private void FindNextTile(bool random)
     {
+        stepsMade++;
         var neibourTiles = GameManager.instance.MapGenerator.GetNeibourCells(currentTile.Row, currentTile.Col);
         var objectiveTile = neibourTiles.FirstOrDefault(x => x.Type == Declarations.TileType.Objective);
         if (objectiveTile != null)
@@ -266,9 +282,17 @@ public class Enemy : MonoBehaviour
 
             if (pathTiles.Count > 0)
             {
-                var nextTileIndex = UnityEngine.Random.Range(0, pathTiles.Count);
-                previousTile = currentTile;
-                currentTile = pathTiles[nextTileIndex];
+                if (random)
+                {
+                    var nextTileIndex = UnityEngine.Random.Range(0, pathTiles.Count);
+                    previousTile = currentTile;
+                    currentTile = pathTiles[nextTileIndex];
+                }
+                else
+                {
+                    previousTile = currentTile;
+                    currentTile = pathTiles[0];
+                }
             }
             else//dead end
             {

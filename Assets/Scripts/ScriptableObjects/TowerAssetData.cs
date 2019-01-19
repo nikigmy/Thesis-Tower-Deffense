@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,4 +15,5 @@ public class TowerAssetData : ScriptableObject
     public Sprite Level3Sprite;
 
     public GameObject Prefab;
+    
 }

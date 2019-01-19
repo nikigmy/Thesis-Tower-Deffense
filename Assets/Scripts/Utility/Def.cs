@@ -7,11 +7,6 @@ using UnityEngine;
 
 public class Def
 {
-    private const string cst_levels = "Levels";
-    private const string cst_towerData = "TowerData";
-    private const string cst_enemyData = "EnemyData";
-    private const string cst_setup = "Setup";
-
     private static Def instance;
     public static Def Instance
     {
@@ -29,10 +24,8 @@ public class Def
     public Dictionary<Declarations.TowerType, Declarations.TowerData> TowerDictionary;
     public Dictionary<Declarations.EnemyType, Declarations.EnemyData> EnemyDictionary;
 
-    public Declarations.LevelData[] Levels;
-    public float CameraMoveSpeed = 30;//read this
-    public float CameraZoomSpeed = 40;//read this
-    public float MaxCameraHeight = 60;//read this
+    public List<Declarations.LevelData> Levels;
+    public Declarations.Settings Settings;
 
     public void LoadData(TowerAssetData[] towersAssetData, EnemyAssetData[] enemyAssetData)
     {
@@ -43,10 +36,14 @@ public class Def
 
     private void LoadAllData(TowerAssetData[] towersAssetData, EnemyAssetData[] enemyAssetData)
     {
-        var setupFile = LoadSetupFile(Application.platform == RuntimePlatform.WindowsEditor);
+        var setupFile = LoadSetupFile(Application.platform != RuntimePlatform.WindowsEditor);
         LoadSetup(towersAssetData, enemyAssetData, setupFile);
-        var levels = LoadLevelFiles(Application.platform == RuntimePlatform.WindowsEditor);
+        var levels = LoadLevelFiles(Application.platform != RuntimePlatform.WindowsEditor);
         LoadLevels(levels);
+        if (DataReader.ReadConfig(LoadConfigFile(), out Settings))
+        {
+            Helpers.SaveAndSetSettings();
+        }
     }
 
     internal void ResetTowerLevel()
@@ -57,33 +54,64 @@ public class Def
         }
     }
 
-    private List<XElement> LoadLevelFiles(bool fromResources)
+    private List<XElement> LoadLevelFiles(bool developerMode)
     {
-        if (fromResources)
+        if (!developerMode)
         {
-            return Resources.LoadAll<TextAsset>(cst_levels).Select(x => XElement.Parse(x.text)).ToList();
+            return Resources.LoadAll<TextAsset>(Constants.cst_Levels).Select(x => XElement.Parse(x.text)).ToList();
         }
         else
         {
-            return Directory.GetFiles(Path.Combine(Application.dataPath + "/../", "Levels")).Where(x => x.EndsWith(".xml")).Select(x => XElement.Load(x)).ToList();
+            var levelFiles = Directory.GetFiles(Path.Combine(Application.dataPath + "/../", Constants.cst_Levels)).Where(x => x.EndsWith(".xml"));
+            if (levelFiles != null && levelFiles.Any())
+            {
+                return levelFiles.Select(x => XElement.Load(x)).ToList();
+            }
+            else
+            {
+                return new List<XElement>();
+            }
         }
     }
 
-    private XElement LoadSetupFile(bool fromResources)
+    private XElement LoadSetupFile(bool developerMode)
     {
-        if (fromResources)
+        if (!developerMode)
         {
-            return XElement.Parse(Resources.Load<TextAsset>(cst_setup).text);
+            return XElement.Parse(Resources.Load<TextAsset>(Constants.cst_Setup).text);
         }
         else
         {
-            return XElement.Load(Path.Combine(Application.dataPath + "/../", "Setup.xml"));
+            var setupPath = Path.Combine(Application.dataPath + "/../", Constants.cst_Setup + Constants.cst_Xml);
+            if (File.Exists(setupPath))
+            {
+                return XElement.Load(setupPath);
+            }
+            else
+            {
+                var result = XElement.Parse(Resources.Load<TextAsset>(Constants.cst_Setup).text);
+                result.Save(setupPath);
+                return result;
+            }
+        }
+    }
+
+    private XElement LoadConfigFile()
+    {
+        var configPath = Path.Combine(Application.dataPath + "/../", Constants.cst_Config + Constants.cst_Xml);
+        if (File.Exists(configPath))
+        {
+            return XElement.Load(configPath);
+        }
+        else
+        {
+            return null;
         }
     }
 
     private void LoadSetup(TowerAssetData[] towersAssetData, EnemyAssetData[] enemyAssetData, XElement setup)
     {
-        var towers = setup.Element(cst_towerData).Elements().ToList();
+        var towers = setup.Element(Constants.cst_TowerData).Elements().ToList();
         for (int i = 0; i < towers.Count; i++)
         {
             Declarations.TowerType towerType;
@@ -105,7 +133,7 @@ public class Def
                 }
             }
         }
-        var enemies = setup.Element(cst_enemyData).Elements().ToList();
+        var enemies = setup.Element(Constants.cst_EnemyData).Elements().ToList();
         for (int i = 0; i < enemies.Count; i++)
         {
             Declarations.EnemyType enemyType;
@@ -140,17 +168,51 @@ public class Def
 
     public void LoadLevels(List<XElement> levels)
     {
-        Levels = new Declarations.LevelData[levels.Count];
+        Levels = new List<Declarations.LevelData>();
         for (int i = 0; i < levels.Count; i++)
         {
             Declarations.LevelData level;
             if (DataReader.ReadLevelData(levels[i], out level))
             {
-                Levels[i] = level;
+                Levels.Add(level);
             }
             else
             {
                 Debug.Log("Invalid level file");
+            }
+        }
+        bool atleastOneUnlocked = false;
+        if (PlayerPrefs.HasKey(Constants.cst_LevelData))
+        {
+            var levelData = PlayerPrefs.GetString(Constants.cst_LevelData, "");
+            if (!string.IsNullOrEmpty(levelData))
+            {
+                var unlockedLevels = levelData.Split(new char[] { '\\' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var unlockedLevel in unlockedLevels)
+                {
+                    var splittedData = unlockedLevel.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (splittedData.Any())
+                    {
+                        var level = Levels.FirstOrDefault(x => x.Name == splittedData[0]);
+                        if (level != null)
+                        {
+                            atleastOneUnlocked = true;
+                            level.Unlocked = true;
+                            int stars;
+                            if (int.TryParse(splittedData[1], out stars))
+                            {
+                                level.Stars = stars;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if(!atleastOneUnlocked)
+        {
+            if (levels.Count > 0)
+            {
+                Levels[0].Unlocked = true;
             }
         }
     }

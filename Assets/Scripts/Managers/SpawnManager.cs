@@ -110,7 +110,10 @@ public class SpawnManager : MonoBehaviour
         enemies.Remove(enemy);
         if (currentWaveIndex >= currentWaves.Count - 1 && currentWavePartIndex >= currentWave.WaveParts.Count - 1 && enemies.Count == 0)
         {
-            LevelCompleted.Invoke();
+            if (GameManager.instance.Health > 0)
+            {
+                LevelCompleted.Invoke();
+            }
         }
     }
 

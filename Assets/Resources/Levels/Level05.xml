@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Level StartMoney="500" StartHealth="10">
+<Level Name="Level05" StartMoney="500" StartHealth="10">
   <Map Width="20" Height="20">
 //////////////////$$
 /////////////////$$$

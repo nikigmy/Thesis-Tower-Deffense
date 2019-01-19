@@ -56,19 +56,19 @@ public class TextureGenerator
                 switch (levelData.Map[row, col])
                 {
                     case Declarations.TileType.Spawn:
-                        brush = Brushes.Gray;
+                        brush = Brushes.Red;
                         break;
                     case Declarations.TileType.Objective:
                         brush = Brushes.Yellow;
                         break;
                     case Declarations.TileType.Grass:
-                        brush = Brushes.Green;
+                        brush = new SolidBrush(System.Drawing.Color.FromArgb(0, 100, 0));
                         break;
                     case Declarations.TileType.Path:
-                        brush = Brushes.Brown;
+                        brush = new SolidBrush(System.Drawing.Color.FromArgb(147, 104, 31));
                         break;
                     case Declarations.TileType.Environment:
-                        brush = Brushes.DarkGreen;
+                        brush = new SolidBrush(System.Drawing.Color.FromArgb(0, 60, 0));
                         break;
                     default:
                         break;

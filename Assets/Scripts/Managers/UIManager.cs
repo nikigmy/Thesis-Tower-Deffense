@@ -3,36 +3,66 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
 
-public class UIManager : MonoBehaviour {
-
-    [Header("UI")]
+public class UIManager : MonoBehaviour
+{
     [SerializeField]
-    private GameObject inGameMenuPanel;
+    GameObject[] DevModeObjects;
+    [SerializeField]
+    GameObject[] NonDevModeObjects;
+
+    [SerializeField]
+    private SettingsMenu SettingsPanel;
+    [SerializeField]
+    private CanvasGroup UpperPanelGroup;
+    [SerializeField]
+    private CanvasGroup ShopPanelGroup;
+
+    [SerializeField]
+    private GameObject DefeatPanel;
+    [SerializeField]
+    private GameObject VictoryPanel;
+    [SerializeField]
+    private Sprite FullStarSprite;
+    [SerializeField]
+    private Sprite EmptyStarSprite;
+
     [SerializeField]
     private Shop shop;
     [SerializeField]
     private InformationPanel informationPanel;
     [SerializeField]
+    private GameObject confirmationPanel;
+    [SerializeField]
     private UnityEngine.UI.Text moneyText;
     [SerializeField]
     private UnityEngine.UI.Text healthText;
-    [SerializeField]
-    private GameObject victoryText;
-    [SerializeField]
-    private GameObject defeatText;
 
+    private bool isConfirmingRestart;
     public void InitUI()
     {
-        musicSprite = musicImage.sprite;
-        soundSprite = soundImage.sprite;
         pauseImage = pauseButtonImage.sprite;
 
         moneyText.text = GameManager.instance.Money.ToString();
         healthText.text = GameManager.instance.Health.ToString();
-        
+
         shop.GenerateShop();
         GameManager.instance.MoneyChanged.AddListener(UpdateMoneyText);
         GameManager.instance.HealthChanged.AddListener(UpdateHealthText);
+
+        SetObjectActivity();
+    }
+
+    private void SetObjectActivity()
+    {
+        bool isInDevMode = GameManager.instance.DeveloperMode;
+        foreach (var obj in DevModeObjects)
+        {
+            obj.SetActive(isInDevMode);
+        }
+        foreach (var obj in NonDevModeObjects)
+        {
+            obj.SetActive(!isInDevMode);
+        }
     }
 
     public void UpdateMoneyText()
@@ -61,83 +91,110 @@ public class UIManager : MonoBehaviour {
         GameManager.instance.BuildManager.SellClicked = true;
     }
 
-    internal void ShowVictoryScreen()
+    internal void ShowVictoryScreen(int stars, bool hasNextLevel)
     {
-        victoryText.SetActive(true);
-        Invoke("LoadMainMenu", 3);
+        Debug.Log(stars);
+        var starParent = VictoryPanel.transform.GetChild(1);
+        for (int i = 0; i < 3; i++)
+        {
+            var star = starParent.GetChild(i).GetComponent<Image>();
+            if(i + 1 <= stars)
+            {
+                star.color = Color.white;
+                star.sprite = FullStarSprite;
+            }
+            else
+            {
+                star.color = new Color(51, 46, 39);
+                star.sprite = EmptyStarSprite;
+            }
+        }
+        VictoryPanel.SetActive(true);
     }
 
-    public void LoadMainMenu()
+    public void RestartLevel(bool withConfirmation)
     {
-        SceneManager.LoadScene("MainMenu");
+        if (withConfirmation)
+        {
+            isConfirmingRestart = true;
+            confirmationPanel.transform.GetChild(0).GetComponent<Text>().text = "Do you want to restart the current level?";
+            confirmationPanel.SetActive(true);
+            wasPaused = GameManager.instance.Paused;
+            if (!GameManager.instance.Paused)
+            {
+                PauseClicked();
+            }
+            SetMenusActive(false);
+        }
+        else
+        {
+            GameManager.instance.LoadLevel(GameManager.instance.CurrentLevel);
+        }
     }
 
-    public void AddCheatMoney()
+    public void LoadNextLevel()
+    {
+        GameManager.instance.LoadNextLevel();
+    }
+
+    public void AddMoney()
     {
         GameManager.instance.AddMoney(10000);
     }
-    #region InGameMenu
-    [Header("In-Game Menu")]
-
-    [SerializeField]
-    private Image musicImage;
-    [SerializeField]
-    private Image soundImage;
-
-    [SerializeField]
-    private Sprite muteMusicSprite;
-    [SerializeField]
-    private Sprite muteSoundSprite;
-
-    private Sprite musicSprite;
-    private Sprite soundSprite;
+    public void AddHealth()
+    {
+        GameManager.instance.AddHealth(10);
+    }
+    #region InGameMenus
 
     private bool wasPaused;
 
-    public bool isInGameMenuActiveActive;
-
-    public void MusicClicked()
-    {
-        GameManager.instance.MuteUnmuteMusic();
-        if (GameManager.instance.MusicMuted)
-        {
-            musicImage.sprite = muteMusicSprite;
-        }
-        else
-        {
-            musicImage.sprite = musicSprite;
-        }
-    }
-
-    public void SoundClicked()
-    {
-        GameManager.instance.MuteUnmuteSound();
-        if (GameManager.instance.SoundMuted)
-        {
-            soundImage.sprite = muteSoundSprite;
-        }
-        else
-        {
-            soundImage.sprite = soundSprite;
-        }
-    }
-
     internal void ShowDefeatScreen()
     {
-        defeatText.SetActive(true);
-        Invoke("LoadMainMenu", 3);
+        DefeatPanel.SetActive(true);
     }
 
-    public void DeactivateInGameMenu()
+    public void HomeSelected(bool withConfirmation)
     {
-        isInGameMenuActiveActive = false;
+        if (withConfirmation)
+        {
+            isConfirmingRestart = false;
+            confirmationPanel.transform.GetChild(0).GetComponent<Text>().text = "Do you want to quit to main menu?";
+            confirmationPanel.SetActive(true);
+            wasPaused = GameManager.instance.Paused;
+            if (!GameManager.instance.Paused)
+            {
+                PauseClicked();
+            }
+            SetMenusActive(false);
+        }
+        else
+        {
+            GameManager.instance.LoadMainMenu();
+        }
+    }
+
+    public void ConfirmationCanceled()
+    {
         if (!wasPaused)
         {
             PauseClicked();
         }
-
-        inGameMenuPanel.SetActive(false);
+        SetMenusActive(true);
     }
+
+    public void ConfirmationCompleted()
+    {
+        if (isConfirmingRestart)
+        {
+            RestartLevel(false);
+        }
+        else
+        {
+            HomeSelected(false);
+        }
+    }
+
     #endregion
 
     #region Control Panel
@@ -151,13 +208,9 @@ public class UIManager : MonoBehaviour {
 
     [SerializeField]
     private Image speedUpButtonImage;
-    
+
     public void PauseClicked()
     {
-        if (isInGameMenuActiveActive)
-        {
-            return;
-        }
         GameManager.instance.PausePlayGame();
         if (GameManager.instance.Paused)
         {
@@ -171,10 +224,6 @@ public class UIManager : MonoBehaviour {
 
     public void SpeedUpClicked()
     {
-        if (isInGameMenuActiveActive)
-        {
-            return;
-        }
         GameManager.instance.SpeedUpGame();
         if (GameManager.instance.GameSpedUp)
         {
@@ -188,20 +237,30 @@ public class UIManager : MonoBehaviour {
 
     public void SettingsClicked()
     {
-        if (!isInGameMenuActiveActive)
+        wasPaused = GameManager.instance.Paused;
+        if (!GameManager.instance.Paused)
         {
-            wasPaused = GameManager.instance.Paused;
-            if (!GameManager.instance.Paused)
-            {
-                PauseClicked();
-            }
-            isInGameMenuActiveActive = true;
-            inGameMenuPanel.SetActive(true);
+            PauseClicked();
         }
-        else
+        SettingsPanel.LoadSettings();
+        SetMenusActive(false);
+    }
+
+    public void SettingsClosed()
+    {
+        if (!wasPaused)
         {
-            DeactivateInGameMenu();
+            PauseClicked();
         }
+        SetMenusActive(true);
+    }
+    
+    private void SetMenusActive(bool activate)
+    {
+        UpperPanelGroup.interactable = activate;
+        UpperPanelGroup.blocksRaycasts = activate;
+        ShopPanelGroup.interactable = activate;
+        ShopPanelGroup.interactable = activate;
     }
     #endregion
 }
