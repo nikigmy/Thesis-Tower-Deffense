@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Config>
+  <Setting Name="Fullscreen" Value="true" />
+  <Setting Name="Resolution" Value="1920x1080" />
+  <Setting Name="Quality" Value="5" />
+  <Setting Name="MusicLevel" Value="100" />
+  <Setting Name="SFXLevel" Value="100" />
+  <Setting Name="CameraMoveSpeed" Value="30" />
+  <Setting Name="CameraZoomSpeed" Value="40" />
+  <Setting Name="FastBuilding" Value="true" />
+</Config>

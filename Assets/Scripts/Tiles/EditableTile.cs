@@ -34,11 +34,11 @@ public class EditableTile : Tile
         {
             ChangeTile(paintManager);
         }
-        if (paintManager.LargeBrush)
+        if (paintManager.BrushSize > 1)
         {
             if (paintManager.Painting)
             {
-                foreach (var cell in GameManager.instance.MapGenerator.GetNeibourCells(Row, Col))
+                foreach (var cell in Helpers.GetTilesInRange(Helpers.GetPositionForTile(Row, Col), paintManager.BrushSize * 1.8f))
                 {
                     ((EditableTile)cell).ChangeTile(paintManager);
                 }
@@ -55,7 +55,7 @@ public class EditableTile : Tile
     private void OnMouseExit()
     {
         var paintManager = GameManager.instance.PaintManager;
-        if (paintManager.LargeBrush)
+        if (paintManager.BrushSize > 0)
         {
             paintManager.UpdateTiles.Invoke();
         }
@@ -75,11 +75,14 @@ public class EditableTile : Tile
         var paintManager = GameManager.instance.PaintManager;
         if (paintManager.CurrentTileType != Declarations.TileType.Unknown)
         {
-            paintManager.Painting = true;
-            ChangeTile(paintManager);
-            if (paintManager.LargeBrush)
+            if (Def.Instance.Settings.FastBuilding)
             {
-                foreach (var cell in GameManager.instance.MapGenerator.GetNeibourCells(Row, Col))
+                paintManager.Painting = true;
+            }
+            ChangeTile(paintManager);
+            if (paintManager.BrushSize > 1)
+            {
+                foreach (var cell in Helpers.GetTilesInRange(Helpers.GetPositionForTile(Row, Col), paintManager.BrushSize * 1.8f))
                 {
                     ((EditableTile)cell).ChangeTile(paintManager);
                 }
@@ -95,9 +98,7 @@ public class EditableTile : Tile
     private void UpdateTile()
     {
         var paintManager = GameManager.instance.PaintManager;
-        if ((paintManager.CurrectMousePos.x == Col && paintManager.CurrectMousePos.y == Row) || (paintManager.LargeBrush &&
-            GameManager.instance.MapGenerator.GetNeibourCells(Row, Col)
-            .Any(x => x.Row == paintManager.CurrectMousePos.y && x.Col == paintManager.CurrectMousePos.x)))
+        if (Vector3.Distance(Helpers.GetPositionForTile(paintManager.CurrectMousePos.y, paintManager.CurrectMousePos.x), transform.position) <= paintManager.BrushSize * 1.8f)
         {
             rend.material = GameManager.instance.MapGenerator.GlowMaterials[Type];
         }

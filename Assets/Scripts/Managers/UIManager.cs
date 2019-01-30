@@ -110,6 +110,7 @@ public class UIManager : MonoBehaviour
             }
         }
         VictoryPanel.SetActive(true);
+        SetMenusActive(false);
     }
 
     public void RestartLevel(bool withConfirmation)
@@ -152,6 +153,7 @@ public class UIManager : MonoBehaviour
     internal void ShowDefeatScreen()
     {
         DefeatPanel.SetActive(true);
+        SetMenusActive(false);
     }
 
     public void HomeSelected(bool withConfirmation)
@@ -261,6 +263,7 @@ public class UIManager : MonoBehaviour
         UpperPanelGroup.blocksRaycasts = activate;
         ShopPanelGroup.interactable = activate;
         ShopPanelGroup.interactable = activate;
+        informationPanel.SetUpgradeActive(false);
     }
     #endregion
 }

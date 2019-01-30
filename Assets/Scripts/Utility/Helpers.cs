@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 public class Helpers
@@ -148,5 +150,78 @@ public class Helpers
                 Debug.LogError("Unknown enemy type");
                 return true;
         }
+    }
+
+    public static List<T> GetNeibourCells<T>(int row, int col, T[,] map)
+    {
+        List<T> tiles = new List<T>();
+
+        foreach (var index in GetNeibourCellIndexes(row, col, map))
+        {
+            tiles.Add(map[index.y, index.x]);
+        }
+
+        return tiles;
+    }
+
+    public static List<Declarations.IntVector2> GetNeibourCellIndexes<T>(int row, int col, T[,] map)
+    {
+        List<Declarations.IntVector2> indexes = new List<Declarations.IntVector2>();
+        if (row > 0)//top
+        {
+            indexes.Add(new Declarations.IntVector2(col, row - 1));
+            if (row % 2 == 0)
+            {
+                if (col > 0)
+                {
+                    indexes.Add(new Declarations.IntVector2(col - 1, row - 1));
+                }
+            }
+            else
+            {
+                if (col + 1 < map.GetLength(1))
+                {
+                    indexes.Add(new Declarations.IntVector2(col + 1, row - 1));
+                }
+            }
+        }
+        if (col > 0)//left
+        {
+            indexes.Add(new Declarations.IntVector2(col - 1, row));
+        }
+        if (col + 1 < map.GetLength(1))//right
+        {
+            indexes.Add(new Declarations.IntVector2(col + 1, row));
+        }
+        if (row + 1 < map.GetLength(0))//bot
+        {
+            indexes.Add(new Declarations.IntVector2(col, row + 1));
+            if (row % 2 == 0)
+            {
+                if (col > 0)
+                {
+                    indexes.Add(new Declarations.IntVector2(col - 1, row + 1));
+                }
+            }
+            else
+            {
+                if (col + 1 < map.GetLength(1))
+                {
+                    indexes.Add(new Declarations.IntVector2(col + 1, row + 1));
+                }
+            }
+        }
+
+        return indexes;
+    }
+
+    public static List<Tile> GetTilesInRange(Vector3 position, float radius)
+    {
+        var coliders = Physics.OverlapSphere(position, radius);
+        if(coliders.Length > 0)
+        {
+            return coliders.Select(x => x.GetComponent<Tile>()).Where(x => x != null).ToList();
+        }
+        return new List<Tile>();
     }
 }

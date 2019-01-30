@@ -19,11 +19,11 @@ public class Declarations
 
     public enum TileType
     {
+        Environment,
         Grass,
         Path,
         Objective,
         Spawn,
-        Environment,
         Unknown
     }
 

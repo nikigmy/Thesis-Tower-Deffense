@@ -7,6 +7,13 @@ using UnityEngine.EventSystems;
 public class MapGenerator : MonoBehaviour
 {
     [Header("Level")]
+    [Range(0, 50)]
+    public int LeftRightBorderSize = 15;
+    [Range(0, 50)]
+    public int TopBorderSize = 14;
+    [Range(0, 50)]
+    public int BotBorderSize = 7;
+
     [SerializeField]
     GameObject[] grassTiles;
     [SerializeField]
@@ -21,7 +28,6 @@ public class MapGenerator : MonoBehaviour
     GameObject Lifter;
     [SerializeField]
     GameObject baseObj;
-
 
     [Header("Level Creator")]
     [SerializeField]
@@ -46,10 +52,18 @@ public class MapGenerator : MonoBehaviour
     public Dictionary<Declarations.TileType, Material> TileMaterials;
     public Dictionary<Declarations.TileType, Material> GlowMaterials;
 
-
     private Dictionary<Declarations.TileType, GameObject[]> TilesMap;
     private Tile[,] Map;
+    private Declarations.LevelData CurrentLevel;
+    private Declarations.TileType[,] TileTypeMap;
     public Declarations.IntVector2 MapSize { get; private set; }
+    public Declarations.IntVector2 RealMapSize
+    {
+        get
+        {
+            return CurrentLevel.MapSize;
+        }
+    }
 
     private void Awake()
     {
@@ -125,21 +139,48 @@ public class MapGenerator : MonoBehaviour
             GlowMaterials.Add(tileMaterial.Key, glowMat);
         }
     }
+
     public void GenerateMap(Declarations.LevelData levelData)
     {
-        var startTime = Time.realtimeSinceStartup;
         ClearMap();
-        MapSize = levelData.MapSize;
+        var startTime = Time.realtimeSinceStartup;
+        MapSize = new Declarations.IntVector2(levelData.MapSize.x + (LeftRightBorderSize * 2), levelData.MapSize.y + TopBorderSize + BotBorderSize);
+
+        CurrentLevel = levelData;
+        TileTypeMap = new Declarations.TileType[MapSize.y, MapSize.x];
+        for (int row = 0; row < levelData.MapSize.y; row++)
+        {
+            for (int col = 0; col < levelData.MapSize.x; col++)
+            {
+                TileTypeMap[row + TopBorderSize, col + LeftRightBorderSize] = levelData.Map[row, col];
+            }
+        }
+        int[,] heightMap = GenerateHeightMapForCurrentLevel();
+        var heightMapGeneration = Time.realtimeSinceStartup - startTime;
+
         Map = new Tile[MapSize.y, MapSize.x];
         for (int row = 0; row < MapSize.y; row++)
         {
             for (int col = 0; col < MapSize.x; col++)
             {
-                var tile = GetObjectByTileType(levelData.Map[row, col]);
-                Vector3 tilePosition = Helpers.GetPositionForTile(row, col);
+                var tile = GetObjectByTileType(TileTypeMap[row, col]);
+                var tilePosition = Helpers.GetPositionForTile(row - TopBorderSize, col - LeftRightBorderSize);
+                var tileRealPosition = tilePosition;
 
-                var tileObj = Instantiate(tile, tilePosition, Quaternion.identity, transform).GetComponent<Tile>();
-                tileObj.SetData(row, col, levelData.Map[row, col]);
+                if (TileTypeMap[row, col] == Declarations.TileType.Grass || TileTypeMap[row, col] == Declarations.TileType.Environment)
+                {
+                    var randomFactor = GetRandomFactor(heightMap[row, col]);
+
+                    var lift = heightMap[row, col] * 0.4f;
+                    lift += UnityEngine.Random.Range(-randomFactor, randomFactor);
+                    if (lift > 0)
+                    {
+                        tileRealPosition.y = lift;
+                    }
+                }
+
+                var tileObj = Instantiate(tile, tileRealPosition, Quaternion.identity, transform).GetComponent<Tile>();
+                tileObj.SetData(row, col, TileTypeMap[row, col]);
                 tileObj.transform.rotation = Quaternion.Euler(new Vector3(0,
                     (UnityEngine.Random.Range(0, 2) +
                     UnityEngine.Random.Range(0, 2) +
@@ -147,155 +188,115 @@ public class MapGenerator : MonoBehaviour
                     UnityEngine.Random.Range(0, 2) +
                     UnityEngine.Random.Range(0, 2)) * 60, 0));
                 Map[row, col] = tileObj;
+
+                if (tileRealPosition.y > 0)
+                {
+                    var lifterObj = Instantiate(Lifter, tilePosition, tileObj.transform.rotation, tileObj.transform).GetComponent<Lifter>();
+                    lifterObj.transform.localScale = new Vector3(1, tileRealPosition.y, 1);
+
+                    tileObj.SetLifter(lifterObj);
+                    lifterObj.SetTile(tileObj);
+                }
             }
         }
 
+        var tilePlacement = Time.realtimeSinceStartup - startTime - heightMapGeneration;
         PutObjectives();
         RotateSpawner();
+        var finishingTouches = Time.realtimeSinceStartup - startTime - heightMapGeneration - tilePlacement;
+        Debug.Log("Total Seconds for new map generation: " + (Time.realtimeSinceStartup - startTime));
+        Debug.Log("Seconds for height map generation: " + heightMapGeneration);
+        Debug.Log("Seconds for tile placement: " + tilePlacement);
+        Debug.Log("Seconds for finishing touches: " + finishingTouches);
+    }
 
-        var levelGenerationTime = Time.realtimeSinceStartup - startTime;
+    private int[,] GenerateHeightMapForCurrentLevel()
+    {
+        float startTime = Time.realtimeSinceStartup;
+        List<Declarations.IntVector2> oldTilesToHandle = new List<Declarations.IntVector2>();
+        List<Declarations.IntVector2> newTilesToHandle = new List<Declarations.IntVector2>();
+        var heightMap = new int[MapSize.y, MapSize.x];
         for (int row = 0; row < MapSize.y; row++)
         {
             for (int col = 0; col < MapSize.x; col++)
             {
-                if (Map[row, col].Type == Declarations.TileType.Grass || Map[row, col].Type == Declarations.TileType.Environment)
+                if (TileTypeMap[row, col] == Declarations.TileType.Objective || TileTypeMap[row, col] == Declarations.TileType.Path || TileTypeMap[row, col] == Declarations.TileType.Spawn)
                 {
-                    var distance = GetDistanceToClosestFlatTile(row, col);
-
-                    var lift = distance * 0.2f;
-                    if (lift > 5)
-                    {
-                        lift = 5;
-                    }
-                    lift += UnityEngine.Random.Range(-0.3f, 0.3f);
-                    if (lift < 0)
-                    {
-                        continue;
-                    }
-                    var currentTileTransform = Map[row, col].transform;
-                    var oldPosition = currentTileTransform.position;
-                    currentTileTransform.position = new Vector3(oldPosition.x, lift, oldPosition.z);
-                    var lifterObj = Instantiate(Lifter, oldPosition, currentTileTransform.rotation, currentTileTransform).GetComponent<Lifter>();
-                    lifterObj.transform.localScale = new Vector3(1, lift, 1);
-
-                    Map[row, col].SetLifter(lifterObj);
-                    lifterObj.SetTile(Map[row, col]);
+                    oldTilesToHandle.Add(new Declarations.IntVector2(col, row));
+                    heightMap[row, col] = 0;
+                }
+                else
+                {
+                    heightMap[row, col] = -1;
                 }
             }
         }
+        for (int i = 0; i < 14; i++)
+        {
+            foreach (var tile in oldTilesToHandle)
+            {
+                var currHeight = heightMap[tile.y, tile.x];
+                foreach (var index in Helpers.GetNeibourCellIndexes(tile.y, tile.x, heightMap))
+                {
+                    if (heightMap[index.y, index.x] == -1)
+                    {
+                        heightMap[index.y, index.x] = currHeight + 1;
+                        newTilesToHandle.Add(new Declarations.IntVector2(index.x, index.y));
+                    }
+                }
+            }
+            oldTilesToHandle = newTilesToHandle;
+            newTilesToHandle = new List<Declarations.IntVector2>();
+        }
 
-        var tileLiftingTime = Time.realtimeSinceStartup - startTime - levelGenerationTime;
-        PlaceBorderTiles(15, 13, 6);
-        var borderPlacementTime = Time.realtimeSinceStartup - startTime - levelGenerationTime - tileLiftingTime;
-        //Debug.Log("Total Seconds for map generation: " + (Time.realtimeSinceStartup - startTime));
-        //Debug.Log("Seconds for level generation: " + levelGenerationTime);
-        //Debug.Log("Seconds for tile lifting: " + tileLiftingTime);
-        //Debug.Log("Seconds for border placement: " + borderPlacementTime);
+        for (int row = 0; row < MapSize.y; row++)
+        {
+            for (int col = 0; col < MapSize.x; col++)
+            {
+                if (heightMap[row, col] == -1)
+                {
+                    heightMap[row, col] = 15;
+                }
+            }
+        }
+        
+        return heightMap;
     }
-
-    private void PlaceBorderTiles(int side, int top, int bot)
+    
+    internal List<Tile> GetNeibourCells(int row, int col)
     {
-        for (int i = 1; i <= side; i++)
-        {
-            for (int j = 0; j < MapSize.y; j++)
-            {
-                PlaceBorderTile(j, MapSize.x + i - 1, GetRandomFactor(i));
-                PlaceBorderTile(j, -i, GetRandomFactor(i));
-            }
-        }
-        for (int i = MapSize.x / 2; i < MapSize.x + side; i++)
-        {
-            for (int j = -1; j >= -top; j--)
-            {
-                PlaceBorderTile(j, i, GetRandomFactor(-j));
-            }
-            for (int j = MapSize.y; j < MapSize.y + bot; j++)
-            {
-                PlaceBorderTile(j, i, GetRandomFactor(j - MapSize.y + 1));
-            }
-        }
-        for (int i = MapSize.x / 2 - 1; i >= -side; i--)
-        {
-            for (int j = -1; j >= -top; j--)
-            {
-                PlaceBorderTile(j, i, GetRandomFactor(-j));
-            }
-            for (int j = MapSize.y; j < MapSize.y + bot; j++)
-            {
-                PlaceBorderTile(j, i, GetRandomFactor(j - MapSize.y + 1));
-            }
-        }
+        return Helpers.GetNeibourCells(row, col, Map);
     }
-
-    private float GetRandomFactor(int offsetFromMap)
+    
+    private float GetRandomFactor(int tileHeight)
     {
-        if (offsetFromMap < 3)
+        if (tileHeight == 0)
+        {
+            return 0;
+        }
+        else if (tileHeight < 3)
+        {
+            return 0.15f;
+        }
+        else if (tileHeight < 5)
         {
             return 0.2f;
         }
-        else if (offsetFromMap < 5)
+        else if (tileHeight < 8)
         {
-            return 0.3f;
+            return 0.25f;
+        }
+        else if (tileHeight < 11)
+        {
+            return 0.35f;
+        }
+        else if (tileHeight < 15)
+        {
+            return 0.45f;
         }
         else
         {
-            return 0.5f;
-        }
-    }
-
-    private void PlaceBorderTile(int row, int col, float randomFactor)
-    {
-        var positionForTile = Helpers.GetPositionForTile(row, col);
-        float height = 0;
-        var countOfTiles = 0;
-        var nearTileHeights = new List<float>();
-        foreach (var colider in Physics.OverlapSphere(positionForTile, 2.5f))
-        {
-            var tile = colider.gameObject.GetComponent<Tile>();
-            if (tile == null)
-            {
-                var lifter = colider.gameObject.GetComponent<Lifter>();
-                if (lifter != null && lifter.Tile != null)
-                {
-                    tile = lifter.Tile;
-                }
-            }
-
-            if (tile != null)
-            {
-                height += tile.transform.position.y;
-                countOfTiles++;
-            }
-        }
-        if (countOfTiles > 0)
-        {
-            height /= countOfTiles;
-        }
-        else
-        {
-            Debug.Log("No neibours for tile! Row: " + row + " Col: " + col);
-        }
-        height += UnityEngine.Random.Range(-randomFactor, randomFactor);
-        if (height < 0)
-        {
-            height = 0;
-        }
-
-        var tileObj = Instantiate(GetObjectByTileType(Declarations.TileType.Environment), positionForTile + (Vector3.up * height), Quaternion.identity, transform).GetComponent<Tile>();
-
-        tileObj.SetData(row, col, Declarations.TileType.Environment);
-        tileObj.transform.rotation = Quaternion.Euler(new Vector3(0,
-            (UnityEngine.Random.Range(0, 2) +
-            UnityEngine.Random.Range(0, 2) +
-            UnityEngine.Random.Range(0, 2) +
-            UnityEngine.Random.Range(0, 2) +
-            UnityEngine.Random.Range(0, 2)) * 60, 0));
-        if (height > 0)
-        {
-            var lifterObj = Instantiate(Lifter, positionForTile, Quaternion.identity, tileObj.transform).GetComponent<Lifter>();
-            lifterObj.transform.localScale = new Vector3(1, height, 1);
-            lifterObj.SetTile(tileObj);
-            tileObj.SetLifter(lifterObj);
+            return 0.55f;
         }
     }
 
@@ -387,58 +388,6 @@ public class MapGenerator : MonoBehaviour
         {
             DestroyImmediate(transform.GetChild(0).gameObject);
         }
-    }
-
-    public List<Tile> GetNeibourCells(int row, int col)
-    {
-        List<Tile> tiles = new List<Tile>();
-
-        if (row > 0)//top
-        {
-            tiles.Add(Map[row - 1, col]);
-            if (row % 2 == 0)
-            {
-                if (col > 0)
-                {
-                    tiles.Add(Map[row - 1, col - 1]);
-                }
-            }
-            else
-            {
-                if (col + 1 < MapSize.x)
-                {
-                    tiles.Add(Map[row - 1, col + 1]);
-                }
-            }
-        }
-        if (col > 0)//left
-        {
-            tiles.Add(Map[row, col - 1]);
-        }
-        if (col + 1 < Map.GetLength(1))//right
-        {
-            tiles.Add(Map[row, col + 1]);
-        }
-        if (row + 1 < Map.GetLength(0))//bot
-        {
-            tiles.Add(Map[row + 1, col]);
-            if (row % 2 == 0)
-            {
-                if (col > 0)
-                {
-                    tiles.Add(Map[row + 1, col - 1]);
-                }
-            }
-            else
-            {
-                if (col + 1 < Map.GetLength(1))
-                {
-                    tiles.Add(Map[row + 1, col + 1]);
-                }
-            }
-        }
-
-        return tiles;
     }
 
     private int GetDistanceToClosestFlatTile(int row, int col)

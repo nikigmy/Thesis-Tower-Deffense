@@ -131,6 +131,9 @@ public class LevelCreator : MonoBehaviour
     {
         if (currentlyLoadedLevel != null)
         {
+            GameManager.instance.MapGenerator.LeftRightBorderSize = 0;
+            GameManager.instance.MapGenerator.TopBorderSize = 0;
+            GameManager.instance.MapGenerator.BotBorderSize = 0;
             GameManager.instance.MapGenerator.GenerateMapForEdit(currentlyLoadedLevel.MapSize, currentlyLoadedLevel.Map);
             GameManager.instance.LevelLoaded.Invoke();
         }

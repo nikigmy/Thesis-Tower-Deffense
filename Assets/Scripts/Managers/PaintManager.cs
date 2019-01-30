@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
-public class PaintManager : MonoBehaviour {
-    public Declarations.IntVector2 CurrectMousePos = new Declarations.IntVector2(-5,-5);
+public class PaintManager : MonoBehaviour
+{
+    public Declarations.IntVector2 CurrectMousePos = new Declarations.IntVector2(-5, -5);
     public UnityEvent UpdateTiles = new UnityEvent();
     public Declarations.TileType CurrentTileType;
     public bool Painting = false;
-    public bool LargeBrush = false;
+    public int BrushSize = 1;
 
     private void Awake()
     {
@@ -19,13 +20,10 @@ public class PaintManager : MonoBehaviour {
         UpdateTiles.Invoke();
     }
 
-    public void SetLargeBrush(bool value)
+    public void SetBrushSize(int value)
     {
-        LargeBrush = value;
-        if (!LargeBrush)
-        {
-            CurrectMousePos = new Declarations.IntVector2(-5, -5);
-        }
+        BrushSize = value;
+        CurrectMousePos = new Declarations.IntVector2(-5, -5);
         UpdateTiles.Invoke();
     }
 

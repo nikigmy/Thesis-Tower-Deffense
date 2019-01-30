@@ -75,7 +75,7 @@ public class SettingsMenu : MonoBehaviour
         }
 
         var currentRes = Resolutions.Find(x => x.x == settings.Resolution.x && x.y == settings.Resolution.y);
-        if (currentRes != null)
+        if (currentRes != null && currentRes.x != 0 && currentRes.y != 0)
         {
             currentResolutionIndex = Resolutions.IndexOf(currentRes);
         }

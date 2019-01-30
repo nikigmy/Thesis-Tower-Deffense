@@ -15,6 +15,8 @@ public class LevelSelect : MonoBehaviour
     Sprite NavigatorWithLinkNonHighlighted;
     [SerializeField]
     Sprite NavigatorWithLinkHighlighted;
+    [SerializeField]
+    GameObject NavigatorPart;
 
     [SerializeField]
     GameObject StarPrefab;
@@ -99,12 +101,10 @@ public class LevelSelect : MonoBehaviour
 
     private void GeneratePageNavigator(int index)
     {
-        var totalNumberOfPages = (int)Math.Round(Def.Instance.Levels.Count / (float)CellsPerPage, MidpointRounding.AwayFromZero);
+        var totalNumberOfPages = (int)Math.Ceiling(Def.Instance.Levels.Count / (float)CellsPerPage);
         if (index >= 0 && index <= totalNumberOfPages)
         {
             DestroyChildrenOfTransform(LevelNavigatorContent);
-            var navigatorPart = new GameObject();
-            var image = navigatorPart.AddComponent<Image>();
             for (int i = 0; i < totalNumberOfPages; i++)
             {
                 Sprite spriteForPart;
@@ -130,8 +130,7 @@ public class LevelSelect : MonoBehaviour
                         spriteForPart = NavigatorWithLinkNonHighlighted;
                     }
                 }
-                image.sprite = spriteForPart;
-                Instantiate(navigatorPart, LevelNavigatorContent);
+                Instantiate(NavigatorPart, LevelNavigatorContent).GetComponent<Image>().sprite = spriteForPart;
             }
         }
     }

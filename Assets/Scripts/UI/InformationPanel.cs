@@ -87,15 +87,27 @@ public class InformationPanel : MonoBehaviour
             if (currentTower.CurrentUpgradePrice <= currentMoney)
             {
                 upgradeButton.image.sprite = greenSprite;
-                upgradeButton.enabled = true;
+                SetUpgradeActive(true);
             }
             else
             {
                 upgradeButton.image.sprite = redSprite;
-                upgradeButton.enabled = false;
+                SetUpgradeActive(false);
             }
             //upgradeButtonText.text = string.Format("Upgrade for:\n{0}?", currentTower.CurrentUpgradePrice);
             upgradeButtonText.text = currentTower.CurrentUpgradePrice.ToString();
+        }
+    }
+
+    public void SetUpgradeActive(bool active)
+    {
+        if (active && currentTower.CurrentUpgradePrice <= GameManager.instance.Money)
+        {
+            upgradeButton.enabled = true;
+        }
+        else
+        {
+            upgradeButton.enabled = false;
         }
     }
 }

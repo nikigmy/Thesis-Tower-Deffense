@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311947, g: 0.38074005, b: 0.35872722, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311992, g: 0.38074034, b: 0.35872713, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1062,7 +1062,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.15, y: 0.85}
   m_AnchorMax: {x: 0.85, y: 1}
-  m_AnchoredPosition: {x: 0, y: 15}
+  m_AnchoredPosition: {x: 0, y: 14.9999695}
   m_SizeDelta: {x: 0, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &722364893
@@ -1306,7 +1306,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.15, y: 0.85}
   m_AnchorMax: {x: 0.85, y: 1}
-  m_AnchoredPosition: {x: 0, y: 15}
+  m_AnchoredPosition: {x: 0, y: 14.9999695}
   m_SizeDelta: {x: 0, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1119492948
@@ -1700,6 +1700,11 @@ Prefab:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 224216018246654932, guid: d2099d51b46240340a58d2980c574017,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 14.9999695
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d2099d51b46240340a58d2980c574017, type: 2}
   m_IsPrefabAsset: 0
@@ -1791,6 +1796,8 @@ MonoBehaviour:
     type: 3}
   NavigatorWithLinkHighlighted: {fileID: 21300000, guid: 8b733210217c9884aa19cad1b3980699,
     type: 3}
+  NavigatorPart: {fileID: 1641645363353798, guid: 94be0d48a593fa74fa5f49abf31db2a2,
+    type: 2}
   StarPrefab: {fileID: 1828566176366270, guid: 5737b68c8f9d29443b4f8cd4057bdee4, type: 2}
   StarredLevelPrefab: {fileID: 1398989607988718, guid: 0ff689e7074ceb441b18bfc7187063b8,
     type: 2}
