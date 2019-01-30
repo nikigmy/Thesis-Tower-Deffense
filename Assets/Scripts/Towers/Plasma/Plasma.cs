@@ -19,7 +19,7 @@ public class Plasma : Tower
 
     private void Awake()
     {
-        towerData = Def.Instance.TowerDictionary[Declarations.TowerType.Plasma];
+        TowerData = Def.Instance.TowerDictionary[Declarations.TowerType.Plasma];
     }
 
     private void Update()
@@ -73,7 +73,7 @@ public class Plasma : Tower
             if (CanShoot() && !charging && !coolingOff)
             {
                 charging = true;
-                timeLeftFromCharge = (towerData as Declarations.PlasmaTower).CurrentFireRate;
+                timeLeftFromCharge = (TowerData as Declarations.PlasmaTower).CurrentFireRate;
                 currentFx.Play(true);
                 var main = currentFx.main;
                 main.simulationSpeed = 1;
@@ -92,13 +92,13 @@ public class Plasma : Tower
         charging = false;
         var main = currentFx.main;
         main.simulationSpeed = 2;
-        timeLeftFromCoolOff = ((towerData as Declarations.PlasmaTower).CurrentFireRate - timeLeftFromCharge) / 2;
+        timeLeftFromCoolOff = ((TowerData as Declarations.PlasmaTower).CurrentFireRate - timeLeftFromCharge) / 2;
     }
 
     private void Fire()
     {
         var projectile = Instantiate(plasmaBall, currentFirePoint.position, currentFirePoint.rotation);
-        projectile.GetComponent<Projectile>().SetTarget(new Declarations.PlasmaBallData(target, (towerData as Declarations.PlasmaTower).CurrentDamage, (towerData as Declarations.PlasmaTower).CurrentExplosionRange));
+        projectile.GetComponent<Projectile>().SetTarget(new Declarations.PlasmaBallData(target, (TowerData as Declarations.PlasmaTower).CurrentDamage, (TowerData as Declarations.PlasmaTower).CurrentExplosionRange));
     }
 
     protected override void UpdateGunPartsReferences()
@@ -111,6 +111,6 @@ public class Plasma : Tower
         currentFx = currentFirePoint.GetComponent<ParticleSystem>();
 
         var main = currentFx.main;
-        main.duration = (towerData as Declarations.PlasmaTower).CurrentFireRate;
+        main.duration = (TowerData as Declarations.PlasmaTower).CurrentFireRate;
     }
 }

@@ -34,6 +34,7 @@ public class BuildManager : MonoBehaviour {
 
     public void DestroyTower(Tower tower)
     {
+        GameManager.instance.AddMoney(tower.TowerData.CurrentPrice / 2);
         CurrentTowers.Remove(tower);
         tower.Destroy();
     }

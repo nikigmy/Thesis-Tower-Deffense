@@ -11,8 +11,8 @@ public class Canon : Tower
 
     private void Awake()
     {
-        towerData = Def.Instance.TowerDictionary[Declarations.TowerType.Canon];
-        timeFromPreviousShot = (towerData as Declarations.FiringTowerData).CurrentFireRate;
+        TowerData = Def.Instance.TowerDictionary[Declarations.TowerType.Canon];
+        timeFromPreviousShot = (TowerData as Declarations.FiringTowerData).CurrentFireRate;
     }
 
     private void Update()
@@ -26,7 +26,7 @@ public class Canon : Tower
         if (target != null)
         {
             LookAtTarget();
-            if (CanShoot() && timeFromPreviousShot >= (towerData as Declarations.FiringTowerData).CurrentFireRate)
+            if (CanShoot() && timeFromPreviousShot >= (TowerData as Declarations.FiringTowerData).CurrentFireRate)
             {
                 Fire();
                 timeFromPreviousShot = 0;
@@ -48,6 +48,6 @@ public class Canon : Tower
     private void Fire()
     {
         var projectile = Instantiate(cannonBall, currentFirePoint.position, currentFirePoint.rotation);
-        projectile.GetComponent<Projectile>().SetTarget(new Declarations.CanonBallData(target, (towerData as Declarations.CanonTower).CurrentDamage));
+        projectile.GetComponent<Projectile>().SetTarget(new Declarations.CanonBallData(target, (TowerData as Declarations.CanonTower).CurrentDamage));
     }
 }

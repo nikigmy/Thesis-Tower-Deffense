@@ -200,33 +200,7 @@ public class GameManager : MonoBehaviour
             Time.timeScale = GameSpedUp ? 2 : 1;
         }
     }
-
-    public void MuteUnmuteMusic()
-    {
-        MusicMuted = !MusicMuted;
-        if (MusicMuted)
-        {
-
-        }
-        else
-        {
-
-        }
-    }
-
-    public void MuteUnmuteSound()
-    {
-        SoundMuted = !SoundMuted;
-        if (SoundMuted)
-        {
-
-        }
-        else
-        {
-
-        }
-    }
-
+    
     private void LevelCompleted()
     {
         var currentLevelIndex = Def.Instance.Levels.IndexOf(CurrentLevel);

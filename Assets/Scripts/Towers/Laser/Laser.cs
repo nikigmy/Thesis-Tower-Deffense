@@ -21,9 +21,9 @@ public class Laser : Tower
 
     private void Awake()
     {
-        towerData = Def.Instance.TowerDictionary[Declarations.TowerType.Laser];
+        TowerData = Def.Instance.TowerDictionary[Declarations.TowerType.Laser];
         firing = false;
-        if (towerData == null)
+        if (TowerData == null)
         {
             Debug.Log("null in init");
         }
@@ -81,7 +81,7 @@ public class Laser : Tower
                 beam.Start.transform.LookAt(endPosition);
                 beam.End.transform.LookAt(firePosition);
 
-                target.DealDamage((towerData as Declarations.LaserTower).CurrentDamage * Time.deltaTime);
+                target.DealDamage((TowerData as Declarations.LaserTower).CurrentDamage * Time.deltaTime);
             }
         }
     }

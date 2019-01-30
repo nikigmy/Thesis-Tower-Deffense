@@ -142,6 +142,7 @@ public class UIManager : MonoBehaviour
     {
         GameManager.instance.AddMoney(10000);
     }
+
     public void AddHealth()
     {
         GameManager.instance.AddHealth(10);

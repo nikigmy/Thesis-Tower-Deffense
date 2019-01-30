@@ -6,7 +6,7 @@ public class Radar : Tower
 {
     private void Awake()
     {
-        towerData = Def.Instance.TowerDictionary[Declarations.TowerType.Radar];
+        TowerData = Def.Instance.TowerDictionary[Declarations.TowerType.Radar];
     }
 
     protected override void UpdateGunPartsReferences()

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public abstract class Tower : MonoBehaviour
 {
-    protected Declarations.TowerData towerData;
+    public Declarations.TowerData TowerData;
     [SerializeField]
     protected Enemy target;
 
@@ -28,9 +28,9 @@ public abstract class Tower : MonoBehaviour
     {
         get
         {
-            if(towerData != null)
+            if(TowerData != null)
             {
-                return towerData.Type;
+                return TowerData.Type;
             }
             else
             {
@@ -42,7 +42,7 @@ public abstract class Tower : MonoBehaviour
     private void Start()
     {
         currentGun = Level1Gun;
-        if (towerData.CurrentLevel != 1)
+        if (TowerData.CurrentLevel != 1)
         {
             UpgradeTower();
         }
@@ -51,7 +51,7 @@ public abstract class Tower : MonoBehaviour
             UpdateGunPartsReferences();
             UpdateGizmoSize();
         }
-        towerData.Upgraded.AddListener(UpgradeTower);
+        TowerData.Upgraded.AddListener(UpgradeTower);
     }
     
     protected virtual void UpdateGunPartsReferences()
@@ -69,7 +69,7 @@ public abstract class Tower : MonoBehaviour
 
     protected virtual void UpgradeTower()
     {
-        switch (towerData.CurrentLevel)
+        switch (TowerData.CurrentLevel)
         {
             case 2:
                 currentGun.SetActive(false);
@@ -91,7 +91,7 @@ public abstract class Tower : MonoBehaviour
 
     private void UpdateGizmoSize()
     {
-        var factor = towerData.CurrentRange * 2 * 2; //first is because the scale is diameter and not radius and the second is because the tower object is scaled down
+        var factor = TowerData.CurrentRange * 2 * 2; //first is because the scale is diameter and not radius and the second is because the tower object is scaled down
         RangeGizmo.transform.localScale = new Vector3(factor, factor, factor);
     }
 
@@ -107,11 +107,11 @@ public abstract class Tower : MonoBehaviour
                 continue;
             }
             var distanceToEnemy = Vector3.Distance(allEnemies[i].GetCenter(), currentGun.transform.position);
-            if (towerData == null)
+            if (TowerData == null)
             {
                 Debug.Log("null in find");
             }
-            if (distanceToEnemy <= towerData.CurrentRange && distanceToEnemy < distanceToClosestEnemy)
+            if (distanceToEnemy <= TowerData.CurrentRange && distanceToEnemy < distanceToClosestEnemy)
             {
                 closestEnemy = allEnemies[i];
                 distanceToClosestEnemy = distanceToEnemy;
@@ -159,9 +159,9 @@ public abstract class Tower : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        if (towerData != null)
+        if (TowerData != null)
         {
-            Gizmos.DrawWireSphere(currentGun.transform.position, towerData.CurrentRange);
+            Gizmos.DrawWireSphere(currentGun.transform.position, TowerData.CurrentRange);
             if (target != null)
             {
                 Gizmos.DrawLine(currentFirePoint.transform.position, target.GetCenter());
@@ -172,7 +172,6 @@ public abstract class Tower : MonoBehaviour
 
     public void Destroy()
     {
-        GameManager.instance.AddMoney(towerData.CurrentPrice / 2);
         Destroy(gameObject);
     }
 
@@ -188,6 +187,6 @@ public abstract class Tower : MonoBehaviour
 
     protected bool LostTarget()
     {
-        return target != null && (Vector3.Distance(target.GetCenter(), currentGun.transform.position) > towerData.CurrentRange || !target.Alive || !target.Visible);
+        return target != null && (Vector3.Distance(target.GetCenter(), currentGun.transform.position) > TowerData.CurrentRange || !target.Alive || !target.Visible);
     }
 }
