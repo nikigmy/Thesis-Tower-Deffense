@@ -61,7 +61,14 @@ public class MapGenerator : MonoBehaviour
     {
         get
         {
-            return CurrentLevel.MapSize;
+            if (CurrentLevel != null)
+            {
+                return CurrentLevel.MapSize;
+            }
+            else
+            {
+                return MapSize;
+            }
         }
     }
 

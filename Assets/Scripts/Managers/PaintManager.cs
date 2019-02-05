@@ -7,7 +7,7 @@ public class PaintManager : MonoBehaviour
     public UnityEvent UpdateTiles = new UnityEvent();
     public Declarations.TileType CurrentTileType;
     public bool Painting = false;
-    public int BrushSize = 1;
+    public float BrushSize = 1.7f;
 
     private void Awake()
     {
@@ -20,9 +20,9 @@ public class PaintManager : MonoBehaviour
         UpdateTiles.Invoke();
     }
 
-    public void SetBrushSize(int value)
+    public void SetBrushSize(float value)
     {
-        BrushSize = value;
+        BrushSize = (int)value * 1.4f;
         CurrectMousePos = new Declarations.IntVector2(-5, -5);
         UpdateTiles.Invoke();
     }

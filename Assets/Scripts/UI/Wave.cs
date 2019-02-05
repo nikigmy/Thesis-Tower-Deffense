@@ -40,14 +40,14 @@ public class Wave : MonoBehaviour {
 
     public void DeleteClicked()
     {
-        GameManager.instance.LevelCreator.DeleteWave(int.Parse(indexText.text));
+        GameManager.instance.LevelCreator.DeleteWave(int.Parse(indexText.text) - 1);
         Destroy(gameObject);
     }
 
     internal void SetData(int index, Declarations.WaveData wave)
     {
         data = wave;
-        indexText.text = index.ToString();
+        indexText.text = (index + 1).ToString();
         partCountText.text = "PartCount: " + data.WaveParts.Count.ToString();
     }
 
@@ -58,6 +58,6 @@ public class Wave : MonoBehaviour {
 
     public void UpdateIndex(int index)
     {
-        indexText.text = index.ToString();
+        indexText.text = (index + 1).ToString();
     }
 }

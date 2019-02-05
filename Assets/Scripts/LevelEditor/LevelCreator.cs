@@ -31,7 +31,16 @@ public class LevelCreator : MonoBehaviour
     [SerializeField]
     GameObject newLevelPanel;
 
+    [SerializeField]
+    CanvasGroup UpperPanelGroup;
+    [SerializeField]
+    CanvasGroup LowerPanelGroup;
+
     Declarations.LevelData currentlyLoadedLevel;
+    [SerializeField]
+    Sprite TextFieldNormal;
+    [SerializeField]
+    Sprite TextFieldError;
 
     Wave currectWave;
     List<Wave> loadedWaves;
@@ -40,27 +49,30 @@ public class LevelCreator : MonoBehaviour
     {
         var waveToAdd = new Declarations.WaveData(new List<Declarations.WavePart>());
         currentlyLoadedLevel.Waves.Add(waveToAdd);
-        var index = WaveList.transform.childCount;
+        var index = WaveList.transform.childCount - 1;
         var waveObject = Instantiate(WavePrefab, WaveList.transform).GetComponent<Wave>();
         waveObject.SetData(index, waveToAdd);
+        waveObject.transform.SetSiblingIndex(index);
         loadedWaves.Add(waveObject);
     }
 
     public void AddEnemyPart()
     {
         var wavePart = new Declarations.SpawnWavePart(Def.Instance.EnemyDictionary[0]);
-        var index = WavePartList.transform.childCount;
+        var index = WavePartList.transform.childCount - 1;
         var wavePartObject = Instantiate(EnemyPartPrefab, WavePartList.transform).GetComponent<WavePart>();
-        wavePartObject.SetData(index, currectWave, wavePart);
+        wavePartObject.SetData(index + 1, currectWave, wavePart);
+        wavePartObject.transform.SetSiblingIndex(index);
         currectWave.AddPart(wavePart, wavePartObject);
     }
 
     public void AddDelayPart()
     {
         var wavePart = new Declarations.DelayWavePart(0);
-        var index = WavePartList.transform.childCount;
+        var index = WavePartList.transform.childCount - 1;
         var wavePartObject = Instantiate(TimePartPrefab, WavePartList.transform).GetComponent<WavePart>();
-        wavePartObject.SetData(index, currectWave, wavePart);
+        wavePartObject.SetData(index + 1, currectWave, wavePart);
+        wavePartObject.transform.SetSiblingIndex(index);
         currectWave.AddPart(wavePart, wavePartObject);
     }
 
@@ -96,6 +108,7 @@ public class LevelCreator : MonoBehaviour
                 wavePartObject = Instantiate(TimePartPrefab, WavePartList.transform).GetComponent<WavePart>();
             }
             wavePartObject.SetData(i, wave, waveParts[i]);
+            wavePartObject.transform.SetSiblingIndex(i);
             wavePartObjects.Add(wavePartObject);
         }
         currectWave.SetParts(wavePartObjects);
@@ -106,6 +119,7 @@ public class LevelCreator : MonoBehaviour
         var filter = new SimpleFileBrowser.FileBrowser.Filter("xml", ".xml");
         SimpleFileBrowser.FileBrowser.SetFilters(false, filter);
         SimpleFileBrowser.FileBrowser.ShowLoadDialog(FileLoaded, null, false, Application.dataPath);
+        EnableDisablePanels(false);
     }
 
     private void FileLoaded(string path)
@@ -136,6 +150,7 @@ public class LevelCreator : MonoBehaviour
             GameManager.instance.MapGenerator.BotBorderSize = 0;
             GameManager.instance.MapGenerator.GenerateMapForEdit(currentlyLoadedLevel.MapSize, currentlyLoadedLevel.Map);
             GameManager.instance.LevelLoaded.Invoke();
+            EnableDisablePanels(true);
         }
     }
 
@@ -147,6 +162,7 @@ public class LevelCreator : MonoBehaviour
             var filter = new SimpleFileBrowser.FileBrowser.Filter("xml", ".xml");
             SimpleFileBrowser.FileBrowser.SetFilters(false, filter);
             SimpleFileBrowser.FileBrowser.ShowSaveDialog(SavePathChosen, null, false, Application.dataPath);
+            EnableDisablePanels(false);
         }
     }
 
@@ -162,28 +178,59 @@ public class LevelCreator : MonoBehaviour
 
     public void CreateLevelClicked()
     {
+        bool error = false;
         var invalidSymbols = new List<char> { '\\', '/', ':', '*', '?', '"', '<', '>', '|' };
-        //var name = newLevelPanel.transform.GetChild(1).GetComponent<InputField>().text;
-        //int width;
-        //int height;
-        //int startMoney;
-        //int startHealth;
-        //if (int.TryParse(newLevelPanel.transform.GetChild(2).GetComponent<InputField>().text, out width) &&
-        //    int.TryParse(newLevelPanel.transform.GetChild(3).GetComponent<InputField>().text, out height) &&
-        //    int.TryParse(newLevelPanel.transform.GetChild(4).GetComponent<InputField>().text, out startMoney) &&
-        //    int.TryParse(newLevelPanel.transform.GetChild(5).GetComponent<InputField>().text, out startHealth) &&
-        //    width > 0 && height > 0 && startMoney > 0 && startHealth > 0
-        //    && !string.IsNullOrEmpty(name) && !name.Any(x => invalidSymbols.Contains(x)))
-        //{
-        var name = "CreatedLevel";
+        var name = newLevelPanel.transform.GetChild(2).GetChild(1).GetComponent<InputField>().text;
         int width;
         int height;
-        int startMoney = 500;
-        int startHealth = 10;
-        if (int.TryParse(newLevelPanel.transform.GetChild(1).GetComponent<InputField>().text, out width) &&
-            int.TryParse(newLevelPanel.transform.GetChild(2).GetComponent<InputField>().text, out height) &&
-            width > 0 && height > 0 && startMoney > 0 && startHealth > 0
-            && !string.IsNullOrEmpty(name) && !name.Any(x => invalidSymbols.Contains(x)))
+        int startMoney;
+        int startHealth;
+        if(string.IsNullOrEmpty(name) || name.Any(x => invalidSymbols.Contains(x)))
+        {
+            error = true;
+            newLevelPanel.transform.GetChild(2).GetChild(1).GetComponent<Image>().sprite = TextFieldError;
+        }
+        else
+        {
+            newLevelPanel.transform.GetChild(2).GetChild(1).GetComponent<Image>().sprite = TextFieldNormal;
+        }
+        if (!int.TryParse(newLevelPanel.transform.GetChild(3).GetChild(1).GetComponent<InputField>().text, out startMoney) || startMoney <= 0)
+        {
+            error = true;
+            newLevelPanel.transform.GetChild(3).GetChild(1).GetComponent<Image>().sprite = TextFieldError;
+        }
+        else
+        {
+            newLevelPanel.transform.GetChild(3).GetChild(1).GetComponent<Image>().sprite = TextFieldNormal;
+        }
+        if (!int.TryParse(newLevelPanel.transform.GetChild(4).GetChild(1).GetComponent<InputField>().text, out startHealth) || startHealth <= 0)
+        {
+            error = true;
+            newLevelPanel.transform.GetChild(4).GetChild(1).GetComponent<Image>().sprite = TextFieldError;
+        }
+        else
+        {
+            newLevelPanel.transform.GetChild(4).GetChild(1).GetComponent<Image>().sprite = TextFieldNormal;
+        }
+        if (!int.TryParse(newLevelPanel.transform.GetChild(5).GetChild(1).GetComponent<InputField>().text, out width) || width <= 0)
+        {
+            error = true;
+            newLevelPanel.transform.GetChild(5).GetChild(1).GetComponent<Image>().sprite = TextFieldError;
+        }
+        else
+        {
+            newLevelPanel.transform.GetChild(5).GetChild(1).GetComponent<Image>().sprite = TextFieldNormal;
+        }
+        if (!int.TryParse(newLevelPanel.transform.GetChild(6).GetChild(1).GetComponent<InputField>().text, out height) || height <= 0)
+        {
+            error = true;
+            newLevelPanel.transform.GetChild(6).GetChild(1).GetComponent<Image>().sprite = TextFieldError;
+        }
+        else
+        {
+            newLevelPanel.transform.GetChild(6).GetChild(1).GetComponent<Image>().sprite = TextFieldNormal;
+        }
+        if (!error)
         {
             var map = new Declarations.TileType[height, width];
             for (int i = 0; i < height; i++)
@@ -196,6 +243,7 @@ public class LevelCreator : MonoBehaviour
             currentlyLoadedLevel = new Declarations.LevelData(name, new Declarations.IntVector2(width, height), map, new List<Declarations.WaveData>(), startMoney, startHealth);
             LoadLevel();
             newLevelPanel.SetActive(false);
+            EnableDisablePanels(true);
         }
     }
 
@@ -207,7 +255,7 @@ public class LevelCreator : MonoBehaviour
     public void EditWavesClicked()
     {
         loadedWaves = new List<Wave>();
-        for (int i = WaveList.transform.childCount - 1; i >= 0; i--)
+        for (int i = WaveList.transform.childCount - 2; i >= 0; i--)
         {
             Destroy(WaveList.transform.GetChild(i).gameObject);
         }
@@ -218,8 +266,18 @@ public class LevelCreator : MonoBehaviour
             {
                 var waveObject = Instantiate(WavePrefab, WaveList.transform).GetComponent<Wave>();
                 waveObject.SetData(i, currentlyLoadedLevel.Waves[i]);
+                waveObject.transform.SetSiblingIndex(i);
                 loadedWaves.Add(waveObject);
             }
         }
+        EnableDisablePanels(false);
+    }
+
+    public void EnableDisablePanels(bool enable)
+    {
+        UpperPanelGroup.interactable = enable;
+        UpperPanelGroup.blocksRaycasts = enable;
+        LowerPanelGroup.interactable = enable;
+        LowerPanelGroup.blocksRaycasts = enable;
     }
 }

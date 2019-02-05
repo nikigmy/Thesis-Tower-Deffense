@@ -8,6 +8,7 @@ using UnityEngine.EventSystems;
 
 public class EditableTile : Tile
 {
+
     MeshRenderer rend;
     // Use this for initialization
     void Awake()
@@ -38,7 +39,7 @@ public class EditableTile : Tile
         {
             if (paintManager.Painting)
             {
-                foreach (var cell in Helpers.GetTilesInRange(Helpers.GetPositionForTile(Row, Col), paintManager.BrushSize * 1.8f))
+                foreach (var cell in Helpers.GetTilesInRange(transform.position, paintManager.BrushSize).Where(x => Vector3.Distance(x.transform.position, transform.position) <= paintManager.BrushSize))
                 {
                     ((EditableTile)cell).ChangeTile(paintManager);
                 }
@@ -82,7 +83,7 @@ public class EditableTile : Tile
             ChangeTile(paintManager);
             if (paintManager.BrushSize > 1)
             {
-                foreach (var cell in Helpers.GetTilesInRange(Helpers.GetPositionForTile(Row, Col), paintManager.BrushSize * 1.8f))
+                foreach (var cell in Helpers.GetTilesInRange(transform.position, paintManager.BrushSize).Where(x => Vector3.Distance(x.transform.position, transform.position) <= paintManager.BrushSize))
                 {
                     ((EditableTile)cell).ChangeTile(paintManager);
                 }
@@ -98,7 +99,7 @@ public class EditableTile : Tile
     private void UpdateTile()
     {
         var paintManager = GameManager.instance.PaintManager;
-        if (Vector3.Distance(Helpers.GetPositionForTile(paintManager.CurrectMousePos.y, paintManager.CurrectMousePos.x), transform.position) <= paintManager.BrushSize * 1.8f)
+        if (Vector3.Distance(Helpers.GetPositionForTile(paintManager.CurrectMousePos.y, paintManager.CurrectMousePos.x), transform.position) <= paintManager.BrushSize)
         {
             rend.material = GameManager.instance.MapGenerator.GlowMaterials[Type];
         }

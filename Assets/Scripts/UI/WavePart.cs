@@ -23,7 +23,7 @@ public class WavePart : MonoBehaviour {
         data = wavePart;
         parent = wave;
         indexText = transform.GetChild(0).GetComponent<Text>();
-        indexText.text = index.ToString();
+        indexText.text = (index + 1).ToString();
         if(wavePart.Type == Declarations.WavePartType.Spawn)
         {
             var enemyType = ((Declarations.SpawnWavePart)wavePart).EnemyToSpawn.Type;
