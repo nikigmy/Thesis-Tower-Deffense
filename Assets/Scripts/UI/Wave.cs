@@ -17,9 +17,9 @@ public class Wave : MonoBehaviour {
     internal void DeletePart(int index)
     {
         parts.RemoveAt(index);
+        data.WaveParts.RemoveAt(index);
         for (int i = index; i < parts.Count; i++)
         {
-            data.WaveParts.RemoveAt(i);
             parts[i].UpdateIndex(i);
         }
         partCountText.text = "PartCount: " + data.WaveParts.Count.ToString();

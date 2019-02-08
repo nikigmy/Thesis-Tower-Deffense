@@ -382,7 +382,7 @@ public class MapGenerator : MonoBehaviour
                     }
                     if (canPlaceBase)
                     {
-                        Instantiate(baseObj, Helpers.GetPositionForTile(row, col), Quaternion.identity, transform).GetComponent<Tile>();
+                        Instantiate(baseObj, Helpers.GetPositionForTile(row - TopBorderSize, col - LeftRightBorderSize), Quaternion.identity, transform).GetComponent<Tile>();
                     }
                 }
             }

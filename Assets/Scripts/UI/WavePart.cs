@@ -76,12 +76,12 @@ public class WavePart : MonoBehaviour {
 
     public void UpdateIndex(int index)
     {
-        indexText.text = index.ToString();
+        indexText.text = (index + 1).ToString();
     }
 
     public void Delete()
     {
-        parent.DeletePart(int.Parse(indexText.text));
+        parent.DeletePart(int.Parse(indexText.text) - 1);
         Destroy(gameObject);
     }
 }

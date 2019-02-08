@@ -47,13 +47,16 @@ public class LevelCreator : MonoBehaviour
 
     public void AddWave()
     {
-        var waveToAdd = new Declarations.WaveData(new List<Declarations.WavePart>());
-        currentlyLoadedLevel.Waves.Add(waveToAdd);
-        var index = WaveList.transform.childCount - 1;
-        var waveObject = Instantiate(WavePrefab, WaveList.transform).GetComponent<Wave>();
-        waveObject.SetData(index, waveToAdd);
-        waveObject.transform.SetSiblingIndex(index);
-        loadedWaves.Add(waveObject);
+        if (currentlyLoadedLevel != null)
+        {
+            var waveToAdd = new Declarations.WaveData(new List<Declarations.WavePart>());
+            currentlyLoadedLevel.Waves.Add(waveToAdd);
+            var index = WaveList.transform.childCount - 1;
+            var waveObject = Instantiate(WavePrefab, WaveList.transform).GetComponent<Wave>();
+            waveObject.SetData(index, waveToAdd);
+            waveObject.transform.SetSiblingIndex(index);
+            loadedWaves.Add(waveObject);
+        }
     }
 
     public void AddEnemyPart()
@@ -61,17 +64,17 @@ public class LevelCreator : MonoBehaviour
         var wavePart = new Declarations.SpawnWavePart(Def.Instance.EnemyDictionary[0]);
         var index = WavePartList.transform.childCount - 1;
         var wavePartObject = Instantiate(EnemyPartPrefab, WavePartList.transform).GetComponent<WavePart>();
-        wavePartObject.SetData(index + 1, currectWave, wavePart);
+        wavePartObject.SetData(index, currectWave, wavePart);
         wavePartObject.transform.SetSiblingIndex(index);
         currectWave.AddPart(wavePart, wavePartObject);
     }
 
     public void AddDelayPart()
     {
-        var wavePart = new Declarations.DelayWavePart(0);
+        var wavePart = new Declarations.DelayWavePart(1);
         var index = WavePartList.transform.childCount - 1;
         var wavePartObject = Instantiate(TimePartPrefab, WavePartList.transform).GetComponent<WavePart>();
-        wavePartObject.SetData(index + 1, currectWave, wavePart);
+        wavePartObject.SetData(index, currectWave, wavePart);
         wavePartObject.transform.SetSiblingIndex(index);
         currectWave.AddPart(wavePart, wavePartObject);
     }
@@ -90,7 +93,7 @@ public class LevelCreator : MonoBehaviour
     {
         var wavePartObjects = new List<WavePart>();
         currectWave = wave;
-        for (int i = WavePartList.transform.childCount - 1; i >= 0; i--)
+        for (int i = WavePartList.transform.childCount - 2; i >= 0; i--)
         {
             Destroy(WavePartList.transform.GetChild(i).gameObject);
         }
@@ -118,8 +121,13 @@ public class LevelCreator : MonoBehaviour
     {
         var filter = new SimpleFileBrowser.FileBrowser.Filter("xml", ".xml");
         SimpleFileBrowser.FileBrowser.SetFilters(false, filter);
-        SimpleFileBrowser.FileBrowser.ShowLoadDialog(FileLoaded, null, false, Application.dataPath);
+        SimpleFileBrowser.FileBrowser.ShowLoadDialog(FileLoaded, Canceled, false, Application.dataPath);
         EnableDisablePanels(false);
+    }
+
+    private void Canceled()
+    {
+        EnableDisablePanels(true);
     }
 
     private void FileLoaded(string path)
@@ -139,6 +147,7 @@ public class LevelCreator : MonoBehaviour
         {
             Debug.Log("Cant load level!");
         }
+        EnableDisablePanels(true);
     }
 
     private void LoadLevel()
@@ -150,7 +159,6 @@ public class LevelCreator : MonoBehaviour
             GameManager.instance.MapGenerator.BotBorderSize = 0;
             GameManager.instance.MapGenerator.GenerateMapForEdit(currentlyLoadedLevel.MapSize, currentlyLoadedLevel.Map);
             GameManager.instance.LevelLoaded.Invoke();
-            EnableDisablePanels(true);
         }
     }
 
@@ -161,7 +169,7 @@ public class LevelCreator : MonoBehaviour
             currentlyLoadedLevel.Map = GameManager.instance.MapGenerator.GetMap();
             var filter = new SimpleFileBrowser.FileBrowser.Filter("xml", ".xml");
             SimpleFileBrowser.FileBrowser.SetFilters(false, filter);
-            SimpleFileBrowser.FileBrowser.ShowSaveDialog(SavePathChosen, null, false, Application.dataPath);
+            SimpleFileBrowser.FileBrowser.ShowSaveDialog(SavePathChosen, Canceled, false, Application.dataPath);
             EnableDisablePanels(false);
         }
     }
@@ -173,6 +181,7 @@ public class LevelCreator : MonoBehaviour
             currentlyLoadedLevel.Name = System.IO.Path.GetFileNameWithoutExtension(path);
             currentlyLoadedLevel.Export().Save(path);
         }
+        EnableDisablePanels(true);
         Debug.Log(path);
     }
 
