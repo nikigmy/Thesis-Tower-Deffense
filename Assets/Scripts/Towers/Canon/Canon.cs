@@ -7,6 +7,8 @@ public class Canon : Tower
 {
     [SerializeField]
     private GameObject cannonBall;
+    [SerializeField]
+    AudioClip shootSound;
     private float timeFromPreviousShot;
 
     private void Awake()
@@ -47,6 +49,8 @@ public class Canon : Tower
 
     private void Fire()
     {
+        audioSource.clip = shootSound;
+        audioSource.Play();
         var projectile = Instantiate(cannonBall, currentFirePoint.position, currentFirePoint.rotation);
         projectile.GetComponent<Projectile>().SetTarget(new Declarations.CanonBallData(target, (TowerData as Declarations.CanonTower).CurrentDamage));
     }

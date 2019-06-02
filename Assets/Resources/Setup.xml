@@ -8,9 +8,9 @@
   </EnemyData>
   <TowerData>
     <Canon>
-      <Level1  Range="3" Damage="15" FireRate="0.5" Price="100"/>
-      <Level2  Range="3.5" Damage="20" FireRate="0.5" UpgradePrice="100"/>
-      <Level3  Range="3.5" Damage="30" FireRate="0.3" UpgradePrice="150"/>
+      <Level1  Range="3" Damage="30" FireRate="1" Price="100"/>
+      <Level2  Range="3.5" Damage="40" FireRate="1" UpgradePrice="100"/>
+      <Level3  Range="3.5" Damage="60" FireRate="0.6" UpgradePrice="150"/>
     </Canon>
     <Plasma>
       <Level1  Range="4.5" Damage="35" FireRate="1.75" Price="200" ExplosionRange="1"/>

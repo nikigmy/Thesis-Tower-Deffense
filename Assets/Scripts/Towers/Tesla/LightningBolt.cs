@@ -13,6 +13,7 @@ public class LightningBolt : Projectile
     List<Enemy> enemiesHit;
     Vector3 lastPosition;
 
+
     public override void SetTarget(Declarations.IProjectileData projectileData)
     {
         enemiesHit = new List<Enemy>();

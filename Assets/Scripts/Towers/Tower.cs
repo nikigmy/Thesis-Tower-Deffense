@@ -21,6 +21,7 @@ public abstract class Tower : MonoBehaviour
     protected Transform currentGunBase;
     protected Transform currentGunHead;
     protected Transform currentFirePoint;
+    protected AudioSource audioSource;
 
     protected int rotationSpeed = 6;
 
@@ -41,6 +42,7 @@ public abstract class Tower : MonoBehaviour
 
     private void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         currentGun = Level1Gun;
         if (TowerData.CurrentLevel != 1)
         {

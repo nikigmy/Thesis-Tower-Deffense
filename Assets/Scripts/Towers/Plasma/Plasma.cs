@@ -11,6 +11,8 @@ public class Plasma : Tower
     private bool charging = false;
     [SerializeField]
     private bool coolingOff = false;
+    [SerializeField]
+    AudioClip chargeSound;
     private DateTime timeOfChargeStart;
     private float timeLeftFromCoolOff;
     private float timeLeftFromCharge;
@@ -53,12 +55,10 @@ public class Plasma : Tower
                         currentFx.Clear();
                         currentFx.Stop();
                         charging = false;
+                        audioSource.Stop();
                         Fire();
                     }
-                    else
-                    {
-                        CoolOff();
-                    }
+                    CoolOff();
                 }
             }
             else
@@ -72,6 +72,8 @@ public class Plasma : Tower
             LookAtTarget();
             if (CanShoot() && !charging && !coolingOff)
             {
+                audioSource.clip = chargeSound;
+                audioSource.Play();
                 charging = true;
                 timeLeftFromCharge = (TowerData as Declarations.PlasmaTower).CurrentFireRate;
                 currentFx.Play(true);
@@ -90,6 +92,7 @@ public class Plasma : Tower
         currentFx.Stop();
         coolingOff = true;
         charging = false;
+        audioSource.Stop();
         var main = currentFx.main;
         main.simulationSpeed = 2;
         timeLeftFromCoolOff = ((TowerData as Declarations.PlasmaTower).CurrentFireRate - timeLeftFromCharge) / 2;
@@ -97,6 +100,7 @@ public class Plasma : Tower
 
     private void Fire()
     {
+        audioSource.Stop();
         var projectile = Instantiate(plasmaBall, currentFirePoint.position, currentFirePoint.rotation);
         projectile.GetComponent<Projectile>().SetTarget(new Declarations.PlasmaBallData(target, (TowerData as Declarations.PlasmaTower).CurrentDamage, (TowerData as Declarations.PlasmaTower).CurrentExplosionRange));
     }

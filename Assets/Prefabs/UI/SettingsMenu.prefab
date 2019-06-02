@@ -1184,8 +1184,8 @@ MonoBehaviour:
   m_FillRect: {fileID: 224008513131632232}
   m_HandleRect: {fileID: 224237796906995108}
   m_Direction: 0
-  m_MinValue: 0
-  m_MaxValue: 100
+  m_MinValue: -80
+  m_MaxValue: -10
   m_WholeNumbers: 1
   m_Value: 100
   m_OnValueChanged:
@@ -2329,6 +2329,17 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 0}
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
       - m_Target: {fileID: 114396888898159830}
         m_MethodName: Close
         m_Mode: 1
@@ -2781,8 +2792,8 @@ MonoBehaviour:
   m_FillRect: {fileID: 224719783413443540}
   m_HandleRect: {fileID: 224738521264000144}
   m_Direction: 0
-  m_MinValue: 0
-  m_MaxValue: 100
+  m_MinValue: -80
+  m_MaxValue: -10
   m_WholeNumbers: 1
   m_Value: 100
   m_OnValueChanged:

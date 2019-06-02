@@ -26,7 +26,7 @@ public class LevelSelect : MonoBehaviour
     GameObject DefaultLevelPrefab;
     [SerializeField]
     GameObject LockedLevelPrefab;
-    
+
     [Header("Scene Setup")]
     [SerializeField]
     Transform LevelsContent;
@@ -49,6 +49,11 @@ public class LevelSelect : MonoBehaviour
     public void Load()
     {
         LoadPage(0);
+    }
+
+    public void ReloadPage()
+    {
+        LoadPage(currentPageIndex);
     }
 
     void LoadPage(int index)
@@ -108,7 +113,7 @@ public class LevelSelect : MonoBehaviour
             for (int i = 0; i < totalNumberOfPages; i++)
             {
                 Sprite spriteForPart;
-                if(index == i)
+                if (index == i)
                 {
                     if (i == totalNumberOfPages - 1)
                     {

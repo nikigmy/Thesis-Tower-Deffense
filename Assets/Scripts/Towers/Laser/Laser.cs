@@ -98,6 +98,7 @@ public class Laser : Tower
             }
             beams = null;
         }
+        audioSource.Stop();
     }
 
     protected override void UpdateGunPartsReferences()
@@ -122,6 +123,7 @@ public class Laser : Tower
             var beamEnd = Instantiate(endPrefab, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
             beams[i] = new BeamCache(beamStart, beam, beamEnd);
         }
+        audioSource.Play();
     }
 
     protected override void UpgradeTower()

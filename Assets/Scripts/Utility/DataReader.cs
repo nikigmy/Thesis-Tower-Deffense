@@ -619,6 +619,13 @@ public class DataReader
     #region SettingsReading
     internal static bool ReadConfig(XElement config, out Declarations.Settings settings)
     {
+        const int cameraMoveDefVal = 30;
+        const int cameraZoomDefVal = 40;
+        const int musicDefVal = -35;
+        const int sfxDefVal = -35;
+        const bool fullscreenDefVal = true;
+        const int qualityDefVal = 5;
+        const bool fastBuildDefVal = true;
         bool failed = false;
         if (config != null)
         {
@@ -632,19 +639,27 @@ public class DataReader
             bool fastBuilding;
             var allSettings = config.Elements(Constants.cst_Setting).Where(x => x.Attribute(Constants.cst_Name) != null && !string.IsNullOrEmpty(x.Attribute(Constants.cst_Name).Value));
 
-            cameraMoveSpeed = ReadInt(allSettings.FirstOrDefault(x => x.Attribute(Constants.cst_Name).Value == Constants.cst_CameraMoveSpeed), Constants.cst_Value, ref failed, 30);
-            cameraZoomSpeed = ReadInt(allSettings.FirstOrDefault(x => x.Attribute(Constants.cst_Name).Value == Constants.cst_CameraZoomSpeed), Constants.cst_Value, ref failed, 40);
-            musicLevel = ReadInt(allSettings.FirstOrDefault(x => x.Attribute(Constants.cst_Name).Value == Constants.cst_MusicLevel), Constants.cst_Value, ref failed, 100);
-            sfxLevel = ReadInt(allSettings.FirstOrDefault(x => x.Attribute(Constants.cst_Name).Value == Constants.cst_SFXLevel), Constants.cst_Value, ref failed, 100);
+            cameraMoveSpeed = ReadInt(allSettings.FirstOrDefault(x => x.Attribute(Constants.cst_Name).Value == Constants.cst_CameraMoveSpeed), Constants.cst_Value, ref failed, cameraMoveDefVal);
+            cameraZoomSpeed = ReadInt(allSettings.FirstOrDefault(x => x.Attribute(Constants.cst_Name).Value == Constants.cst_CameraZoomSpeed), Constants.cst_Value, ref failed, cameraZoomDefVal);
+            musicLevel = ReadInt(allSettings.FirstOrDefault(x => x.Attribute(Constants.cst_Name).Value == Constants.cst_MusicLevel), Constants.cst_Value, ref failed, musicDefVal);
+            if (musicLevel > -10 && musicLevel < -80)
+            {
+                musicLevel = musicDefVal;
+            }
+            sfxLevel = ReadInt(allSettings.FirstOrDefault(x => x.Attribute(Constants.cst_Name).Value == Constants.cst_SFXLevel), Constants.cst_Value, ref failed, musicDefVal);
+            if (sfxLevel > -10 && sfxLevel < -80)
+            {
+                sfxLevel = musicDefVal;
+            }
 
-            fullscreen = ReadBool(allSettings.FirstOrDefault(x => x.Attribute(Constants.cst_Name).Value == Constants.cst_Fullscreen), Constants.cst_Value, ref failed, true);
-            quality = ReadInt(allSettings.FirstOrDefault(x => x.Attribute(Constants.cst_Name).Value == Constants.cst_Quality), Constants.cst_Value, ref failed, 5);
+            fullscreen = ReadBool(allSettings.FirstOrDefault(x => x.Attribute(Constants.cst_Name).Value == Constants.cst_Fullscreen), Constants.cst_Value, ref failed, fullscreenDefVal);
+            quality = ReadInt(allSettings.FirstOrDefault(x => x.Attribute(Constants.cst_Name).Value == Constants.cst_Quality), Constants.cst_Value, ref failed, qualityDefVal);
             if(quality < 0 || quality > 5)
             {
-                quality = 5;
+                quality = qualityDefVal;
             }
-            var tempFullscreen = ReadString(allSettings.FirstOrDefault(x => x.Attribute(Constants.cst_Name).Value == Constants.cst_Resolution), Constants.cst_Value, ref failed, "");
-            var splittedResolution = tempFullscreen.Split(new char[] { 'x' }, StringSplitOptions.RemoveEmptyEntries);
+            var tempResolution = ReadString(allSettings.FirstOrDefault(x => x.Attribute(Constants.cst_Name).Value == Constants.cst_Resolution), Constants.cst_Value, ref failed, "");
+            var splittedResolution = tempResolution.Split(new char[] { 'x' }, StringSplitOptions.RemoveEmptyEntries);
             bool validRes = false;
             if(splittedResolution.Length == 2)
             {
@@ -668,13 +683,13 @@ public class DataReader
                 resolution = new Vector2(Screen.width, Screen.height);
                 failed = true;
             }
-            fastBuilding = ReadBool(allSettings.FirstOrDefault(x => x.Attribute(Constants.cst_Name).Value == Constants.cst_FastBuilding), Constants.cst_Value, ref failed, true); ;
+            fastBuilding = ReadBool(allSettings.FirstOrDefault(x => x.Attribute(Constants.cst_Name).Value == Constants.cst_FastBuilding), Constants.cst_Value, ref failed, fastBuildDefVal); ;
 
             settings = new Declarations.Settings(fullscreen, resolution, quality, cameraMoveSpeed, cameraZoomSpeed, musicLevel, sfxLevel, fastBuilding);
         }
         else
         {
-            settings = new Declarations.Settings(true, new Vector2(Screen.width, Screen.height), 5, 30, 40, 100, 100, true);
+            settings = new Declarations.Settings(fullscreenDefVal, new Vector2(Screen.width, Screen.height), qualityDefVal, cameraMoveDefVal, cameraZoomDefVal, musicDefVal, sfxDefVal, fastBuildDefVal);
             failed = true;
         }
         return failed;

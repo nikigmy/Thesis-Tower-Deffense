@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Swordsman : Enemy {
-
+    
     private void Awake()
     {
         enemyData = Def.Instance.EnemyDictionary[Declarations.EnemyType.Swordsman];

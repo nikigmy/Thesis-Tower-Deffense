@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
-
+using UnityEngine.UI;
 public class PaintManager : MonoBehaviour
 {
     public Declarations.IntVector2 CurrectMousePos = new Declarations.IntVector2(-5, -5);
@@ -8,6 +8,19 @@ public class PaintManager : MonoBehaviour
     public Declarations.TileType CurrentTileType;
     public bool Painting = false;
     public float BrushSize = 1.7f;
+
+    [SerializeField]
+    Image grassImage;
+    [SerializeField]
+    Image pathImage;
+    [SerializeField]
+    Image objectiveImage;
+    [SerializeField]
+    Image spawnImage;
+    [SerializeField]
+    Image environmentImage;
+
+    Image currentImage;
 
     private void Awake()
     {
@@ -31,6 +44,30 @@ public class PaintManager : MonoBehaviour
     public void SetTile(int index)
     {
         CurrentTileType = (Declarations.TileType)index;
+        if (currentImage != null)
+        {
+            currentImage.color = new Color(1, 1, 1, 1);
+        }
+        switch (CurrentTileType)
+        {
+            case Declarations.TileType.Environment:
+                currentImage = environmentImage;
+                break;
+            case Declarations.TileType.Grass:
+                currentImage = grassImage;
+                break;
+            case Declarations.TileType.Path:
+                currentImage = pathImage;
+                break;
+            case Declarations.TileType.Objective:
+                currentImage = objectiveImage;
+                break;
+            case Declarations.TileType.Spawn:
+                currentImage = spawnImage;
+                break;
+        }
+
+        currentImage.color = new Color(1, 1, 0, 1);
     }
 
     public void Update()

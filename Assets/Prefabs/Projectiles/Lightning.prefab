@@ -52,6 +52,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4863411747308372}
   - component: {fileID: 114185384914128122}
+  - component: {fileID: 82786720896633528}
   m_Layer: 0
   m_Name: Lightning
   m_TagString: Untagged
@@ -100,6 +101,102 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -92.005005, z: 0}
+--- !u!82 &82786720896633528
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1881030198296516}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 243661741154100900, guid: f4fa9f5fccd5ee24ea44b59e5c6512d7,
+    type: 2}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 0.5
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 3
+  MaxDistance: 30
+  Pan2D: 0
+  rolloffMode: 2
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.0042686462
+      value: 0.511116
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!114 &114185384914128122
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -113,6 +210,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lineRenderer: {fileID: 120918731495215426}
   glowRenderer: {fileID: 120356786697491972}
+  lightningSounds:
+  - {fileID: 8300000, guid: 7c3749063b1d8ff4d87a2a8eb7c643db, type: 3}
+  - {fileID: 8300000, guid: b1d05117f663b6c42b3eb38726794383, type: 3}
+  - {fileID: 8300000, guid: 79383128b9ef6104da9ca574488a96c5, type: 3}
+  audioSource: {fileID: 82786720896633528}
 --- !u!120 &120356786697491972
 LineRenderer:
   m_ObjectHideFlags: 1

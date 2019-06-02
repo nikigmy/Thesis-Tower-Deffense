@@ -12,6 +12,11 @@ public class Boss : Enemy
 
     Animator explosionAnim;
 
+    [SerializeField]
+    AudioClip explosionChargeSound;
+    [SerializeField]
+    AudioClip explosionSound;
+
     bool transformed;
 
     private void Start()
@@ -34,6 +39,9 @@ public class Boss : Enemy
     {
         if (!transformed)
         {
+            Effects.Clear();
+            audioSource.clip = explosionChargeSound;
+            audioSource.Play();
             Alive = false;
             slowEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             anim.speed = 0;
@@ -48,6 +56,10 @@ public class Boss : Enemy
 
     public void Transform()
     {
+        audioSource.Stop();
+        audioSource.clip = explosionSound;
+        audioSource.Play();
+
         demonObject.SetActive(false);
         golemObject.SetActive(true);
 

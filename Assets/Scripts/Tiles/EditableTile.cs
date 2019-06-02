@@ -25,12 +25,12 @@ public class EditableTile : Tile
 
     private void OnMouseEnter()
     {
-        if (EventSystem.current.IsPointerOverGameObject())
+        var paintManager = GameManager.instance.PaintManager;
+        if (EventSystem.current.IsPointerOverGameObject() || paintManager.CurrentTileType == Declarations.TileType.Unknown)
         {
             return;
         }
 
-        var paintManager = GameManager.instance.PaintManager;
         if (paintManager.Painting)
         {
             ChangeTile(paintManager);
@@ -68,31 +68,27 @@ public class EditableTile : Tile
 
     private void OnMouseDown()
     {
-        if (EventSystem.current.IsPointerOverGameObject())
+        var paintManager = GameManager.instance.PaintManager;
+        if (EventSystem.current.IsPointerOverGameObject() || paintManager.CurrentTileType == Declarations.TileType.Unknown)
         {
             return;
         }
-
-        var paintManager = GameManager.instance.PaintManager;
-        if (paintManager.CurrentTileType != Declarations.TileType.Unknown)
+        if (Def.Instance.Settings.FastBuilding)
         {
-            if (Def.Instance.Settings.FastBuilding)
+            paintManager.Painting = true;
+        }
+        ChangeTile(paintManager);
+        if (paintManager.BrushSize > 1)
+        {
+            foreach (var cell in Helpers.GetTilesInRange(transform.position, paintManager.BrushSize).Where(x => Vector3.Distance(x.transform.position, transform.position) <= paintManager.BrushSize))
             {
-                paintManager.Painting = true;
+                ((EditableTile)cell).ChangeTile(paintManager);
             }
-            ChangeTile(paintManager);
-            if (paintManager.BrushSize > 1)
-            {
-                foreach (var cell in Helpers.GetTilesInRange(transform.position, paintManager.BrushSize).Where(x => Vector3.Distance(x.transform.position, transform.position) <= paintManager.BrushSize))
-                {
-                    ((EditableTile)cell).ChangeTile(paintManager);
-                }
-                paintManager.UpdateTiles.Invoke();
-            }
-            else
-            {
-                rend.material = GameManager.instance.MapGenerator.GlowMaterials[Type];
-            }
+            paintManager.UpdateTiles.Invoke();
+        }
+        else
+        {
+            rend.material = GameManager.instance.MapGenerator.GlowMaterials[Type];
         }
     }
 

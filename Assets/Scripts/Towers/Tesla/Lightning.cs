@@ -11,6 +11,11 @@ public class Lightning : MonoBehaviour
 
     GameObject start;
     Enemy end;
+    
+    [SerializeField]
+    AudioClip[] lightningSounds;
+    [SerializeField]
+    AudioSource audioSource;
 
     public void GenerateLightning(GameObject start, Enemy end)
     {
@@ -24,6 +29,12 @@ public class Lightning : MonoBehaviour
     {
         if (start != null && end != null)
         {
+            if (!audioSource.isPlaying && !GameManager.instance.Paused)
+            {
+                audioSource.clip = lightningSounds[UnityEngine.Random.Range(0, lightningSounds.Length)];
+                audioSource.Play();
+            }
+            Debug.Log(audioSource.outputAudioMixerGroup.name);
             var startPos = Vector3.zero;
             var startEnemy = start.GetComponent<Enemy>();
             if (startEnemy != null)
@@ -39,9 +50,10 @@ public class Lightning : MonoBehaviour
             transform.LookAt(end.GetCenter());
             var noise = Random.Range(0.2f, 0.3f);
             var distance = Vector3.Distance(startPos, end.GetCenter());
-            var posCount = 0;
+
             var positions = new List<Vector3>();
             positions.Add(Vector3.zero);
+
             var distanceleft = distance;
             var endPoint = new Vector3(0, 0, distance);
             while (distanceleft > 0)
@@ -69,7 +81,6 @@ public class Lightning : MonoBehaviour
                 {
                     break;
                 }
-                posCount++;
             }
             positions.Add(endPoint);
             points = positions.ToArray();

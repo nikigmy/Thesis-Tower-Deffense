@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
@@ -24,6 +25,8 @@ public class GameManager : MonoBehaviour
     private TowerAssetData[] towersAssetData;
     [SerializeField]
     private EnemyAssetData[] enemyAssetData;
+    [SerializeField]
+    public AudioMixer AudioMixer;
 
     public Declarations.LevelData CurrentLevel;
 
@@ -39,6 +42,8 @@ public class GameManager : MonoBehaviour
     public bool DeveloperMode;
     float timeOfStart;
     public List<int> stepsMade;
+
+    private List<AudioSource> pausedAudios;
 
     private void Awake()
     {
@@ -77,6 +82,7 @@ public class GameManager : MonoBehaviour
         {
             LooeadDependencies(scene.name);
             Def.Instance.LoadData(towersAssetData, enemyAssetData);
+            MainMenu.SetButtonActivity();
         }
         else if (scene.name == "LevelCreator")
         {
@@ -193,11 +199,20 @@ public class GameManager : MonoBehaviour
         Paused = !Paused;
         if (Paused)
         {
+            pausedAudios = FindObjectsOfType<AudioSource>().Where(x => x.outputAudioMixerGroup.name == "SFX").ToList();
+            foreach (var audioToPause in pausedAudios)
+            {
+                audioToPause.Pause();
+            }
             Time.timeScale = 0;
         }
         else
         {
             Time.timeScale = GameSpedUp ? 2 : 1;
+            foreach (var audioToPause in pausedAudios.Where(x => x != null))
+            {
+                audioToPause.Play();
+            }
         }
     }
     

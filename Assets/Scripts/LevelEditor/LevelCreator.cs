@@ -194,7 +194,7 @@ public class LevelCreator : MonoBehaviour
         int height;
         int startMoney;
         int startHealth;
-        if(string.IsNullOrEmpty(name) || name.Any(x => invalidSymbols.Contains(x)))
+        if (string.IsNullOrEmpty(name) || name.Any(x => invalidSymbols.Contains(x)))
         {
             error = true;
             newLevelPanel.transform.GetChild(2).GetChild(1).GetComponent<Image>().sprite = TextFieldError;
@@ -221,7 +221,7 @@ public class LevelCreator : MonoBehaviour
         {
             newLevelPanel.transform.GetChild(4).GetChild(1).GetComponent<Image>().sprite = TextFieldNormal;
         }
-        if (!int.TryParse(newLevelPanel.transform.GetChild(5).GetChild(1).GetComponent<InputField>().text, out width) || width <= 0)
+        if (!int.TryParse(newLevelPanel.transform.GetChild(5).GetChild(1).GetComponent<InputField>().text, out width) || width < 10 || width > 50)
         {
             error = true;
             newLevelPanel.transform.GetChild(5).GetChild(1).GetComponent<Image>().sprite = TextFieldError;
@@ -230,7 +230,7 @@ public class LevelCreator : MonoBehaviour
         {
             newLevelPanel.transform.GetChild(5).GetChild(1).GetComponent<Image>().sprite = TextFieldNormal;
         }
-        if (!int.TryParse(newLevelPanel.transform.GetChild(6).GetChild(1).GetComponent<InputField>().text, out height) || height <= 0)
+        if (!int.TryParse(newLevelPanel.transform.GetChild(6).GetChild(1).GetComponent<InputField>().text, out height) || height < 10 || height > 50)
         {
             error = true;
             newLevelPanel.transform.GetChild(6).GetChild(1).GetComponent<Image>().sprite = TextFieldError;

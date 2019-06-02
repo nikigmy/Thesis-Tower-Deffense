@@ -83,7 +83,6 @@ public class TextureGenerator
     {
         var yoffset = HexHeight * 2f;
         float h = ((float)HexHeight / 2) * (float)Math.Sqrt(3);
-        // Start with the leftmost corner of the upper left hexagon.
         float y = row * (HexHeight * 1.5f) + yoffset;//upmost point
         float offset = 0;
         if (row % 2 == 1)

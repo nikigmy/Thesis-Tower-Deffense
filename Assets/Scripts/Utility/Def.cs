@@ -40,10 +40,9 @@ public class Def
         LoadSetup(towersAssetData, enemyAssetData, setupFile);
         var levels = LoadLevelFiles(Application.platform != RuntimePlatform.WindowsEditor);
         LoadLevels(levels);
-        if (DataReader.ReadConfig(LoadConfigFile(), out Settings))
-        {
-            Helpers.SaveAndSetSettings();
-        }
+
+        DataReader.ReadConfig(LoadConfigFile(), out Settings);
+        Helpers.SaveAndSetSettings();
     }
 
     internal void ResetTowerLevel()
@@ -208,7 +207,7 @@ public class Def
                 }
             }
         }
-        if(!atleastOneUnlocked)
+        if (!atleastOneUnlocked)
         {
             if (levels.Count > 0)
             {

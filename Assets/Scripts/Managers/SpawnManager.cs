@@ -23,6 +23,8 @@ public class SpawnManager : MonoBehaviour
             return spawnTile;
         }
     }
+    [SerializeField]
+    AudioClip spawnSound;
 
     private const float delayBetweenWaves = 5;
 
@@ -66,6 +68,8 @@ public class SpawnManager : MonoBehaviour
                     var enemy = Instantiate(enemyData.AssetData.Prefab, SpawnTile.transform.position, Quaternion.identity).GetComponent<Enemy>();
                     enemy.SetData(SpawnTile);
                     enemies.Add(enemy);
+                    SpawnTile.GetComponent<AudioSource>().clip = spawnSound;
+                    SpawnTile.GetComponent<AudioSource>().Play();
 
                     currentWavePartIndex++;
                     NextWavePart();

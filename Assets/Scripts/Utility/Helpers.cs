@@ -83,10 +83,15 @@ public class Helpers
 
     internal static void SaveAndSetSettings()
     {
+        Debug.Log("Setting and saving settings");
         Def.Instance.Settings.Export().Save(Path.Combine(Application.dataPath + "/../", Constants.cst_Config + Constants.cst_Xml));
         
         Screen.SetResolution((int)Def.Instance.Settings.Resolution.x, (int)Def.Instance.Settings.Resolution.y, Def.Instance.Settings.Fullscreen);
         QualitySettings.SetQualityLevel(Def.Instance.Settings.QualityLevel, true);
+
+        GameManager.instance.AudioMixer.SetFloat("MusicVolume", Def.Instance.Settings.MusicLevel);
+        GameManager.instance.AudioMixer.SetFloat("SfxVolume", Def.Instance.Settings.SFXLevel);
+        Debug.Log("Set and saved settings");
     }
 
     public static bool GetTileType(char tileId, out Declarations.TileType tileType, bool canHaveEmpty)

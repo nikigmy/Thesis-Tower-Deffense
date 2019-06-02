@@ -13,6 +13,8 @@ public class Enemy : MonoBehaviour
     protected Renderer rend;
     [SerializeField]
     protected ParticleSystem slowEffect;
+    [SerializeField]
+    AudioClip deathSound;
 
     protected Animator anim;
     protected Declarations.EnemyData enemyData;
@@ -26,6 +28,7 @@ public class Enemy : MonoBehaviour
     public bool Visible = true;
     public Declarations.EnemyType Type { get { return enemyData.Type; } }
     public List<Declarations.Effect> Effects;
+    protected AudioSource audioSource;
 
     int stepsMade;
 
@@ -47,6 +50,7 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         anim = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     public Vector3 GetCenter()
@@ -77,10 +81,10 @@ public class Enemy : MonoBehaviour
 
     protected void UpdateEnemy()
     {
-        UpdateUI();
+        UpdateUI();//update health bar
         if (Alive)
         {
-            if ((currentTile.transform.position - transform.position).magnitude <= 0.3)
+            if ((currentTile.transform.position - transform.position).magnitude <= 0.3)//reached the current tile
             {
                 FindNextTile(currentTile.Type != Declarations.TileType.Spawn);
             }
@@ -88,17 +92,17 @@ public class Enemy : MonoBehaviour
             {
                 if (currentTile.Type == Declarations.TileType.Objective)
                 {
-                    Attack();
+                    Attack();//deal damage
                     return;
                 }
                 if (Moving)
                 {
-                    Rotate();
-                    UpdateSpeed();
-                    Move();
+                    Rotate();//rotate to look at the current tile
+                    UpdateSpeed();//update movement speed
+                    Move();//move
                 }
             }
-            UpdateEffects();
+            UpdateEffects();//remove expired effects
         }
     }
 
@@ -305,6 +309,9 @@ public class Enemy : MonoBehaviour
 
     protected virtual void Died()
     {
+        audioSource.clip = deathSound;
+        audioSource.Play();
+
         Alive = false;
         slowEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         anim.speed = 1;

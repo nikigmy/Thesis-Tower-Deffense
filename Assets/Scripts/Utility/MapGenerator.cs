@@ -47,8 +47,7 @@ public class MapGenerator : MonoBehaviour
     Color SpawnColor;
     [SerializeField]
     Color EnvironmentColor;
-    [SerializeField]
-    Color EmptyColor;
+
     public Dictionary<Declarations.TileType, Material> TileMaterials;
     public Dictionary<Declarations.TileType, Material> GlowMaterials;
 
